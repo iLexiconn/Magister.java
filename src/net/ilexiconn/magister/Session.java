@@ -7,7 +7,7 @@ public class Session
     private boolean isVerified;
     private Links[] links;
 
-    private class Links
+    public class Links
     {
         private String href;
         private String rel;

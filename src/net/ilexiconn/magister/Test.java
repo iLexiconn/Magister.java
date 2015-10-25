@@ -9,11 +9,11 @@ public class Test
     {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Please enter school name: \n");
+        System.out.println("Please enter school name:");
         String school = scanner.nextLine();
-        System.out.print("Please enter username: \n");
+        System.out.println("Please enter username:");
         String username = scanner.nextLine();
-        System.out.print("Please enter password: \n");
+        System.out.println("Please enter password:");
         String password = scanner.nextLine();
 
         Magister magister = new Magister();
@@ -30,5 +30,6 @@ public class Test
         }
 
         System.out.println("Hey, " + magister.getProfile().getPerson().getNickname() + "!");
+        System.out.println(magister.getStudy().getItems()[magister.getStudy().getTotalCount() - 1].getStudy().getDescription());
     }
 }

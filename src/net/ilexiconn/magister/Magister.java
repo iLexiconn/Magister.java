@@ -29,6 +29,7 @@ public class Magister
 
     private Session session;
     private Profile profile;
+    private Study study;
 
     public Magister(School school, String username, String password)
     {
@@ -89,7 +90,6 @@ public class Magister
             nvps.add(new BasicNameValuePair("Wachtwoord", password));
             post.setEntity(new UrlEncodedFormEntity(nvps));
             CloseableHttpResponse responsePost = httpClient.execute(post);
-
             session = gson.fromJson(new InputStreamReader(responsePost.getEntity().getContent()), Session.class);
 
             if (!session.isVerified() || !session.getState().equals("active"))
@@ -100,8 +100,11 @@ public class Magister
 
             HttpGet get = new HttpGet(school.getUrl() + "/api/account");
             CloseableHttpResponse responseGet = httpClient.execute(get);
-
             profile = gson.fromJson(new InputStreamReader(responseGet.getEntity().getContent()), Profile.class);
+
+            get = new HttpGet(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen");
+            responseGet = httpClient.execute(get);
+            study = gson.fromJson(new InputStreamReader(responseGet.getEntity().getContent()), Study.class);
         }
     }
 
@@ -113,5 +116,10 @@ public class Magister
     public Profile getProfile()
     {
         return profile;
+    }
+
+    public Study getStudy()
+    {
+        return study;
     }
 }
