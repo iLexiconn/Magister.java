@@ -1,6 +1,11 @@
 apply plugin: "java"
 apply plugin: "idea"
 
+version = "0.1.0"
+group = "net.ilexiconn"
+archivesBaseName = "magister"
+sourceCompatibility = targetCompatibility = 1.7
+
 repositories {
     mavenCentral()
 }

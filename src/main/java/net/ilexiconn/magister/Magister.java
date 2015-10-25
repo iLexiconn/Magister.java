@@ -17,10 +17,12 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class Magister {
@@ -72,7 +74,7 @@ public class Magister {
         }
     }
 
-    public void login() throws IOException {
+    public void login() throws IOException, ParseException {
         if (school != null && !username.isEmpty() && !password.isEmpty()) {
             HttpGet get = new HttpGet(school.getUrl() + "/api/versie");
             CloseableHttpResponse responseGet = httpClient.execute(get);
@@ -98,9 +100,10 @@ public class Magister {
             get = new HttpGet(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen");
             responseGet = httpClient.execute(get);
             study = gson.fromJson(new InputStreamReader(responseGet.getEntity().getContent()), Study.class);
-            LocalDate now = LocalDate.now();
+            DateFormat format = new SimpleDateFormat("Y-m-d");
+            Date now = new Date();
             for (Study.Items item : study.getItems()) {
-                if (LocalDate.parse(item.getEnd().substring(0, 10)).isAfter(now)) {
+                if (format.parse(item.getEnd().substring(0, 10)).after(now)) {
                     currentStudy = item;
                 }
             }
