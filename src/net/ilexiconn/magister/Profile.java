@@ -1,12 +1,18 @@
 package net.ilexiconn.magister;
 
-public class Profile
-{
+public class Profile {
     private Persoon Persoon;
     private Groep[] Groep;
 
-    public class Persoon
-    {
+    public Persoon getPerson() {
+        return Persoon;
+    }
+
+    public Groep[] getGroups() {
+        return Groep;
+    }
+
+    public class Persoon {
         private int Id;
         private String Roepnaam;
         private String Tussenvoegsel;
@@ -20,106 +26,78 @@ public class Profile
         private String GeboortenaamTussenvoegsel;
         private boolean GebruikGeboortenaam;
 
-        public int getId()
-        {
+        public int getId() {
             return Id;
         }
 
-        public String getNickname()
-        {
+        public String getNickname() {
             return Roepnaam;
         }
 
-        public String getSurnamePrefix()
-        {
+        public String getSurnamePrefix() {
             return Tussenvoegsel;
         }
 
-        public String getSurname()
-        {
+        public String getSurname() {
             return Achternaam;
         }
 
-        public String getOfficialInitials()
-        {
+        public String getOfficialInitials() {
             return OfficieleVoornamen;
         }
 
-        public String getInitials()
-        {
+        public String getInitials() {
             return Voorletters;
         }
 
-        public String getOfficialSurnamePrefix()
-        {
+        public String getOfficialSurnamePrefix() {
             return OfficieleTussenvoegsels;
         }
 
-        public String getOfficialSurname()
-        {
+        public String getOfficialSurname() {
             return OfficieleAchternaam;
         }
 
-        public String getDateOfBirth()
-        {
+        public String getDateOfBirth() {
             return Geboortedatum;
         }
 
-        public String getBirthSurname()
-        {
+        public String getBirthSurname() {
             return GeboorteAchternaam;
         }
 
-        public String getBirthSurnamePrefix()
-        {
+        public String getBirthSurnamePrefix() {
             return GeboortenaamTussenvoegsel;
         }
 
-        public boolean useBirthName()
-        {
+        public boolean useBirthName() {
             return GebruikGeboortenaam;
         }
     }
 
-    public class Groep
-    {
+    public class Groep {
         private String Naam;
         private Privileges[] Privileges;
 
-        public class Privileges
-        {
-            private String Naam;
-            private String[] AccessType;
-
-            public String getName()
-            {
-                return Naam;
-            }
-
-            public String[] getAccessType()
-            {
-                return AccessType;
-            }
-        }
-
-        public String getName()
-        {
+        public String getName() {
             return Naam;
         }
 
-        public Privileges[] getPrivileges()
-        {
+        public Privileges[] getPrivileges() {
             return Privileges;
         }
-    }
 
-    public Persoon getPerson()
-    {
-        return Persoon;
-    }
+        public class Privileges {
+            private String Naam;
+            private String[] AccessType;
 
-    public Groep[] getGroups()
-    {
-        return Groep;
+            public String getName() {
+                return Naam;
+            }
+
+            public String[] getAccessType() {
+                return AccessType;
+            }
+        }
     }
 }

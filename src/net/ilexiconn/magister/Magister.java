@@ -19,8 +19,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Magister
-{
+public class Magister {
     private CloseableHttpClient httpClient = HttpClients.createDefault();
     private Gson gson = new Gson();
 
@@ -33,59 +32,46 @@ public class Magister
     private Study study;
     private Study.Items currentStudy;
 
-    public Magister(School school, String username, String password)
-    {
+    public Magister(School school, String username, String password) {
         if (school != null) setSchool(school);
         if (username != null && password != null) setUser(username, password);
     }
 
-    public Magister(String username, String password)
-    {
+    public Magister(String username, String password) {
         this(null, username, password);
     }
 
-    public Magister(School school)
-    {
+    public Magister(School school) {
         this(school, null, null);
     }
 
-    public Magister()
-    {
+    public Magister() {
         this(null, null, null);
     }
 
-    public void setUser(String u, String p)
-    {
+    public void setUser(String u, String p) {
         username = u;
         password = p;
     }
 
-    public void setSchool(School s)
-    {
+    public void setSchool(School s) {
         school = s;
     }
 
-    public School[] findSchool(String s)
-    {
-        try
-        {
+    public School[] findSchool(String s) {
+        try {
             return gson.fromJson(new InputStreamReader(new URL("https://mijn.magister.net/api/schools?filter=" + s).openStream()), School[].class);
-        }
-        catch (IOException e)
-        {
+        } catch (IOException e) {
             e.printStackTrace();
             return new School[0];
         }
     }
 
-    public void login() throws IOException
-    {
-        if (school != null && !username.isEmpty() && !password.isEmpty())
-        {
+    public void login() throws IOException {
+        if (school != null && !username.isEmpty() && !password.isEmpty()) {
             HttpDelete delete = new HttpDelete(school.getUrl() + "/api/sessies/huidige");
             delete.addHeader(new BasicHeader("Content-Type", "application/json; charset=UTF-8"));
             httpClient.execute(delete);
-
             HttpPost post = new HttpPost(school.getUrl() + "/api/sessies");
             List<NameValuePair> nvps = new ArrayList<NameValuePair>();
             nvps.add(new BasicNameValuePair("Gebruikersnaam", username));
@@ -93,56 +79,52 @@ public class Magister
             post.setEntity(new UrlEncodedFormEntity(nvps));
             CloseableHttpResponse responsePost = httpClient.execute(post);
             session = gson.fromJson(new InputStreamReader(responsePost.getEntity().getContent()), Session.class);
-
-            if (!session.isVerified() || !session.getState().equals("active"))
-            {
+            if (!session.isVerified() || !session.getState().equals("active")) {
                 System.err.println("Invalid session, check credentials.");
                 return;
             }
-
             HttpGet get = new HttpGet(school.getUrl() + "/api/account");
             CloseableHttpResponse responseGet = httpClient.execute(get);
             profile = gson.fromJson(new InputStreamReader(responseGet.getEntity().getContent()), Profile.class);
-
             get = new HttpGet(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen");
             responseGet = httpClient.execute(get);
             study = gson.fromJson(new InputStreamReader(responseGet.getEntity().getContent()), Study.class);
-
             LocalDate now = LocalDate.now();
-            for (Study.Items item : study.getItems())
-            {
-                if (LocalDate.parse(item.getEnd().substring(0, 10)).isAfter(now))
-                {
+            for (Study.Items item : study.getItems()) {
+                if (LocalDate.parse(item.getEnd().substring(0, 10)).isAfter(now)) {
                     currentStudy = item;
                 }
             }
         }
     }
 
-    public Session getSession()
-    {
+    public Session getSession() {
         return session;
     }
 
-    public Profile getProfile()
-    {
+    public Profile getProfile() {
         return profile;
     }
 
-    public Study getStudy()
-    {
+    public Study getStudy() {
         return study;
     }
 
-    public Study.Items getCurrentStudy()
-    {
+    public Study.Items getCurrentStudy() {
         return currentStudy;
     }
 
-    public Mark.Items[] getMarks() throws IOException
-    {
+    public Mark.Items[] getMarks() throws IOException {
+        return getMarks(null);
+    }
+
+    public Mark.Items[] getMarks(String subject) throws IOException {
         HttpGet get = new HttpGet(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen/" + currentStudy.getId() + "/cijfers/cijferoverzichtvooraanmelding?actievePerioden=" + true + "&alleenBerekendeKolommen=" + false + "&alleenPTAKolommen=" + false);
         CloseableHttpResponse responseGet = httpClient.execute(get);
-        return gson.fromJson(new InputStreamReader(responseGet.getEntity().getContent()), Mark.class).getItems();
+        Mark.Items[] items = gson.fromJson(new InputStreamReader(responseGet.getEntity().getContent()), Mark.class).getItems();
+        if (subject == null) return items;
+        List<Mark.Items> itemsList = new ArrayList<Mark.Items>();
+        for (Mark.Items item : items) if (item.getSubject().getAbbreviation().equals(subject)) itemsList.add(item);
+        return itemsList.toArray(new Mark.Items[itemsList.size()]);
     }
 }

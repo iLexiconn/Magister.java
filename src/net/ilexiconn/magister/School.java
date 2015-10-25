@@ -1,23 +1,19 @@
 package net.ilexiconn.magister;
 
-public class School
-{
+public class School {
     private String Id;
     private String Name;
     private String Url;
 
-    public String getId()
-    {
+    public String getId() {
         return Id;
     }
 
-    public String getName()
-    {
+    public String getName() {
         return Name;
     }
 
-    public String getUrl()
-    {
+    public String getUrl() {
         return Url;
     }
 }
