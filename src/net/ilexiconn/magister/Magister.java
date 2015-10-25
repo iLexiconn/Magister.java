@@ -12,6 +12,8 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -27,6 +29,7 @@ public class Magister {
     private String username;
     private String password;
 
+    private Version version;
     private Session session;
     private Profile profile;
     private Study study;
@@ -69,6 +72,10 @@ public class Magister {
 
     public void login() throws IOException {
         if (school != null && !username.isEmpty() && !password.isEmpty()) {
+            HttpGet get = new HttpGet(school.getUrl() + "/api/versie");
+            CloseableHttpResponse responseGet = httpClient.execute(get);
+            version = gson.fromJson(new InputStreamReader(responseGet.getEntity().getContent()), Version.class);
+            System.out.println("Connecting to Magister version " + version.getProductVersion() + "...");
             HttpDelete delete = new HttpDelete(school.getUrl() + "/api/sessies/huidige");
             delete.addHeader(new BasicHeader("Content-Type", "application/json; charset=UTF-8"));
             httpClient.execute(delete);
@@ -83,8 +90,8 @@ public class Magister {
                 System.err.println("Invalid session, check credentials.");
                 return;
             }
-            HttpGet get = new HttpGet(school.getUrl() + "/api/account");
-            CloseableHttpResponse responseGet = httpClient.execute(get);
+            get = new HttpGet(school.getUrl() + "/api/account");
+            responseGet = httpClient.execute(get);
             profile = gson.fromJson(new InputStreamReader(responseGet.getEntity().getContent()), Profile.class);
             get = new HttpGet(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen");
             responseGet = httpClient.execute(get);
@@ -126,5 +133,13 @@ public class Magister {
         List<Mark.Items> itemsList = new ArrayList<Mark.Items>();
         for (Mark.Items item : items) if (item.getSubject().getAbbreviation().equals(subject)) itemsList.add(item);
         return itemsList.toArray(new Mark.Items[itemsList.size()]);
+    }
+
+    public BufferedImage getImage() throws IOException {
+        return getImage(42, 64, false);
+    }
+
+    public BufferedImage getImage(int width, int height, boolean crop) throws IOException {
+        return ImageIO.read(new URL("https://weert.magister.net/api/personen/" + profile.getPerson().getId() + "/foto" + (width != 42 || height != 64 || crop ? "?width=" + width + "&height=" + height + "&crop=" + crop : "")));
     }
 }
