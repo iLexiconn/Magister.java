@@ -30,6 +30,18 @@ public class Test
         }
 
         System.out.println("Hey, " + magister.getProfile().getPerson().getNickname() + "!");
-        System.out.println(magister.getStudy().getItems()[magister.getStudy().getTotalCount() - 1].getStudy().getDescription());
+        System.out.println(magister.getCurrentStudy().getStudy().getDescription());
+
+        try
+        {
+            for (Mark.Items item : magister.getMarks())
+            {
+                System.out.print(item.getMark() + ", ");
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

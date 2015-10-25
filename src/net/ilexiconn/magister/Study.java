@@ -2,7 +2,7 @@ package net.ilexiconn.magister;
 
 public class Study
 {
-    private Study.Items[] Items;
+    private Items[] Items;
     private int TotalCount;
 
     public class Items

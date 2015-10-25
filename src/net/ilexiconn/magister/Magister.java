@@ -15,6 +15,7 @@ import org.apache.http.message.BasicNameValuePair;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,6 +31,7 @@ public class Magister
     private Session session;
     private Profile profile;
     private Study study;
+    private Study.Items currentStudy;
 
     public Magister(School school, String username, String password)
     {
@@ -85,7 +87,7 @@ public class Magister
             httpClient.execute(delete);
 
             HttpPost post = new HttpPost(school.getUrl() + "/api/sessies");
-            List<NameValuePair> nvps = new ArrayList<>();
+            List<NameValuePair> nvps = new ArrayList<NameValuePair>();
             nvps.add(new BasicNameValuePair("Gebruikersnaam", username));
             nvps.add(new BasicNameValuePair("Wachtwoord", password));
             post.setEntity(new UrlEncodedFormEntity(nvps));
@@ -105,6 +107,15 @@ public class Magister
             get = new HttpGet(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen");
             responseGet = httpClient.execute(get);
             study = gson.fromJson(new InputStreamReader(responseGet.getEntity().getContent()), Study.class);
+
+            LocalDate now = LocalDate.now();
+            for (Study.Items item : study.getItems())
+            {
+                if (LocalDate.parse(item.getEnd().substring(0, 10)).isAfter(now))
+                {
+                    currentStudy = item;
+                }
+            }
         }
     }
 
@@ -121,5 +132,17 @@ public class Magister
     public Study getStudy()
     {
         return study;
+    }
+
+    public Study.Items getCurrentStudy()
+    {
+        return currentStudy;
+    }
+
+    public Mark.Items[] getMarks() throws IOException
+    {
+        HttpGet get = new HttpGet(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen/" + currentStudy.getId() + "/cijfers/cijferoverzichtvooraanmelding?actievePerioden=" + true + "&alleenBerekendeKolommen=" + false + "&alleenPTAKolommen=" + false);
+        CloseableHttpResponse responseGet = httpClient.execute(get);
+        return gson.fromJson(new InputStreamReader(responseGet.getEntity().getContent()), Mark.class).getItems();
     }
 }
