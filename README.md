@@ -1,4 +1,5 @@
 [<img src="http://i.imgur.com/TSBwaOQ.png" alt="Magister.java" align="left"/>](https://github.com/iLexiconn/magister6-api)
+<br>
 <p align="center">
     <a href="https://travis-ci.org/iLexiconn/magister6-api">
         <img src="https://api.travis-ci.org/iLexiconn/magister6-api.png" alt="Travis CI Badge"/>
