@@ -20,3 +20,7 @@ Before creating issues
 1. Update all your packages.
 2. Be sure you haven't made a typo and your code is correct.
 3. Don't create issues which occur in a modified version of the API.
+
+License
+==========
+[MIT](LICENSE.md)
