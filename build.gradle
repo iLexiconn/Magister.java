@@ -1,0 +1,11 @@
+apply plugin: "java"
+apply plugin: "idea"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile "org.apache.httpcomponents:httpclient:4.5.1"
+    compile "com.google.code.gson:gson:2.4"
+}

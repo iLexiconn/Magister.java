@@ -1,5 +1,4 @@
-libs/
-.idea/
+.gradle/
 out/
 *.iml
 *.ipr
