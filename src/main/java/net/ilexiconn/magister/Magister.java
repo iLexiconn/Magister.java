@@ -18,7 +18,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -74,7 +73,7 @@ public class Magister {
         }
     }
 
-    public void login() throws IOException, ParseException {
+    public void login() throws Exception {
         if (school != null && !username.isEmpty() && !password.isEmpty()) {
             HttpGet get = new HttpGet(school.getUrl() + "/api/versie");
             CloseableHttpResponse responseGet = httpClient.execute(get);

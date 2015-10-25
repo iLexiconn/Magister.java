@@ -22,7 +22,7 @@ public class Test {
 
         try {
             magister.login();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
