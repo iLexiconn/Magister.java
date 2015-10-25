@@ -147,7 +147,11 @@ public class Magister {
     }
 
     public BufferedImage getImage(int width, int height, boolean crop) throws IOException {
-        return ImageIO.read(new URL("https://weert.magister.net/api/personen/" + profile.getPerson().getId() + "/foto" + (width != 42 || height != 64 || crop ? "?width=" + width + "&height=" + height + "&crop=" + crop : "")));
+        String url = "https://weert.magister.net/api/personen/" + profile.getPerson().getId() + "/foto" + (width != 42 || height != 64 || crop ? "?width=" + width + "&height=" + height + "&crop=" + crop : "");
+        System.out.println(url);
+        HttpGet get = new HttpGet(url);
+        CloseableHttpResponse responseGet = httpClient.execute(get);
+        return ImageIO.read(responseGet.getEntity().getContent());
     }
 
     public Homework.Items[] getHomework() throws IOException {
