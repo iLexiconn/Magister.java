@@ -147,9 +147,7 @@ public class Magister {
     }
 
     public BufferedImage getImage(int width, int height, boolean crop) throws IOException {
-        String url = "https://weert.magister.net/api/personen/" + profile.getPerson().getId() + "/foto" + (width != 42 || height != 64 || crop ? "?width=" + width + "&height=" + height + "&crop=" + crop : "");
-        System.out.println(url);
-        HttpGet get = new HttpGet(url);
+        HttpGet get = new HttpGet("https://weert.magister.net/api/personen/" + profile.getPerson().getId() + "/foto" + (width != 42 || height != 64 || crop ? "?width=" + width + "&height=" + height + "&crop=" + crop : ""));
         CloseableHttpResponse responseGet = httpClient.execute(get);
         return ImageIO.read(responseGet.getEntity().getContent());
     }
@@ -163,5 +161,11 @@ public class Magister {
         HttpGet get = new HttpGet(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/afspraken" + (from == null || to == null ? "" : "?van=" + format.format(from.getTime()) + "&tot=" + format.format(to.getTime())));
         CloseableHttpResponse responseGet = httpClient.execute(get);
         return gson.fromJson(new InputStreamReader(responseGet.getEntity().getContent()), Homework.class).getItems();
+    }
+
+    public Subject[] getSubjects() throws IOException {
+        HttpGet get = new HttpGet(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen/" + currentStudy.getId() + "/vakken");
+        CloseableHttpResponse responseGet = httpClient.execute(get);
+        return gson.fromJson(new InputStreamReader(responseGet.getEntity().getContent()), Subject[].class);
     }
 }

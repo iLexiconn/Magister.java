@@ -30,6 +30,11 @@ public class Test {
         System.out.println(magister.getCurrentStudy().getStudy().getDescription());
 
         try {
+            for (Subject subject : magister.getSubjects()) {
+                System.out.print("[" + subject.getAbbreviation() + "], ");
+            }
+            System.out.println();
+
             for (Mark.Items item : magister.getMarks("bi")) {
                 System.out.print("[" + item.getMark() + "], ");
             }
