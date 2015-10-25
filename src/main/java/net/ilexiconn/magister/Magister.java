@@ -15,6 +15,7 @@ import org.apache.http.message.BasicNameValuePair;
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.text.DateFormat;
@@ -75,9 +76,7 @@ public class Magister {
 
     public void login() throws Exception {
         if (school != null && !username.isEmpty() && !password.isEmpty()) {
-            HttpGet get = new HttpGet(school.getUrl() + "/api/versie");
-            CloseableHttpResponse responseGet = httpClient.execute(get);
-            version = gson.fromJson(new InputStreamReader(responseGet.getEntity().getContent()), Version.class);
+            version = gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/versie")), Version.class);
             System.out.println("Connecting to Magister version " + version.getProductVersion() + "...");
             HttpDelete delete = new HttpDelete(school.getUrl() + "/api/sessies/huidige");
             delete.addHeader(new BasicHeader("Content-Type", "application/json; charset=UTF-8"));
@@ -93,12 +92,8 @@ public class Magister {
                 System.err.println("Invalid session, check credentials.");
                 return;
             }
-            get = new HttpGet(school.getUrl() + "/api/account");
-            responseGet = httpClient.execute(get);
-            profile = gson.fromJson(new InputStreamReader(responseGet.getEntity().getContent()), Profile.class);
-            get = new HttpGet(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen");
-            responseGet = httpClient.execute(get);
-            study = gson.fromJson(new InputStreamReader(responseGet.getEntity().getContent()), Study.class);
+            profile = gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/account")), Profile.class);
+            study = gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen")), Study.class);
             DateFormat format = new SimpleDateFormat("Y-m-d");
             Date now = new Date();
             for (Study.Items item : study.getItems()) {
@@ -134,11 +129,9 @@ public class Magister {
     }
 
     public Mark.Items[] getMarks(String subject) throws IOException {
-        HttpGet get = new HttpGet(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen/" + currentStudy.getId() + "/cijfers/cijferoverzichtvooraanmelding?actievePerioden=" + true + "&alleenBerekendeKolommen=" + false + "&alleenPTAKolommen=" + false);
-        CloseableHttpResponse responseGet = httpClient.execute(get);
-        Mark.Items[] items = gson.fromJson(new InputStreamReader(responseGet.getEntity().getContent()), Mark.class).getItems();
+        Mark.Items[] items = gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen/" + currentStudy.getId() + "/cijfers/cijferoverzichtvooraanmelding?actievePerioden=" + true + "&alleenBerekendeKolommen=" + false + "&alleenPTAKolommen=" + false)), Mark.class).getItems();
         if (subject == null) return items;
-        List<Mark.Items> itemsList = new ArrayList<Mark.Items>();
+        List<Mark.Items> itemsList = new ArrayList<>();
         for (Mark.Items item : items)
             if (item.getSubject().getAbbreviation().equals(subject)) itemsList.add(item);
         return itemsList.toArray(new Mark.Items[itemsList.size()]);
@@ -149,9 +142,7 @@ public class Magister {
     }
 
     public BufferedImage getImage(int width, int height, boolean crop) throws IOException {
-        HttpGet get = new HttpGet("https://weert.magister.net/api/personen/" + profile.getPerson().getId() + "/foto" + (width != 42 || height != 64 || crop ? "?width=" + width + "&height=" + height + "&crop=" + crop : ""));
-        CloseableHttpResponse responseGet = httpClient.execute(get);
-        return ImageIO.read(responseGet.getEntity().getContent());
+        return ImageIO.read(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/foto" + (width != 42 || height != 64 || crop ? "?width=" + width + "&height=" + height + "&crop=" + crop : "")));
     }
 
     public Homework.Items[] getHomework() throws IOException {
@@ -160,14 +151,16 @@ public class Magister {
 
     public Homework.Items[] getHomework(Calendar from, Calendar to) throws IOException {
         SimpleDateFormat format = new SimpleDateFormat("Y-m-d");
-        HttpGet get = new HttpGet(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/afspraken" + (from == null || to == null ? "" : "?van=" + format.format(from.getTime()) + "&tot=" + format.format(to.getTime())));
-        CloseableHttpResponse responseGet = httpClient.execute(get);
-        return gson.fromJson(new InputStreamReader(responseGet.getEntity().getContent()), Homework.class).getItems();
+        return gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/afspraken" + (from == null || to == null ? "" : "?van=" + format.format(from.getTime()) + "&tot=" + format.format(to.getTime())))), Homework.class).getItems();
     }
 
     public Subject[] getSubjects() throws IOException {
-        HttpGet get = new HttpGet(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen/" + currentStudy.getId() + "/vakken");
+        return gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen/" + currentStudy.getId() + "/vakken")), Subject[].class);
+    }
+
+    private InputStream getInputStream(String url) throws IOException {
+        HttpGet get = new HttpGet(url);
         CloseableHttpResponse responseGet = httpClient.execute(get);
-        return gson.fromJson(new InputStreamReader(responseGet.getEntity().getContent()), Subject[].class);
+        return responseGet.getEntity().getContent();
     }
 }
