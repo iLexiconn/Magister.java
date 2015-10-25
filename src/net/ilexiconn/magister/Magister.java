@@ -17,8 +17,10 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class Magister {
@@ -105,6 +107,10 @@ public class Magister {
         }
     }
 
+    public Version getVersion() {
+        return version;
+    }
+
     public Session getSession() {
         return session;
     }
@@ -131,7 +137,8 @@ public class Magister {
         Mark.Items[] items = gson.fromJson(new InputStreamReader(responseGet.getEntity().getContent()), Mark.class).getItems();
         if (subject == null) return items;
         List<Mark.Items> itemsList = new ArrayList<Mark.Items>();
-        for (Mark.Items item : items) if (item.getSubject().getAbbreviation().equals(subject)) itemsList.add(item);
+        for (Mark.Items item : items)
+            if (item.getSubject().getAbbreviation().equals(subject)) itemsList.add(item);
         return itemsList.toArray(new Mark.Items[itemsList.size()]);
     }
 
@@ -141,5 +148,16 @@ public class Magister {
 
     public BufferedImage getImage(int width, int height, boolean crop) throws IOException {
         return ImageIO.read(new URL("https://weert.magister.net/api/personen/" + profile.getPerson().getId() + "/foto" + (width != 42 || height != 64 || crop ? "?width=" + width + "&height=" + height + "&crop=" + crop : "")));
+    }
+
+    public Homework.Items[] getHomework() throws IOException {
+        return getHomework(null, null);
+    }
+
+    public Homework.Items[] getHomework(Calendar from, Calendar to) throws IOException {
+        SimpleDateFormat format = new SimpleDateFormat("Y-m-d");
+        HttpGet get = new HttpGet(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/afspraken" + (from == null || to == null ? "" : "?van=" + format.format(from.getTime()) + "&tot=" + format.format(to.getTime())));
+        CloseableHttpResponse responseGet = httpClient.execute(get);
+        return gson.fromJson(new InputStreamReader(responseGet.getEntity().getContent()), Homework.class).getItems();
     }
 }

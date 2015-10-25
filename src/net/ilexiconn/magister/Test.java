@@ -33,6 +33,12 @@ public class Test {
             for (Mark.Items item : magister.getMarks("bi")) {
                 System.out.print("[" + item.getMark() + "], ");
             }
+            System.out.println();
+
+            for (Homework.Items item : magister.getHomework()) {
+                System.out.print("[" + item.getSubjects()[0].getName() + "], ");
+            }
+            System.out.println();
         } catch (IOException e) {
             e.printStackTrace();
         }
