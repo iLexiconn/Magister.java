@@ -23,50 +23,25 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.ilexiconn.magister;
+package net.ilexiconn.magister.container;
 
-public class Contact {
-    private Items[] Items;
-    private int TotalCount;
+public class Link {
+    private String href;
+    private String rel;
 
-    public Contact.Items[] getItems() {
-        return Items;
+    public String getHref() {
+        return href;
     }
 
-    public int getTotalCount() {
-        return TotalCount;
+    public void setHref(String s) {
+        href = s;
     }
 
-    public class Items {
-        private int Id;
-        private String Achternaam;
-        private String Voornaam;
-        private String Tussenvoegsel;
-        private String Naam;
-        private int Type;
+    public String getRel() {
+        return rel;
+    }
 
-        public int getId() {
-            return Id;
-        }
-
-        public String getSurname() {
-            return Achternaam;
-        }
-
-        public String getName() {
-            return Voornaam;
-        }
-
-        public String getSurnamePrefix() {
-            return Tussenvoegsel;
-        }
-
-        public String getFullName() {
-            return Naam;
-        }
-
-        public int getType() {
-            return Type;
-        }
+    public void setRel(String s) {
+        rel = s;
     }
 }

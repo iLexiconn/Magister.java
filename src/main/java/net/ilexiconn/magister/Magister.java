@@ -26,6 +26,9 @@
 package net.ilexiconn.magister;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import net.ilexiconn.magister.adapter.ContactAdapter;
+import net.ilexiconn.magister.container.Contact;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -52,7 +55,7 @@ import java.util.List;
 
 public class Magister {
     private static CloseableHttpClient httpClient = HttpClients.createDefault();
-    private static Gson gson = new Gson();
+    private static Gson gson = new GsonBuilder().registerTypeAdapter(Contact[].class, new ContactAdapter()).create();
 
     private School school;
     private String username;
@@ -187,14 +190,14 @@ public class Magister {
         return gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen/" + currentStudy.getId() + "/vakken")), Subject[].class);
     }
 
-    public Contact.Items[] getTeacherInfo(String name) throws IOException{
+    public Contact[] getTeacherInfo(String name) throws IOException{
         if (session == null || name == null || name.isEmpty()) return null;
-        return gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/contactpersonen?contactPersoonType=Personeel&q=" + name)), Contact.class).getItems();
+        return gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/contactpersonen?contactPersoonType=Personeel&q=" + name)), Contact[].class);
     }
 
-    public Contact.Items[] getPupilInfo(String name) throws IOException{
+    public Contact[] getPupilInfo(String name) throws IOException{
         if (session == null || name == null || name.isEmpty()) return null;
-        return gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/contactpersonen?contactPersoonType=Leerling&q=" + name)), Contact.class).getItems();
+        return gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/contactpersonen?contactPersoonType=Leerling&q=" + name)), Contact[].class);
     }
 
     private InputStream getInputStream(String url) throws IOException {
