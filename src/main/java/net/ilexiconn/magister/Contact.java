@@ -25,20 +25,48 @@
 
 package net.ilexiconn.magister;
 
-public class School {
-    private String Id;
-    private String Name;
-    private String Url;
+public class Contact {
+    private Items[] Items;
+    private int TotalCount;
 
-    public String getId() {
-        return Id;
+    public Contact.Items[] getItems() {
+        return Items;
     }
 
-    public String getName() {
-        return Name;
+    public int getTotalCount() {
+        return TotalCount;
     }
 
-    public String getUrl() {
-        return Url;
+    public class Items {
+        private int Id;
+        private String Achternaam;
+        private String Voornaam;
+        private String Tussenvoegsel;
+        private String Naam;
+        private int Type;
+
+        public int getId() {
+            return Id;
+        }
+
+        public String getSurname() {
+            return Achternaam;
+        }
+
+        public String getName() {
+            return Voornaam;
+        }
+
+        public String getSurnamePrefix() {
+            return Tussenvoegsel;
+        }
+
+        public String getFullName() {
+            return Naam;
+        }
+
+        public int getType() {
+            return Type;
+        }
     }
 }

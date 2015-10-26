@@ -22,6 +22,7 @@
  *  FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
+
 package net.ilexiconn.magister;
 
 import java.io.IOException;
@@ -69,6 +70,11 @@ public class Test {
                 System.out.print("[" + item.getSubjects()[0].getName() + "], ");
             }
             System.out.println();
+
+            System.out.println("Please enter a name:");
+            for (Contact.Items item : magister.getPupilInfo(scanner.nextLine())) {
+                System.out.print("[" + item.getFullName() + "], ");
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
