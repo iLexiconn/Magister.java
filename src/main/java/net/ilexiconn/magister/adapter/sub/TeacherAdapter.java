@@ -32,32 +32,43 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.cache.ContainerCache;
-import net.ilexiconn.magister.container.sub.Group;
-import net.ilexiconn.magister.container.sub.Link;
+import net.ilexiconn.magister.container.Contact;
+import net.ilexiconn.magister.container.sub.Teacher;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
-public class GroupAdapter extends TypeAdapter<Group> {
+public class TeacherAdapter extends TypeAdapter<Teacher[]> {
     public Magister magister;
 
-    public GroupAdapter(Magister m) {
+    public TeacherAdapter(Magister m) {
         magister = m;
     }
 
-    public void write(JsonWriter jsonWriter, Group value) throws IOException {
-        throw new UnsupportedOperationException("Not implemented");
+    public void write(JsonWriter jsonWriter, Teacher[] value) throws IOException {
+
     }
 
-    public Group read(JsonReader jsonReader) throws IOException {
-        JsonObject groupObject = (JsonObject) magister.gson.getAdapter(JsonElement.class).read(jsonReader);
-        int id = groupObject.get("Id").getAsInt();
-        Group group = ContainerCache.get(id + "", Group.class);
-        if (group == null) {
-            Link[] links = magister.gson.getAdapter(Link[].class).fromJsonTree(groupObject.getAsJsonArray("Links"));
-            String description = groupObject.get("Omschrijving").getAsString();
-            int locationId = groupObject.get("LocatieId").getAsInt();
-            group = new Group(id, links, description, locationId);
+    public Teacher[] read(JsonReader jsonReader) throws IOException {
+        List<Teacher> teacherList = new ArrayList<>();
+        System.out.println("1");
+        for (JsonElement element : magister.gson.getAdapter(JsonElement.class).read(jsonReader).getAsJsonArray()) {
+            System.out.println("2");
+            JsonObject object = element.getAsJsonObject();
+            String code = object.get("Docentcode").getAsString();
+            Teacher t = ContainerCache.get(code, Teacher.class);
+            if (t != null) {
+                teacherList.add(t);
+                continue;
+            }
+            System.out.println("3");
+            Contact[] contacts = magister.getTeacherInfo(code);
+            System.out.println("4");
+            for (Contact c : contacts) {
+                teacherList.add(new Teacher(c.id, c.links, c.surname, c.firstName, c.surnamePrefix, c.fullName, c.type, code));
+            }
         }
-        return group;
+        return teacherList.toArray(new Teacher[teacherList.size()]);
     }
 }

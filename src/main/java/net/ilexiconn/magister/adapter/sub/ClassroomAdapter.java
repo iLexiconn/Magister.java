@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ClassroomAdapter extends TypeAdapter<Classroom[]> {
-    public TypeAdapter<JsonElement> jsonElementTypeAdapter;
     public Magister magister;
 
     public ClassroomAdapter(Magister m) {
@@ -50,11 +49,8 @@ public class ClassroomAdapter extends TypeAdapter<Classroom[]> {
     }
 
     public Classroom[] read(JsonReader jsonReader) throws IOException {
-        if (jsonElementTypeAdapter == null) {
-            jsonElementTypeAdapter = magister.gson.getAdapter(JsonElement.class);
-        }
         List<Classroom> classroomList = new ArrayList<>();
-        for (JsonElement element : jsonElementTypeAdapter.read(jsonReader).getAsJsonArray()) {
+        for (JsonElement element : magister.gson.getAdapter(JsonElement.class).read(jsonReader).getAsJsonArray()) {
             JsonObject object = element.getAsJsonObject();
             String name = object.get("Naam").getAsString();
             classroomList.add(new Classroom(name));

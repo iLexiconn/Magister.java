@@ -33,18 +33,17 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.cache.ContainerCache;
-import net.ilexiconn.magister.container.Contact;
 import net.ilexiconn.magister.container.Homework;
 import net.ilexiconn.magister.container.sub.Classroom;
 import net.ilexiconn.magister.container.sub.Link;
 import net.ilexiconn.magister.container.sub.Subject;
+import net.ilexiconn.magister.container.sub.Teacher;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HomeworkAdapter extends TypeAdapter<Homework[]> {
-    public TypeAdapter<JsonElement> jsonElementTypeAdapter;
     public Magister magister;
 
     public HomeworkAdapter(Magister m) {
@@ -56,11 +55,8 @@ public class HomeworkAdapter extends TypeAdapter<Homework[]> {
     }
 
     public Homework[] read(JsonReader jsonReader) throws IOException {
-        if (jsonElementTypeAdapter == null) {
-            jsonElementTypeAdapter = magister.gson.getAdapter(JsonElement.class);
-        }
         List<Homework> homeworkList = new ArrayList<>();
-        JsonObject homeworkObject = jsonElementTypeAdapter.read(jsonReader).getAsJsonObject();
+        JsonObject homeworkObject = magister.gson.getAdapter(JsonElement.class).read(jsonReader).getAsJsonObject();
         JsonArray items = homeworkObject.get("Items").getAsJsonArray();
         for (JsonElement element : items) {
             JsonObject item = element.getAsJsonObject();
@@ -84,7 +80,9 @@ public class HomeworkAdapter extends TypeAdapter<Homework[]> {
             int infoType = item.get("InfoType").getAsInt();
             boolean finished = item.get("Afgerond").getAsBoolean();
             Subject[] subjects = magister.gson.getAdapter(Subject[].class).fromJsonTree(item.getAsJsonArray("Vakken"));
-            Contact[] teachers = magister.gson.getAdapter(Contact[].class).fromJsonTree(item.getAsJsonArray("Docenten"));
+            System.out.println("pre");
+            Teacher[] teachers = magister.gson.getAdapter(Teacher[].class).fromJsonTree(item.getAsJsonArray("Docenten"));
+            System.out.println("post");
             Classroom[] classrooms = magister.gson.getAdapter(Classroom[].class).fromJsonTree(item.getAsJsonArray("Lokalen"));
             int homeworkId = item.get("OpdrachtId").getAsInt();
             boolean hasAttachment = item.get("HeeftBijlagen").getAsBoolean();

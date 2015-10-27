@@ -38,7 +38,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LinkAdapter extends TypeAdapter<Link[]> {
-    public TypeAdapter<JsonElement> jsonElementTypeAdapter;
     public Magister magister;
 
     public LinkAdapter(Magister m) {
@@ -50,11 +49,8 @@ public class LinkAdapter extends TypeAdapter<Link[]> {
     }
 
     public Link[] read(JsonReader jsonReader) throws IOException {
-        if (jsonElementTypeAdapter == null) {
-            jsonElementTypeAdapter = magister.gson.getAdapter(JsonElement.class);
-        }
         List<Link> linkList = new ArrayList<>();
-        for (JsonElement element : jsonElementTypeAdapter.read(jsonReader).getAsJsonArray()) {
+        for (JsonElement element : magister.gson.getAdapter(JsonElement.class).read(jsonReader).getAsJsonArray()) {
             JsonObject object = element.getAsJsonObject();
             String href = object.has("href") ? object.get("href").getAsString() : object.get("Href").getAsString();
             String rel = object.has("rel") ? object.get("rel").getAsString() : object.get("Rel").getAsString();

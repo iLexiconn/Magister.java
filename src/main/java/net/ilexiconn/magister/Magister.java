@@ -27,17 +27,12 @@ package net.ilexiconn.magister;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.ilexiconn.magister.adapter.*;
-import net.ilexiconn.magister.adapter.sub.ClassroomAdapter;
-import net.ilexiconn.magister.adapter.sub.ContactAdapter;
-import net.ilexiconn.magister.adapter.sub.GroupAdapter;
-import net.ilexiconn.magister.adapter.sub.LinkAdapter;
+import net.ilexiconn.magister.adapter.HomeworkAdapter;
+import net.ilexiconn.magister.adapter.SubjectAdapter;
+import net.ilexiconn.magister.adapter.sub.*;
 import net.ilexiconn.magister.container.Contact;
 import net.ilexiconn.magister.container.Homework;
-import net.ilexiconn.magister.container.sub.Classroom;
-import net.ilexiconn.magister.container.sub.Group;
-import net.ilexiconn.magister.container.sub.Link;
-import net.ilexiconn.magister.container.sub.Subject;
+import net.ilexiconn.magister.container.sub.*;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -87,6 +82,7 @@ public class Magister {
                 .registerTypeAdapter(Classroom[].class, new ClassroomAdapter(this))
                 .registerTypeAdapter(Group.class, new GroupAdapter(this))
                 .registerTypeAdapter(Homework[].class, new HomeworkAdapter(this))
+                .registerTypeAdapter(Teacher[].class, new TeacherAdapter(this))
                 .create();
     }
 
@@ -102,15 +98,6 @@ public class Magister {
         this(null, null, null);
     }
 
-    public void setUser(String u, String p) {
-        username = u;
-        password = p;
-    }
-
-    public void setSchool(School s) {
-        school = s;
-    }
-
     public static School[] findSchool(String s) {
         try {
             return new Gson().fromJson(new InputStreamReader(new URL("https://mijn.magister.net/api/schools?filter=" + s).openStream()), School[].class);
@@ -118,6 +105,15 @@ public class Magister {
             e.printStackTrace();
             return new School[0];
         }
+    }
+
+    public void setUser(String u, String p) {
+        username = u;
+        password = p;
+    }
+
+    public void setSchool(School s) {
+        school = s;
     }
 
     public void login() throws Exception {
@@ -208,9 +204,10 @@ public class Magister {
         return gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen/" + currentStudy.getId() + "/vakken")), Subject[].class);
     }
 
-    public Contact[] getTeacherInfo(String name) throws IOException {
-        if (session == null || name == null || name.isEmpty()) return null;
-        return gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/contactpersonen?contactPersoonType=Personeel&q=" + name)), Contact[].class);
+    public Contact[] getTeacherInfo(String code) throws IOException {
+        System.out.println(code);
+        if (session == null || code == null || code.isEmpty()) return null;
+        return gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/contactpersonen?contactPersoonType=Personeel&q=" + code)), Contact[].class);
     }
 
     public Contact[] getPupilInfo(String name) throws IOException {

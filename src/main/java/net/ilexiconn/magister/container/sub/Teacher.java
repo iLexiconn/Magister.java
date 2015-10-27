@@ -23,28 +23,36 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.ilexiconn.magister.cache;
+package net.ilexiconn.magister.container.sub;
 
-import net.ilexiconn.magister.util.Triplet;
+import net.ilexiconn.magister.cache.Cachable;
+import net.ilexiconn.magister.cache.ContainerCache;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.io.Serializable;
 
-public class ContainerCache {
-    private static List<Triplet<String, Class<?>, Object>> cacheList = new ArrayList<>();
+public class Teacher implements Serializable, Cachable {
+    public final int id;
+    public final Link[] links;
+    public final String surname;
+    public final String firstName;
+    public final String surnamePrefix;
+    public final String fullName;
+    public final int type;
+    public final String code;
 
-    public static <T> T put(Cachable cachable, Class<T> type) {
-        cacheList.add(new Triplet<String, Class<?>, Object>(cachable.getId(), type, cachable));
-        return (T) cachable;
+    public Teacher(int i, Link[] l, String s, String f, String p, String n, int t, String c) {
+        id = i;
+        links = l;
+        surname = s;
+        firstName = f;
+        surnamePrefix = p;
+        fullName = n;
+        type = t;
+        code = c;
+        ContainerCache.put(this, getClass());
     }
 
-    public static <T> T get(String d, Class<T> type) {
-        for (Triplet<String, Class<?>, Object> triplet : cacheList) {
-            if (Objects.equals(triplet.getA(), d) && triplet.getB() == type) {
-                return (T) triplet.getC();
-            }
-        }
-        return null;
+    public String getId() {
+        return code;
     }
 }

@@ -30,11 +30,10 @@ import net.ilexiconn.magister.container.Homework;
 import net.ilexiconn.magister.container.sub.Subject;
 
 import java.io.IOException;
-import java.util.Scanner;
 
 public class Test {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        /*Scanner scanner = new Scanner(System.in);
 
         School school = null;
         while (school == null) {
@@ -46,9 +45,9 @@ public class Test {
         System.out.println("Please enter username:");
         String username = scanner.nextLine();
         System.out.println("Please enter password:");
-        String password = scanner.nextLine();
+        String password = scanner.nextLine();*/
 
-        Magister magister = new Magister(school, username, password);
+        Magister magister = new Magister(Magister.findSchool(args[0])[0], args[1], args[2]);
 
         try {
             magister.login();
@@ -70,15 +69,15 @@ public class Test {
             }
             System.out.println();*/
 
+            for (Contact contact : magister.getTeacherInfo(args[3])) {
+                System.out.print("[" + contact.fullName + "], ");
+            }
+            System.out.println();
+
             for (Homework item : magister.getHomework()) {
                 System.out.print("[" + item.subjects[0].abbreviation + "], ");
             }
             System.out.println();
-
-            System.out.println("Please enter a name:");
-            for (Contact contact : magister.getPupilInfo(scanner.nextLine())) {
-                System.out.print("[" + contact.fullName + "], ");
-            }
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -41,7 +41,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class SubjectAdapter extends TypeAdapter<Subject[]> {
-    public TypeAdapter<JsonElement> jsonElementTypeAdapter;
     public Magister magister;
 
     public SubjectAdapter(Magister m) {
@@ -53,11 +52,8 @@ public class SubjectAdapter extends TypeAdapter<Subject[]> {
     }
 
     public Subject[] read(JsonReader jsonReader) throws IOException {
-        if (jsonElementTypeAdapter == null) {
-            jsonElementTypeAdapter = magister.gson.getAdapter(JsonElement.class);
-        }
         List<Subject> subjectList = new ArrayList<>();
-        for (JsonElement element : jsonElementTypeAdapter.read(jsonReader).getAsJsonArray()) {
+        for (JsonElement element : magister.gson.getAdapter(JsonElement.class).read(jsonReader).getAsJsonArray()) {
             JsonObject object = element.getAsJsonObject();
             if (!object.has("afkorting")) {
                 String description = object.get("Naam").getAsString();

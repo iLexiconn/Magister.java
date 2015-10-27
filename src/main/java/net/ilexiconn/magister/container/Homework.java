@@ -27,7 +27,10 @@ package net.ilexiconn.magister.container;
 
 import net.ilexiconn.magister.cache.Cachable;
 import net.ilexiconn.magister.cache.ContainerCache;
-import net.ilexiconn.magister.container.sub.*;
+import net.ilexiconn.magister.container.sub.Classroom;
+import net.ilexiconn.magister.container.sub.Link;
+import net.ilexiconn.magister.container.sub.Subject;
+import net.ilexiconn.magister.container.sub.Teacher;
 
 import java.io.Serializable;
 
@@ -49,14 +52,14 @@ public class Homework implements Serializable, Cachable {
     //Aantekening?
     public final boolean finished;
     public final Subject[] subjects;
-    public final Contact[] teachers;
+    public final Teacher[] teachers;
     public final Classroom[] classrooms;
     //Groepen?
     public final int homeworkId;
     public final boolean hasAttachment;
     //Bijlagen?
 
-    public Homework(int i, Link[] l, String s, String e, int f, int t, boolean w, String d, String o, int a, int y, int p, int n, boolean h, Subject[] u, Contact[] c, Classroom[] r, int m, boolean b) {
+    public Homework(int i, Link[] l, String s, String e, int f, int t, boolean w, String d, String o, int a, int y, int p, int n, boolean h, Subject[] u, Teacher[] c, Classroom[] r, int m, boolean b) {
         id = i;
         links = l;
         startDate = s;

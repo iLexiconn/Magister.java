@@ -39,8 +39,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ContactAdapter extends TypeAdapter<Contact[]> {
-    public TypeAdapter<JsonElement> jsonElementTypeAdapter;
-    public TypeAdapter<Link[]> linkTypeAdapter;
     public Magister magister;
 
     public ContactAdapter(Magister m) {
@@ -52,53 +50,30 @@ public class ContactAdapter extends TypeAdapter<Contact[]> {
     }
 
     public Contact[] read(JsonReader jsonReader) throws IOException {
-        if (jsonElementTypeAdapter == null) {
-            jsonElementTypeAdapter = magister.gson.getAdapter(JsonElement.class);
-        }
-        if (linkTypeAdapter == null) {
-            linkTypeAdapter = magister.gson.getAdapter(Link[].class);
-        }
         List<Contact> contactList = new ArrayList<>();
         JsonArray items;
+        System.out.println("4");
         if (jsonReader.peek() == JsonToken.BEGIN_OBJECT) {
-            JsonObject contactObject = jsonElementTypeAdapter.read(jsonReader).getAsJsonObject();
+            JsonObject contactObject = magister.gson.getAdapter(JsonElement.class).read(jsonReader).getAsJsonObject();
             items = contactObject.getAsJsonArray("Items");
         } else {
-            items = jsonElementTypeAdapter.read(jsonReader).getAsJsonArray();
+            items = magister.gson.getAdapter(JsonElement.class).read(jsonReader).getAsJsonArray();
         }
         for (JsonElement item : items) {
             JsonObject contact = item.getAsJsonObject();
-            if (!contact.has("Links")) {
-                int id = contact.get("Id").getAsInt();
-                Contact c = ContainerCache.get(id + "", Contact.class);
-                if (c != null) {
-                    contactList.add(c);
-                } else {
-                    String code = contact.get("Docentcode").getAsString();
-                    Contact[] contacts = magister.getTeacherInfo(code);
-                    for (Contact s : contacts) {
-                        System.out.println("Found teacher with id " + s.getId());
-                        if (s.id == id) {
-                            System.out.println("Done");
-                            contactList.add(s);
-                        }
-                    }
-                }
-            } else {
-                int id = contact.get("Id").getAsInt();
-                Contact c = ContainerCache.get(id + "", Contact.class);
-                if (c != null) {
-                    contactList.add(c);
-                    continue;
-                }
-                Link[] links = contact.get("Links") instanceof JsonNull ? null : linkTypeAdapter.fromJsonTree(contact.getAsJsonArray("Links"));
-                String surname = contact.get("Achternaam").getAsString();
-                String firstName = contact.get("Voornaam").getAsString();
-                String surnamePrefix = contact.get("Tussenvoegsel") instanceof JsonNull ? null : contact.get("Tussenvoegsel").getAsString();
-                String fullName = contact.get("Naam").getAsString();
-                int type = contact.get("Type").getAsInt();
-                contactList.add(new Contact(id, links, surname, firstName, surnamePrefix, fullName, type));
+            int id = contact.get("Id").getAsInt();
+            Contact c = ContainerCache.get(id + "", Contact.class);
+            if (c != null) {
+                contactList.add(c);
+                continue;
             }
+            Link[] links = contact.get("Links") instanceof JsonNull ? null : magister.gson.getAdapter(Link[].class).fromJsonTree(contact.getAsJsonArray("Links"));
+            String surname = contact.get("Achternaam").getAsString();
+            String firstName = contact.get("Voornaam").getAsString();
+            String surnamePrefix = contact.get("Tussenvoegsel") instanceof JsonNull ? null : contact.get("Tussenvoegsel").getAsString();
+            String fullName = contact.get("Naam").getAsString();
+            int type = contact.get("Type").getAsInt();
+            contactList.add(new Contact(id, links, surname, firstName, surnamePrefix, fullName, type));
         }
         return contactList.toArray(new Contact[contactList.size()]);
     }
