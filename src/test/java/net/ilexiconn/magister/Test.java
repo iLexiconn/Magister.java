@@ -75,7 +75,7 @@ public class Test {
             System.out.println();
 
             for (Homework item : magister.getHomework()) {
-                System.out.print("[" + item.subjects[0].abbreviation + "], ");
+                System.out.print("[" + item.subjects[0].abbreviation + ", " + item.getTeachers(magister)[0].surname + "], ");
             }
             System.out.println();
         } catch (IOException e) {

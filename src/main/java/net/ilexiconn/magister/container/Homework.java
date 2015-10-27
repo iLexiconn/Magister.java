@@ -25,12 +25,13 @@
 
 package net.ilexiconn.magister.container;
 
+import com.google.gson.JsonArray;
+import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.cache.Cachable;
 import net.ilexiconn.magister.cache.ContainerCache;
 import net.ilexiconn.magister.container.sub.Classroom;
 import net.ilexiconn.magister.container.sub.Link;
 import net.ilexiconn.magister.container.sub.Subject;
-import net.ilexiconn.magister.container.sub.Teacher;
 
 import java.io.Serializable;
 
@@ -52,14 +53,14 @@ public class Homework implements Serializable, Cachable {
     //Aantekening?
     public final boolean finished;
     public final Subject[] subjects;
-    public final Teacher[] teachers;
+    private final JsonArray teachers;
     public final Classroom[] classrooms;
     //Groepen?
     public final int homeworkId;
     public final boolean hasAttachment;
     //Bijlagen?
 
-    public Homework(int i, Link[] l, String s, String e, int f, int t, boolean w, String d, String o, int a, int y, int p, int n, boolean h, Subject[] u, Teacher[] c, Classroom[] r, int m, boolean b) {
+    public Homework(int i, Link[] l, String s, String e, int f, int t, boolean w, String d, String o, int a, int y, int p, int n, boolean h, Subject[] u, JsonArray c, Classroom[] r, int m, boolean b) {
         id = i;
         links = l;
         startDate = s;
@@ -80,6 +81,10 @@ public class Homework implements Serializable, Cachable {
         homeworkId = m;
         hasAttachment = b;
         ContainerCache.put(this, getClass());
+    }
+
+    public Contact[] getTeachers(Magister magister) {
+        return magister.gson.getAdapter(Contact[].class).fromJsonTree(teachers);
     }
 
     public String getId() {

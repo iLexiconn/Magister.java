@@ -34,6 +34,7 @@ import net.ilexiconn.magister.container.Contact;
 import net.ilexiconn.magister.container.Homework;
 import net.ilexiconn.magister.container.sub.*;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
@@ -58,7 +59,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Magister {
-    public CloseableHttpClient httpClient = HttpClients.createDefault();
+    public CloseableHttpClient httpClient;
     public Gson gson;
 
     private School school;
@@ -75,6 +76,9 @@ public class Magister {
         if (school != null) setSchool(school);
         if (username != null && password != null) setUser(username, password);
 
+        RequestConfig config = RequestConfig.custom().setSocketTimeout(10000).setConnectTimeout(10000).build();
+        httpClient = HttpClients.custom().setDefaultRequestConfig(config).build();
+
         gson = new GsonBuilder()
                 .registerTypeAdapter(Link[].class, new LinkAdapter(this))
                 .registerTypeAdapter(Contact[].class, new ContactAdapter(this))
@@ -82,7 +86,6 @@ public class Magister {
                 .registerTypeAdapter(Classroom[].class, new ClassroomAdapter(this))
                 .registerTypeAdapter(Group.class, new GroupAdapter(this))
                 .registerTypeAdapter(Homework[].class, new HomeworkAdapter(this))
-                .registerTypeAdapter(Teacher[].class, new TeacherAdapter(this))
                 .create();
     }
 
@@ -204,10 +207,9 @@ public class Magister {
         return gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen/" + currentStudy.getId() + "/vakken")), Subject[].class);
     }
 
-    public Contact[] getTeacherInfo(String code) throws IOException {
-        System.out.println(code);
-        if (session == null || code == null || code.isEmpty()) return null;
-        return gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/contactpersonen?contactPersoonType=Personeel&q=" + code)), Contact[].class);
+    public Contact[] getTeacherInfo(String name) throws IOException {
+        if (session == null || name == null || name.isEmpty()) return null;
+        return gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/contactpersonen?contactPersoonType=Personeel&q=" + name)), Contact[].class);
     }
 
     public Contact[] getPupilInfo(String name) throws IOException {

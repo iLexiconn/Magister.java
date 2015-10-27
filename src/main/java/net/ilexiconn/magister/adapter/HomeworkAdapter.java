@@ -37,7 +37,6 @@ import net.ilexiconn.magister.container.Homework;
 import net.ilexiconn.magister.container.sub.Classroom;
 import net.ilexiconn.magister.container.sub.Link;
 import net.ilexiconn.magister.container.sub.Subject;
-import net.ilexiconn.magister.container.sub.Teacher;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -80,9 +79,7 @@ public class HomeworkAdapter extends TypeAdapter<Homework[]> {
             int infoType = item.get("InfoType").getAsInt();
             boolean finished = item.get("Afgerond").getAsBoolean();
             Subject[] subjects = magister.gson.getAdapter(Subject[].class).fromJsonTree(item.getAsJsonArray("Vakken"));
-            System.out.println("pre");
-            Teacher[] teachers = magister.gson.getAdapter(Teacher[].class).fromJsonTree(item.getAsJsonArray("Docenten"));
-            System.out.println("post");
+            JsonArray teachers = item.getAsJsonArray("Docenten");
             Classroom[] classrooms = magister.gson.getAdapter(Classroom[].class).fromJsonTree(item.getAsJsonArray("Lokalen"));
             int homeworkId = item.get("OpdrachtId").getAsInt();
             boolean hasAttachment = item.get("HeeftBijlagen").getAsBoolean();
