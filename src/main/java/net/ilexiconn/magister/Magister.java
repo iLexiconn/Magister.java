@@ -27,12 +27,15 @@ package net.ilexiconn.magister;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.ilexiconn.magister.adapter.ClassroomAdapter;
-import net.ilexiconn.magister.adapter.ContactAdapter;
-import net.ilexiconn.magister.adapter.LinkAdapter;
-import net.ilexiconn.magister.adapter.SubjectAdapter;
+import net.ilexiconn.magister.adapter.*;
+import net.ilexiconn.magister.adapter.sub.ClassroomAdapter;
+import net.ilexiconn.magister.adapter.sub.ContactAdapter;
+import net.ilexiconn.magister.adapter.sub.GroupAdapter;
+import net.ilexiconn.magister.adapter.sub.LinkAdapter;
 import net.ilexiconn.magister.container.Contact;
+import net.ilexiconn.magister.container.Homework;
 import net.ilexiconn.magister.container.sub.Classroom;
+import net.ilexiconn.magister.container.sub.Group;
 import net.ilexiconn.magister.container.sub.Link;
 import net.ilexiconn.magister.container.sub.Subject;
 import org.apache.http.NameValuePair;
@@ -82,6 +85,8 @@ public class Magister {
                 .registerTypeAdapter(Contact[].class, new ContactAdapter(this))
                 .registerTypeAdapter(Subject[].class, new SubjectAdapter(this))
                 .registerTypeAdapter(Classroom[].class, new ClassroomAdapter(this))
+                .registerTypeAdapter(Group.class, new GroupAdapter(this))
+                .registerTypeAdapter(Homework[].class, new HomeworkAdapter(this))
                 .create();
     }
 
@@ -188,14 +193,14 @@ public class Magister {
         return ImageIO.read(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/foto" + (width != 42 || height != 64 || crop ? "?width=" + width + "&height=" + height + "&crop=" + crop : "")));
     }
 
-    public Homework.Items[] getHomework() throws IOException {
+    public Homework[] getHomework() throws IOException {
         return getHomework(null, null);
     }
 
-    public Homework.Items[] getHomework(Calendar from, Calendar to) throws IOException {
+    public Homework[] getHomework(Calendar from, Calendar to) throws IOException {
         if (session == null) return null;
         SimpleDateFormat format = new SimpleDateFormat("Y-m-d");
-        return gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/afspraken" + (from == null || to == null ? "" : "?van=" + format.format(from.getTime()) + "&tot=" + format.format(to.getTime())))), Homework.class).getItems();
+        return gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/afspraken" + (from == null || to == null ? "" : "?van=" + format.format(from.getTime()) + "&tot=" + format.format(to.getTime())))), Homework[].class);
     }
 
     public Subject[] getSubjects() throws IOException {

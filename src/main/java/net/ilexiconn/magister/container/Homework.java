@@ -51,12 +51,12 @@ public class Homework implements Serializable, Cachable {
     public final Subject[] subjects;
     public final Contact[] teachers;
     public final Classroom[] classrooms;
-    public final Group[] groups;
+    //Groepen?
     public final int homeworkId;
     public final boolean hasAttachment;
     //Bijlagen?
 
-    public Homework(int i, Link[] l, String s, String e, int f, int t, boolean w, String d, String o, int a, int y, int p, int n, boolean h, Subject[] u, Contact[] c, Classroom[] r, Group[] g, int m, boolean b) {
+    public Homework(int i, Link[] l, String s, String e, int f, int t, boolean w, String d, String o, int a, int y, int p, int n, boolean h, Subject[] u, Contact[] c, Classroom[] r, int m, boolean b) {
         id = i;
         links = l;
         startDate = s;
@@ -74,7 +74,6 @@ public class Homework implements Serializable, Cachable {
         subjects = u;
         teachers = c;
         classrooms = r;
-        groups = g;
         homeworkId = m;
         hasAttachment = b;
         ContainerCache.put(this, getClass());

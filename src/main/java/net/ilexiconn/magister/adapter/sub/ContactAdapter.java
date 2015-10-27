@@ -23,10 +23,11 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.ilexiconn.magister.adapter;
+package net.ilexiconn.magister.adapter.sub;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.cache.ContainerCache;
@@ -58,8 +59,13 @@ public class ContactAdapter extends TypeAdapter<Contact[]> {
             linkTypeAdapter = magister.gson.getAdapter(Link[].class);
         }
         List<Contact> contactList = new ArrayList<>();
-        JsonObject contactObject = (JsonObject) jsonElementTypeAdapter.read(jsonReader);
-        JsonArray items = contactObject.getAsJsonArray("Items");
+        JsonArray items;
+        if (jsonReader.peek() == JsonToken.BEGIN_OBJECT) {
+            JsonObject contactObject = jsonElementTypeAdapter.read(jsonReader).getAsJsonObject();
+            items = contactObject.getAsJsonArray("Items");
+        } else {
+            items = jsonElementTypeAdapter.read(jsonReader).getAsJsonArray();
+        }
         for (JsonElement item : items) {
             JsonObject contact = item.getAsJsonObject();
             if (!contact.has("Links")) {
@@ -71,8 +77,10 @@ public class ContactAdapter extends TypeAdapter<Contact[]> {
                     String code = contact.get("Docentcode").getAsString();
                     Contact[] contacts = magister.getTeacherInfo(code);
                     for (Contact s : contacts) {
+                        System.out.println("Found teacher with id " + s.getId());
                         if (s.id == id) {
-                            contactList.add(ContainerCache.put(s, s.getClass()));
+                            System.out.println("Done");
+                            contactList.add(s);
                         }
                     }
                 }

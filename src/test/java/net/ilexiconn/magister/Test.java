@@ -26,6 +26,7 @@
 package net.ilexiconn.magister;
 
 import net.ilexiconn.magister.container.Contact;
+import net.ilexiconn.magister.container.Homework;
 import net.ilexiconn.magister.container.sub.Subject;
 
 import java.io.IOException;
@@ -67,12 +68,12 @@ public class Test {
             /*for (Mark.Items item : magister.getMarks("bi")) {
                 System.out.print("[" + item.getMark() + "], ");
             }
-            System.out.println();
-
-            for (Homework.Items item : magister.getHomework()) {
-                System.out.print("[" + item.getSubjects()[0].getName() + "], ");
-            }
             System.out.println();*/
+
+            for (Homework item : magister.getHomework()) {
+                System.out.print("[" + item.subjects[0].abbreviation + "], ");
+            }
+            System.out.println();
 
             System.out.println("Please enter a name:");
             for (Contact contact : magister.getPupilInfo(scanner.nextLine())) {

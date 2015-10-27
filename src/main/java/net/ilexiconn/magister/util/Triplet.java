@@ -26,9 +26,9 @@
 package net.ilexiconn.magister.util;
 
 public class Triplet<A, B, C> {
-    A a;
-    B b;
-    C c;
+    private A a;
+    private B b;
+    private C c;
 
     public Triplet(A a, B b, C c) {
         this.a = a;

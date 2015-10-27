@@ -45,6 +45,6 @@ public class Group implements Serializable, Cachable {
     }
 
     public String getId() {
-        return description;
+        return id + "";
     }
 }

@@ -23,7 +23,7 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.ilexiconn.magister.adapter;
+package net.ilexiconn.magister.adapter.sub;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -31,35 +31,37 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.ilexiconn.magister.Magister;
+import net.ilexiconn.magister.cache.ContainerCache;
+import net.ilexiconn.magister.container.sub.Group;
 import net.ilexiconn.magister.container.sub.Link;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
-public class LinkAdapter extends TypeAdapter<Link[]> {
+public class GroupAdapter extends TypeAdapter<Group> {
     public TypeAdapter<JsonElement> jsonElementTypeAdapter;
     public Magister magister;
 
-    public LinkAdapter(Magister m) {
+    public GroupAdapter(Magister m) {
         magister = m;
     }
 
-    public void write(JsonWriter jsonWriter, Link[] value) throws IOException {
+    public void write(JsonWriter jsonWriter, Group value) throws IOException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    public Link[] read(JsonReader jsonReader) throws IOException {
+    public Group read(JsonReader jsonReader) throws IOException {
         if (jsonElementTypeAdapter == null) {
             jsonElementTypeAdapter = magister.gson.getAdapter(JsonElement.class);
         }
-        List<Link> linkList = new ArrayList<>();
-        for (JsonElement element : jsonElementTypeAdapter.read(jsonReader).getAsJsonArray()) {
-            JsonObject object = element.getAsJsonObject();
-            String href = object.get("href").getAsString();
-            String rel = object.get("rel").getAsString();
-            linkList.add(new Link(href, rel));
+        JsonObject groupObject = (JsonObject) jsonElementTypeAdapter.read(jsonReader);
+        int id = groupObject.get("Id").getAsInt();
+        Group group = ContainerCache.get(id + "", Group.class);
+        if (group == null) {
+            Link[] links = magister.gson.getAdapter(Link[].class).fromJsonTree(groupObject.getAsJsonArray("Links"));
+            String description = groupObject.get("Omschrijving").getAsString();
+            int locationId = groupObject.get("LocatieId").getAsInt();
+            group = new Group(id, links, description, locationId);
         }
-        return linkList.toArray(new Link[linkList.size()]);
+        return group;
     }
 }
