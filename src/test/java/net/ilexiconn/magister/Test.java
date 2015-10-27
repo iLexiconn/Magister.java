@@ -27,6 +27,7 @@ package net.ilexiconn.magister;
 
 import net.ilexiconn.magister.container.Contact;
 import net.ilexiconn.magister.container.Homework;
+import net.ilexiconn.magister.container.Mark;
 import net.ilexiconn.magister.container.sub.Subject;
 
 import java.io.IOException;
@@ -60,22 +61,22 @@ public class Test {
 
         try {
             for (Subject subject : magister.getSubjects()) {
-                System.out.print("[" + subject.abbreviation + "], ");
+                System.out.print("[" + subject.abbreviation + ", " + subject.teacher + "], ");
             }
             System.out.println();
 
-            /*for (Mark.Items item : magister.getMarks("bi")) {
-                System.out.print("[" + item.getMark() + "], ");
+            for (Mark mark : magister.getMarks("bi")) {
+                System.out.print("[" + mark.mark + ", " + mark.getSubject(magister).abbreviation + "], ");
             }
-            System.out.println();*/
+            System.out.println();
 
             for (Contact contact : magister.getTeacherInfo(args[3])) {
                 System.out.print("[" + contact.fullName + "], ");
             }
             System.out.println();
 
-            for (Homework item : magister.getHomework()) {
-                System.out.print("[" + item.subjects[0].abbreviation + ", " + item.getTeachers(magister)[0].surname + "], ");
+            for (Homework homework : magister.getHomework()) {
+                System.out.print("[" + homework.subjects[0].abbreviation + ", " + homework.getTeachers(magister)[0].fullName + "], ");
             }
             System.out.println();
         } catch (IOException e) {

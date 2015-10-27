@@ -28,13 +28,14 @@ package net.ilexiconn.magister;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.ilexiconn.magister.adapter.HomeworkAdapter;
+import net.ilexiconn.magister.adapter.MarkAdapter;
 import net.ilexiconn.magister.adapter.SubjectAdapter;
 import net.ilexiconn.magister.adapter.sub.*;
 import net.ilexiconn.magister.container.Contact;
 import net.ilexiconn.magister.container.Homework;
+import net.ilexiconn.magister.container.Mark;
 import net.ilexiconn.magister.container.sub.*;
 import org.apache.http.NameValuePair;
-import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
@@ -59,7 +60,7 @@ import java.util.Date;
 import java.util.List;
 
 public class Magister {
-    public CloseableHttpClient httpClient;
+    public CloseableHttpClient httpClient = HttpClients.createDefault();
     public Gson gson;
 
     private School school;
@@ -76,9 +77,6 @@ public class Magister {
         if (school != null) setSchool(school);
         if (username != null && password != null) setUser(username, password);
 
-        RequestConfig config = RequestConfig.custom().setSocketTimeout(10000).setConnectTimeout(10000).build();
-        httpClient = HttpClients.custom().setDefaultRequestConfig(config).build();
-
         gson = new GsonBuilder()
                 .registerTypeAdapter(Link[].class, new LinkAdapter(this))
                 .registerTypeAdapter(Contact[].class, new ContactAdapter(this))
@@ -86,6 +84,9 @@ public class Magister {
                 .registerTypeAdapter(Classroom[].class, new ClassroomAdapter(this))
                 .registerTypeAdapter(Group.class, new GroupAdapter(this))
                 .registerTypeAdapter(Homework[].class, new HomeworkAdapter(this))
+                .registerTypeAdapter(MarkPeriod.class, new MarkPeriodAdapter(this))
+                .registerTypeAdapter(MarkColumn.class, new MarkColumnAdapter(this))
+                .registerTypeAdapter(Mark[].class, new MarkAdapter(this))
                 .create();
     }
 
@@ -169,18 +170,19 @@ public class Magister {
         return currentStudy;
     }
 
-    public Mark.Items[] getMarks() throws IOException {
+    public Mark[] getMarks() throws IOException {
         return getMarks(null);
     }
 
-    public Mark.Items[] getMarks(String subject) throws IOException {
+    public Mark[] getMarks(String subject) throws IOException {
         if (session == null) return null;
-        Mark.Items[] items = gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen/" + currentStudy.getId() + "/cijfers/cijferoverzichtvooraanmelding?actievePerioden=" + true + "&alleenBerekendeKolommen=" + false + "&alleenPTAKolommen=" + false)), Mark.class).getItems();
-        if (subject == null) return items;
-        List<Mark.Items> itemsList = new ArrayList<>();
-        for (Mark.Items item : items)
-            if (item.getSubject().getAbbreviation().equals(subject)) itemsList.add(item);
-        return itemsList.toArray(new Mark.Items[itemsList.size()]);
+        Mark[] marks = gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen/" + currentStudy.getId() + "/cijfers/cijferoverzichtvooraanmelding?actievePerioden=" + true + "&alleenBerekendeKolommen=" + false + "&alleenPTAKolommen=" + false)), Mark[].class);
+        if (subject == null) return marks;
+        List<Mark> itemsList = new ArrayList<>();
+        for (Mark item : marks) {
+            if (item.getSubject(this).abbreviation.equals(subject)) itemsList.add(item);
+        }
+        return itemsList.toArray(new Mark[itemsList.size()]);
     }
 
     public BufferedImage getImage() throws IOException {

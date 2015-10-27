@@ -32,32 +32,30 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.cache.ContainerCache;
-import net.ilexiconn.magister.container.sub.Group;
-import net.ilexiconn.magister.container.sub.Link;
+import net.ilexiconn.magister.container.sub.MarkPeriod;
 
 import java.io.IOException;
 
-public class GroupAdapter extends TypeAdapter<Group> {
+public class MarkPeriodAdapter extends TypeAdapter<MarkPeriod> {
     public Magister magister;
 
-    public GroupAdapter(Magister m) {
+    public MarkPeriodAdapter(Magister m) {
         magister = m;
     }
 
-    public void write(JsonWriter jsonWriter, Group value) throws IOException {
+    public void write(JsonWriter jsonWriter, MarkPeriod value) throws IOException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    public Group read(JsonReader jsonReader) throws IOException {
+    public MarkPeriod read(JsonReader jsonReader) throws IOException {
         JsonObject object = (JsonObject) magister.gson.getAdapter(JsonElement.class).read(jsonReader);
         int id = object.get("Id").getAsInt();
-        Group group = ContainerCache.get(id + "", Group.class);
-        if (group == null) {
-            Link[] links = magister.gson.getAdapter(Link[].class).fromJsonTree(object.getAsJsonArray("Links"));
-            String description = object.get("Omschrijving").getAsString();
-            int locationId = object.get("LocatieId").getAsInt();
-            group = new Group(id, links, description, locationId);
+        MarkPeriod markPeriod = ContainerCache.get(id + "", MarkPeriod.class);
+        if (markPeriod == null) {
+            String name = object.get("Naam").getAsString();
+            int followId = object.get("VolgNummer").getAsInt();
+            markPeriod = new MarkPeriod(id, name, followId);
         }
-        return group;
+        return markPeriod;
     }
 }

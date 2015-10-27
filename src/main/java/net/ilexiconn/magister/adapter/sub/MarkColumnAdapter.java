@@ -26,38 +26,45 @@
 package net.ilexiconn.magister.adapter.sub;
 
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonObject;
 import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.cache.ContainerCache;
-import net.ilexiconn.magister.container.sub.Group;
-import net.ilexiconn.magister.container.sub.Link;
+import net.ilexiconn.magister.container.sub.MarkColumn;
 
 import java.io.IOException;
 
-public class GroupAdapter extends TypeAdapter<Group> {
+public class MarkColumnAdapter extends TypeAdapter<MarkColumn> {
     public Magister magister;
 
-    public GroupAdapter(Magister m) {
+    public MarkColumnAdapter(Magister m) {
         magister = m;
     }
 
-    public void write(JsonWriter jsonWriter, Group value) throws IOException {
+    public void write(JsonWriter jsonWriter, MarkColumn value) throws IOException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    public Group read(JsonReader jsonReader) throws IOException {
+    public MarkColumn read(JsonReader jsonReader) throws IOException {
         JsonObject object = (JsonObject) magister.gson.getAdapter(JsonElement.class).read(jsonReader);
         int id = object.get("Id").getAsInt();
-        Group group = ContainerCache.get(id + "", Group.class);
-        if (group == null) {
-            Link[] links = magister.gson.getAdapter(Link[].class).fromJsonTree(object.getAsJsonArray("Links"));
-            String description = object.get("Omschrijving").getAsString();
-            int locationId = object.get("LocatieId").getAsInt();
-            group = new Group(id, links, description, locationId);
+        MarkColumn markColumn = ContainerCache.get(id + "", MarkColumn.class);
+        if (markColumn == null) {
+            String name = object.get("KolomNaam").getAsString();
+            String columnNumber = object.get("KolomNummer").getAsString();
+            String followId = object.get("KolomVolgNummer").getAsString();
+            String header = object.get("KolomKop").getAsString();
+            String description = object.get("KolomOmschrijving") instanceof JsonNull ? null : object.get("KolomOmschrijving").getAsString();
+            int type = object.get("KolomSoort").getAsInt();
+            boolean resitColumn = object.get("IsHerkansingKolom").getAsBoolean();
+            boolean teacherColumn = object.get("IsDocentKolom").getAsBoolean();
+            boolean columnUnderneath = object.get("HeeftOnderliggendeKolommen").getAsBoolean();
+            boolean pta = object.get("IsPTAKolom").getAsBoolean();
+            markColumn = new MarkColumn(id, name, columnNumber, followId, header, description, type, resitColumn, teacherColumn, columnUnderneath, pta);
         }
-        return group;
+        return markColumn;
     }
 }

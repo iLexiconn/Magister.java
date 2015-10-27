@@ -25,11 +25,9 @@
 
 package net.ilexiconn.magister.adapter;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
-import com.google.gson.JsonObject;
-import com.google.gson.TypeAdapter;
+import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.cache.ContainerCache;
@@ -53,39 +51,56 @@ public class SubjectAdapter extends TypeAdapter<Subject[]> {
 
     public Subject[] read(JsonReader jsonReader) throws IOException {
         List<Subject> subjectList = new ArrayList<>();
-        for (JsonElement element : magister.gson.getAdapter(JsonElement.class).read(jsonReader).getAsJsonArray()) {
-            JsonObject object = element.getAsJsonObject();
-            if (!object.has("afkorting")) {
-                String description = object.get("Naam").getAsString();
-                Subject s = ContainerCache.get(description, Subject.class);
-                if (s != null) {
-                    subjectList.add(s);
-                } else {
-                    Subject[] subjects = magister.getSubjects();
-                    for (Subject c : subjects) {
-                        if (Objects.equals(c.description, description)) {
-                            subjectList.add(ContainerCache.put(c, c.getClass()));
+        JsonArray array = null;
+        JsonObject object = null;
+        if (jsonReader.peek() == JsonToken.BEGIN_ARRAY) {
+            array = magister.gson.getAdapter(JsonElement.class).read(jsonReader).getAsJsonArray();
+        } else {
+            object = magister.gson.getAdapter(JsonElement.class).read(jsonReader).getAsJsonObject();
+        }
+        if (array != null) {
+            for (JsonElement element : array) {
+                JsonObject obj = element.getAsJsonObject();
+                if (!obj.has("afkorting")) {
+                    String description = obj.get("Naam").getAsString();
+                    Subject s = ContainerCache.get(description, Subject.class);
+                    if (s != null) {
+                        subjectList.add(s);
+                    } else {
+                        Subject[] subjects = magister.getSubjects();
+                        for (Subject c : subjects) {
+                            if (Objects.equals(c.description, description)) {
+                                subjectList.add(ContainerCache.put(c, c.getClass()));
+                            }
                         }
                     }
+                } else {
+                    String description = obj.get("omschrijving").getAsString();
+                    Subject s = ContainerCache.get(description, Subject.class);
+                    if (s != null) {
+                        subjectList.add(s);
+                        continue;
+                    }
+                    int id = obj.get("id").getAsInt();
+                    int subjectId = obj.get("studieVakId").getAsInt();
+                    int studyId = obj.get("studieId").getAsInt();
+                    String abbreviation = obj.get("afkorting").getAsString();
+                    boolean exemption = obj.get("vrijstelling").getAsBoolean();
+                    boolean dispensation = obj.get("dispensatie").getAsBoolean();
+                    int followId = obj.get("volgnr").getAsInt();
+                    String teacher = obj.get("docent") instanceof JsonNull ? null : obj.get("docent").getAsString();
+                    String startDate = obj.get("begindatum").getAsString();
+                    String endDate = obj.get("einddatum").getAsString();
+                    subjectList.add(new Subject(id, subjectId, studyId, abbreviation, description, exemption, dispensation, followId, teacher, startDate, endDate));
                 }
-            } else {
-                String description = object.get("omschrijving").getAsString();
-                Subject s = ContainerCache.get(description, Subject.class);
-                if (s != null) {
-                    subjectList.add(s);
-                    continue;
+            }
+        } else if (object != null) {
+            String abbreviation = object.get("Afkorting").getAsString();
+            Subject[] s = magister.getSubjects();
+            for (Subject subject : s) {
+                if (Objects.equals(subject.abbreviation, abbreviation)) {
+                    subjectList.add(subject);
                 }
-                int id = object.get("id").getAsInt();
-                int subjectId = object.get("studieVakId").getAsInt();
-                int studyId = object.get("studieId").getAsInt();
-                String abbreviation = object.get("afkorting").getAsString();
-                boolean exemption = object.get("vrijstelling").getAsBoolean();
-                boolean dispensation = object.get("dispensatie").getAsBoolean();
-                int followId = object.get("volgnr").getAsInt();
-                String teacher = object.get("docent") instanceof JsonNull ? null : object.get("docent").getAsString();
-                String startDate = object.get("begindatum").getAsString();
-                String endDate = object.get("einddatum").getAsString();
-                subjectList.add(new Subject(id, subjectId, studyId, abbreviation, description, exemption, dispensation, followId, teacher, startDate, endDate));
             }
         }
         return subjectList.toArray(new Subject[subjectList.size()]);
