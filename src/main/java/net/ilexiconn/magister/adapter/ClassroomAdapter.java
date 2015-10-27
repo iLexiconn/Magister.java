@@ -31,35 +31,34 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.ilexiconn.magister.Magister;
-import net.ilexiconn.magister.container.sub.Link;
+import net.ilexiconn.magister.container.sub.Classroom;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LinkAdapter extends TypeAdapter<Link[]> {
+public class ClassroomAdapter extends TypeAdapter<Classroom[]> {
     public TypeAdapter<JsonElement> jsonElementTypeAdapter;
     public Magister magister;
 
-    public LinkAdapter(Magister m) {
+    public ClassroomAdapter(Magister m) {
         magister = m;
     }
 
-    public void write(JsonWriter jsonWriter, Link[] value) throws IOException {
+    public void write(JsonWriter jsonWriter, Classroom[] value) throws IOException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    public Link[] read(JsonReader jsonReader) throws IOException {
+    public Classroom[] read(JsonReader jsonReader) throws IOException {
         if (jsonElementTypeAdapter == null) {
             jsonElementTypeAdapter = magister.gson.getAdapter(JsonElement.class);
         }
-        List<Link> linkList = new ArrayList<>();
+        List<Classroom> classroomList = new ArrayList<>();
         for (JsonElement element : jsonElementTypeAdapter.read(jsonReader).getAsJsonArray()) {
             JsonObject object = element.getAsJsonObject();
-            String href = object.get("href").getAsString();
-            String rel = object.get("rel").getAsString();
-            linkList.add(new Link(href, rel));
+            String name = object.get("Naam").getAsString();
+            classroomList.add(new Classroom(name));
         }
-        return linkList.toArray(new Link[linkList.size()]);
+        return classroomList.toArray(new Classroom[classroomList.size()]);
     }
 }

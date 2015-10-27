@@ -54,7 +54,7 @@ public class SubjectAdapter extends TypeAdapter<Subject[]> {
 
     public Subject[] read(JsonReader jsonReader) throws IOException {
         if (jsonElementTypeAdapter == null) {
-            jsonElementTypeAdapter = Magister.gson.getAdapter(JsonElement.class);
+            jsonElementTypeAdapter = magister.gson.getAdapter(JsonElement.class);
         }
         List<Subject> subjectList = new ArrayList<>();
         for (JsonElement element : jsonElementTypeAdapter.read(jsonReader).getAsJsonArray()) {

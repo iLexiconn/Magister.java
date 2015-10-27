@@ -27,7 +27,6 @@ package net.ilexiconn.magister.adapter;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.cache.ContainerCache;
@@ -41,6 +40,11 @@ import java.util.List;
 public class ContactAdapter extends TypeAdapter<Contact[]> {
     public TypeAdapter<JsonElement> jsonElementTypeAdapter;
     public TypeAdapter<Link[]> linkTypeAdapter;
+    public Magister magister;
+
+    public ContactAdapter(Magister m) {
+        magister = m;
+    }
 
     public void write(JsonWriter jsonWriter, Contact[] value) throws IOException {
         throw new UnsupportedOperationException("Not implemented");
@@ -48,28 +52,42 @@ public class ContactAdapter extends TypeAdapter<Contact[]> {
 
     public Contact[] read(JsonReader jsonReader) throws IOException {
         if (jsonElementTypeAdapter == null) {
-            jsonElementTypeAdapter = Magister.gson.getAdapter(JsonElement.class);
+            jsonElementTypeAdapter = magister.gson.getAdapter(JsonElement.class);
         }
         if (linkTypeAdapter == null) {
-            linkTypeAdapter = Magister.gson.getAdapter(Link[].class);
+            linkTypeAdapter = magister.gson.getAdapter(Link[].class);
         }
         List<Contact> contactList = new ArrayList<>();
-        if (jsonReader.peek() == JsonToken.BEGIN_OBJECT) {
-            JsonObject contactObject = (JsonObject) jsonElementTypeAdapter.read(jsonReader);
-            JsonArray items = contactObject.getAsJsonArray("Items");
-            for (JsonElement item : items) {
-                JsonObject contact = item.getAsJsonObject();
-                String fullName = contact.get("Naam").getAsString();
-                Contact c = ContainerCache.get(fullName, Contact.class);
+        JsonObject contactObject = (JsonObject) jsonElementTypeAdapter.read(jsonReader);
+        JsonArray items = contactObject.getAsJsonArray("Items");
+        for (JsonElement item : items) {
+            JsonObject contact = item.getAsJsonObject();
+            if (!contact.has("Links")) {
+                int id = contact.get("Id").getAsInt();
+                Contact c = ContainerCache.get(id + "", Contact.class);
+                if (c != null) {
+                    contactList.add(c);
+                } else {
+                    String code = contact.get("Docentcode").getAsString();
+                    Contact[] contacts = magister.getTeacherInfo(code);
+                    for (Contact s : contacts) {
+                        if (s.id == id) {
+                            contactList.add(ContainerCache.put(s, s.getClass()));
+                        }
+                    }
+                }
+            } else {
+                int id = contact.get("Id").getAsInt();
+                Contact c = ContainerCache.get(id + "", Contact.class);
                 if (c != null) {
                     contactList.add(c);
                     continue;
                 }
-                int id = contact.get("Id").getAsInt();
                 Link[] links = contact.get("Links") instanceof JsonNull ? null : linkTypeAdapter.fromJsonTree(contact.getAsJsonArray("Links"));
                 String surname = contact.get("Achternaam").getAsString();
                 String firstName = contact.get("Voornaam").getAsString();
                 String surnamePrefix = contact.get("Tussenvoegsel") instanceof JsonNull ? null : contact.get("Tussenvoegsel").getAsString();
+                String fullName = contact.get("Naam").getAsString();
                 int type = contact.get("Type").getAsInt();
                 contactList.add(new Contact(id, links, surname, firstName, surnamePrefix, fullName, type));
             }

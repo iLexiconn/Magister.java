@@ -27,10 +27,12 @@ package net.ilexiconn.magister;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.ilexiconn.magister.adapter.ClassroomAdapter;
 import net.ilexiconn.magister.adapter.ContactAdapter;
 import net.ilexiconn.magister.adapter.LinkAdapter;
 import net.ilexiconn.magister.adapter.SubjectAdapter;
 import net.ilexiconn.magister.container.Contact;
+import net.ilexiconn.magister.container.sub.Classroom;
 import net.ilexiconn.magister.container.sub.Link;
 import net.ilexiconn.magister.container.sub.Subject;
 import org.apache.http.NameValuePair;
@@ -58,8 +60,8 @@ import java.util.Date;
 import java.util.List;
 
 public class Magister {
-    public static CloseableHttpClient httpClient = HttpClients.createDefault();
-    public static Gson gson;
+    public CloseableHttpClient httpClient = HttpClients.createDefault();
+    public Gson gson;
 
     private School school;
     private String username;
@@ -76,9 +78,10 @@ public class Magister {
         if (username != null && password != null) setUser(username, password);
 
         gson = new GsonBuilder()
-                .registerTypeAdapter(Link[].class, new LinkAdapter())
-                .registerTypeAdapter(Contact[].class, new ContactAdapter())
+                .registerTypeAdapter(Link[].class, new LinkAdapter(this))
+                .registerTypeAdapter(Contact[].class, new ContactAdapter(this))
                 .registerTypeAdapter(Subject[].class, new SubjectAdapter(this))
+                .registerTypeAdapter(Classroom[].class, new ClassroomAdapter(this))
                 .create();
     }
 

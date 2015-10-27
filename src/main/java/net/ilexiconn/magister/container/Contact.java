@@ -52,6 +52,6 @@ public class Contact implements Serializable, Cachable {
     }
 
     public String getId() {
-        return fullName;
+        return id + "";
     }
 }
