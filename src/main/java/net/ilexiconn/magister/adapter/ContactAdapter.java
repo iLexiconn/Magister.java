@@ -25,106 +25,56 @@
 
 package net.ilexiconn.magister.adapter;
 
-import com.google.gson.TypeAdapter;
+import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
+import net.ilexiconn.magister.Magister;
+import net.ilexiconn.magister.cache.ContainerCache;
 import net.ilexiconn.magister.container.Contact;
-import net.ilexiconn.magister.container.Link;
+import net.ilexiconn.magister.container.sub.Link;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ContactAdapter extends TypeAdapter<Contact[]> {
-    public void write(JsonWriter out, Contact[] value) throws IOException {
+    public TypeAdapter<JsonElement> jsonElementTypeAdapter;
+    public TypeAdapter<Link[]> linkTypeAdapter;
 
+    public void write(JsonWriter jsonWriter, Contact[] value) throws IOException {
+        throw new UnsupportedOperationException("Not implemented");
     }
 
-    public Contact[] read(JsonReader in) throws IOException {
+    public Contact[] read(JsonReader jsonReader) throws IOException {
+        if (jsonElementTypeAdapter == null) {
+            jsonElementTypeAdapter = Magister.gson.getAdapter(JsonElement.class);
+        }
+        if (linkTypeAdapter == null) {
+            linkTypeAdapter = Magister.gson.getAdapter(Link[].class);
+        }
+
         List<Contact> contactList = new ArrayList<>();
-        in.beginObject();
-        while (in.hasNext()) {
-            switch (in.nextName()) {
-                case "Items": {
-                    in.beginArray();
-                    while (in.hasNext()) {
-                        in.beginObject();
-                        Contact contact = new Contact();
-                        while (in.hasNext()) {
-                            String s = in.nextName();
-                            if (in.peek() == JsonToken.NULL) {
-                                in.nextNull();
-                                continue;
-                            }
-                            switch (s) {
-                                case "Id": {
-                                    contact.setId(in.nextInt());
-                                    break;
-                                }
-                                case "Links": {
-                                    in.beginArray();
-                                    List<Link> linkList = new ArrayList<>();
-                                    while (in.hasNext()) {
-                                        in.beginObject();
-                                        Link link = new Link();
-                                        switch (in.nextName()) {
-                                            case "href": {
-                                                link.setHref(in.nextString());
-                                                break;
-                                            }
-                                            case "rel": {
-                                                link.setRel(in.nextString());
-                                                break;
-                                            }
-                                        }
-                                        linkList.add(link);
-                                        in.endObject();
-                                    }
-                                    contact.setLinks(linkList.toArray(new Link[linkList.size()]));
-                                    in.endArray();
-                                    break;
-                                }
-                                case "Achternaam": {
-                                    contact.setSurname(in.nextString());
-                                    break;
-                                }
-                                case "Voornaam": {
-                                    contact.setFirstName(in.nextString());
-                                    break;
-                                }
-                                case "Tussenvoegsel": {
-                                    contact.setSurnamePrefix(in.nextString());
-                                    break;
-                                }
-                                case "Naam": {
-                                    contact.setFullName(in.nextString());
-                                    break;
-                                }
-                                case "Type": {
-                                    contact.setType(in.nextInt());
-                                    break;
-                                }
-                            }
-                        }
-                        contactList.add(contact);
-                        in.endObject();
-                    }
-                    in.endArray();
-                    break;
+        if (jsonReader.peek() == JsonToken.BEGIN_OBJECT) {
+            JsonObject contactObject = (JsonObject) jsonElementTypeAdapter.read(jsonReader);
+            JsonArray items = contactObject.getAsJsonArray("Items");
+            for (JsonElement item : items) {
+                JsonObject contact = item.getAsJsonObject();
+                int id = contact.get("Id").getAsInt();
+                Contact c = ContainerCache.get(id, Contact.class);
+                if (c != null) {
+                    contactList.add(c);
+                    continue;
                 }
-                case "TotalCount": {
-                    in.nextInt(); // Just ignore the value.
-                    break;
-                }
-                case "Links": {
-                    in.beginArray(); // Just ignore the array.
-                    in.endArray();
-                    break;
-                }
+                Link[] links = contact.get("Links") instanceof JsonNull ? null : linkTypeAdapter.fromJsonTree(contact.getAsJsonArray("Links"));
+                String surname = contact.get("Achternaam").getAsString();
+                String firstName = contact.get("Voornaam").getAsString();
+                String surnamePrefix = contact.get("Tussenvoegsel") instanceof JsonNull ? null : contact.get("Tussenvoegsel").getAsString();
+                String fullName = contact.get("Naam").getAsString();
+                int type = contact.get("Type").getAsInt();
+                contactList.add(new Contact(id, links, surname, firstName, surnamePrefix, fullName, type));
             }
         }
-        in.endObject();
         return contactList.toArray(new Contact[contactList.size()]);
     }
 }

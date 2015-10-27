@@ -58,12 +58,12 @@ public class Test {
         System.out.println(magister.getCurrentStudy().getStudy().getDescription());
 
         try {
-            /*for (Subject subject : magister.getSubjects()) {
+            for (Subject subject : magister.getSubjects()) {
                 System.out.print("[" + subject.getAbbreviation() + "], ");
             }
             System.out.println();
 
-            for (Mark.Items item : magister.getMarks("bi")) {
+            /*for (Mark.Items item : magister.getMarks("bi")) {
                 System.out.print("[" + item.getMark() + "], ");
             }
             System.out.println();
@@ -72,6 +72,11 @@ public class Test {
                 System.out.print("[" + item.getSubjects()[0].getName() + "], ");
             }
             System.out.println();*/
+
+            System.out.println("Please enter a name:");
+            for (Contact contact : magister.getPupilInfo(scanner.nextLine())) {
+                System.out.print("[" + contact.getFullName() + "], ");
+            }
 
             System.out.println("Please enter a name:");
             for (Contact contact : magister.getPupilInfo(scanner.nextLine())) {

@@ -23,35 +23,23 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.ilexiconn.magister.container;
+package net.ilexiconn.magister.container.sub;
 
 import net.ilexiconn.magister.cache.Cachable;
-import net.ilexiconn.magister.cache.ContainerCache;
-import net.ilexiconn.magister.container.sub.Link;
 
 import java.io.Serializable;
 
-public class Contact implements Serializable, Cachable {
+public class Group implements Serializable, Cachable {
     private int Id;
     private Link[] Links;
-    private String Achternaam;
-    private String Voornaam;
-    private String Tussenvoegsel;
-    private String Naam;
-    private int Type;
+    private String Omschrijving;
+    private int LocatieId;
 
-    public Contact(int i, Link[] l, String s, String f, String p, String n, int t) {
+    public Group(int i, Link[] l, String d, int o) {
         Id = i;
         Links = l;
-        Achternaam = s;
-        Voornaam = f;
-        Tussenvoegsel = p;
-        Naam = n;
-        Type = t;
-
-        if (ContainerCache.get(Id, getClass()) == null) {
-            ContainerCache.put(this, getClass());
-        }
+        Omschrijving = d;
+        LocatieId = o;
     }
 
     public int getId() {
@@ -62,23 +50,11 @@ public class Contact implements Serializable, Cachable {
         return Links;
     }
 
-    public String getSurname() {
-        return Achternaam;
+    public String getDescription() {
+        return Omschrijving;
     }
 
-    public String getFirstName() {
-        return Voornaam;
-    }
-
-    public String getSurnamePrefix() {
-        return Tussenvoegsel;
-    }
-
-    public String getFullName() {
-        return Naam;
-    }
-
-    public int getType() {
-        return Type;
+    public int getLocationId() {
+        return LocatieId;
     }
 }

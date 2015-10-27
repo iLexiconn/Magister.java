@@ -23,25 +23,27 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.ilexiconn.magister.container;
+package net.ilexiconn.magister.cache;
 
-public class Link {
-    private String href;
-    private String rel;
+import net.ilexiconn.magister.util.Triplet;
 
-    public String getHref() {
-        return href;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ContainerCache {
+    private static List<Triplet<Integer, Class<?>, Object>> cacheList = new ArrayList<>();
+
+    public static <T> T put(Cachable cachable, Class<T> type) {
+        cacheList.add(new Triplet<Integer, Class<?>, Object>(cachable.getId(), type, cachable));
+        return (T) cachable;
     }
 
-    public void setHref(String s) {
-        href = s;
-    }
-
-    public String getRel() {
-        return rel;
-    }
-
-    public void setRel(String s) {
-        rel = s;
+    public static  <T> T get(int id, Class<T> type) {
+        for (Triplet<Integer, Class<?>, Object> triplet : cacheList) {
+            if (triplet.getA() == id && triplet.getB() == type) {
+                return (T) triplet.getC();
+            }
+        }
+        return null;
     }
 }
