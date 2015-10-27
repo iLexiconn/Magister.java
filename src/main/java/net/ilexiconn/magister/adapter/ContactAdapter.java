@@ -53,7 +53,6 @@ public class ContactAdapter extends TypeAdapter<Contact[]> {
         if (linkTypeAdapter == null) {
             linkTypeAdapter = Magister.gson.getAdapter(Link[].class);
         }
-
         List<Contact> contactList = new ArrayList<>();
         if (jsonReader.peek() == JsonToken.BEGIN_OBJECT) {
             JsonObject contactObject = (JsonObject) jsonElementTypeAdapter.read(jsonReader);

@@ -26,6 +26,7 @@
 package net.ilexiconn.magister.container.sub;
 
 import net.ilexiconn.magister.cache.Cachable;
+import net.ilexiconn.magister.cache.ContainerCache;
 
 import java.io.Serializable;
 
@@ -40,6 +41,7 @@ public class Group implements Serializable, Cachable {
         links = l;
         description = d;
         locationId = o;
+        ContainerCache.put(this, getClass());
     }
 
     public String getId() {

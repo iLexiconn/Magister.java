@@ -26,6 +26,7 @@
 package net.ilexiconn.magister.container;
 
 import net.ilexiconn.magister.cache.Cachable;
+import net.ilexiconn.magister.cache.ContainerCache;
 import net.ilexiconn.magister.container.sub.*;
 
 import java.io.Serializable;
@@ -76,6 +77,7 @@ public class Homework implements Serializable, Cachable {
         groups = g;
         homeworkId = m;
         hasAttachment = b;
+        ContainerCache.put(this, getClass());
     }
 
     public String getId() {

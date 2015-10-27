@@ -48,7 +48,6 @@ public class Contact implements Serializable, Cachable {
         surnamePrefix = p;
         fullName = n;
         type = t;
-
         ContainerCache.put(this, getClass());
     }
 

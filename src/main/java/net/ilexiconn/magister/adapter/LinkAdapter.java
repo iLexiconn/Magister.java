@@ -48,7 +48,6 @@ public class LinkAdapter extends TypeAdapter<Link[]> {
         if (jsonElementTypeAdapter == null) {
             jsonElementTypeAdapter = Magister.gson.getAdapter(JsonElement.class);
         }
-
         List<Link> linkList = new ArrayList<>();
         for (JsonElement element : jsonElementTypeAdapter.read(jsonReader).getAsJsonArray()) {
             JsonObject object = element.getAsJsonObject();

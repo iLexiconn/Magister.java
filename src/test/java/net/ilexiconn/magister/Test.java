@@ -26,6 +26,7 @@
 package net.ilexiconn.magister;
 
 import net.ilexiconn.magister.container.Contact;
+import net.ilexiconn.magister.container.sub.Subject;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -59,7 +60,7 @@ public class Test {
 
         try {
             for (Subject subject : magister.getSubjects()) {
-                System.out.print("[" + subject.getAbbreviation() + "], ");
+                System.out.print("[" + subject.abbreviation + "], ");
             }
             System.out.println();
 
@@ -72,11 +73,6 @@ public class Test {
                 System.out.print("[" + item.getSubjects()[0].getName() + "], ");
             }
             System.out.println();*/
-
-            System.out.println("Please enter a name:");
-            for (Contact contact : magister.getPupilInfo(scanner.nextLine())) {
-                System.out.print("[" + contact.fullName + "], ");
-            }
 
             System.out.println("Please enter a name:");
             for (Contact contact : magister.getPupilInfo(scanner.nextLine())) {

@@ -29,8 +29,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.ilexiconn.magister.adapter.ContactAdapter;
 import net.ilexiconn.magister.adapter.LinkAdapter;
+import net.ilexiconn.magister.adapter.SubjectAdapter;
 import net.ilexiconn.magister.container.Contact;
 import net.ilexiconn.magister.container.sub.Link;
+import net.ilexiconn.magister.container.sub.Subject;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -56,11 +58,8 @@ import java.util.Date;
 import java.util.List;
 
 public class Magister {
-    public static final CloseableHttpClient httpClient = HttpClients.createDefault();
-    public static final Gson gson = new GsonBuilder()
-            .registerTypeAdapter(Link[].class, new LinkAdapter())
-            .registerTypeAdapter(Contact[].class, new ContactAdapter())
-            .create();
+    public static CloseableHttpClient httpClient = HttpClients.createDefault();
+    public static Gson gson;
 
     private School school;
     private String username;
@@ -75,6 +74,12 @@ public class Magister {
     public Magister(School school, String username, String password) {
         if (school != null) setSchool(school);
         if (username != null && password != null) setUser(username, password);
+
+        gson = new GsonBuilder()
+                .registerTypeAdapter(Link[].class, new LinkAdapter())
+                .registerTypeAdapter(Contact[].class, new ContactAdapter())
+                .registerTypeAdapter(Subject[].class, new SubjectAdapter(this))
+                .create();
     }
 
     public Magister(String username, String password) {
@@ -100,7 +105,7 @@ public class Magister {
 
     public static School[] findSchool(String s) {
         try {
-            return gson.fromJson(new InputStreamReader(new URL("https://mijn.magister.net/api/schools?filter=" + s).openStream()), School[].class);
+            return new Gson().fromJson(new InputStreamReader(new URL("https://mijn.magister.net/api/schools?filter=" + s).openStream()), School[].class);
         } catch (IOException e) {
             e.printStackTrace();
             return new School[0];

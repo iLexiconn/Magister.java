@@ -55,7 +55,6 @@ public class Subject implements Serializable, Cachable {
         teacher = c;
         startDate = r;
         endDate = n;
-
         ContainerCache.put(this, getClass());
     }
 
