@@ -29,18 +29,19 @@ import net.ilexiconn.magister.util.Triplet;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ContainerCache {
-    private static List<Triplet<Integer, Class<?>, Object>> cacheList = new ArrayList<>();
+    private static List<Triplet<String, Class<?>, Object>> cacheList = new ArrayList<>();
 
     public static <T> T put(Cachable cachable, Class<T> type) {
-        cacheList.add(new Triplet<Integer, Class<?>, Object>(cachable.getId(), type, cachable));
+        cacheList.add(new Triplet<String, Class<?>, Object>(cachable.getId(), type, cachable));
         return (T) cachable;
     }
 
-    public static  <T> T get(int id, Class<T> type) {
-        for (Triplet<Integer, Class<?>, Object> triplet : cacheList) {
-            if (triplet.getA() == id && triplet.getB() == type) {
+    public static  <T> T get(String d, Class<T> type) {
+        for (Triplet<String, Class<?>, Object> triplet : cacheList) {
+            if (Objects.equals(triplet.getA(), d) && triplet.getB() == type) {
                 return (T) triplet.getC();
             }
         }

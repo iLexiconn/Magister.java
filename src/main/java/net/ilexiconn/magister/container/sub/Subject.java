@@ -26,23 +26,40 @@
 package net.ilexiconn.magister.container.sub;
 
 import net.ilexiconn.magister.cache.Cachable;
+import net.ilexiconn.magister.cache.ContainerCache;
 
 import java.io.Serializable;
 
 public class Subject implements Serializable, Cachable {
-    private int Id;
-    private String Naam;
+    public final int id;
+    public final int subjectId;
+    public final int studyId;
+    public final String abbreviation;
+    public final String description;
+    public final boolean exemption;
+    public final boolean dispensation;
+    public final int followId;
+    public final String teacher;
+    public final String startDate;
+    public final String endDate;
 
-    public Subject(int i, String n) {
-        Id = i;
-        Naam = n;
+    public Subject(int i, int s, int t, String a, String d, boolean e, boolean p, int f, String c, String r, String n) {
+        id = i;
+        subjectId = s;
+        studyId = t;
+        abbreviation = a;
+        description = d;
+        exemption = e;
+        dispensation = p;
+        followId = f;
+        teacher = c;
+        startDate = r;
+        endDate = n;
+
+        ContainerCache.put(this, getClass());
     }
 
-    public int getId() {
-        return Id;
-    }
-
-    public String getName() {
-        return Naam;
+    public String getId() {
+        return description;
     }
 }

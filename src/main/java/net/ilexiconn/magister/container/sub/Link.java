@@ -28,19 +28,11 @@ package net.ilexiconn.magister.container.sub;
 import java.io.Serializable;
 
 public class Link implements Serializable {
-    private String href;
-    private String rel;
+    public final String href;
+    public final String rel;
 
     public Link(String h, String r) {
         href = h;
         rel = r;
-    }
-
-    public String getHref() {
-        return href;
-    }
-
-    public String getRel() {
-        return rel;
     }
 }

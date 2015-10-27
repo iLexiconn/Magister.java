@@ -31,130 +31,54 @@ import net.ilexiconn.magister.container.sub.*;
 import java.io.Serializable;
 
 public class Homework implements Serializable, Cachable {
-    private int Id;
-    private Link[] Links;
-    private String Start;
-    private String Einde;
-    private int LesuurVan;
-    private int LesuurTotMet;
-    private boolean DuurtHeleDag;
-    private String Omschrijving;
-    private String Lokatie;
-    private int Status;
-    private int Type;
-    private int WeergaveType;
+    public final int id;
+    public final Link[] links;
+    public final String startDate;
+    public final String endDate;
+    public final int classFrom;
+    public final int classTo;
+    public final boolean wholeDay;
+    public final String description;
+    public final String location;
+    public final int status;
+    public final int type;
+    public final int displayType;
     //Inhoud?
-    private int InfoType;
+    public final int infoType;
     //Aantekening?
-    private boolean Afgerond;
-    private Subject[] Vakken;
-    private Teacher[] Docenten;
-    private Classroom[] Lokalen;
-    private Group[] Groepen;
-    private int OpdrachtId;
-    private boolean HeeftBijlagen;
+    public final boolean finished;
+    public final Subject[] subjects;
+    public final Contact[] teachers;
+    public final Classroom[] classrooms;
+    public final Group[] groups;
+    public final int homeworkId;
+    public final boolean hasAttachment;
     //Bijlagen?
 
-    public Homework(int i, Link[] l, String s, String e, int f, int t, boolean w, String d, String o, int a, int y, int p, int n, boolean h, Subject[] u, Teacher[] c, Classroom[] r, Group[] g, int m, boolean b) {
-        Id = i;
-        Links = l;
-        Start = s;
-        Einde = e;
-        LesuurVan = f;
-        LesuurTotMet = t;
-        DuurtHeleDag = w;
-        Omschrijving = d;
-        Lokatie = o;
-        Status = a;
-        Type = y;
-        WeergaveType = p;
-        InfoType = n;
-        Afgerond = h;
-        Vakken = u;
-        Docenten = c;
-        Lokalen = r;
-        Groepen = g;
-        OpdrachtId = m;
-        HeeftBijlagen = b;
+    public Homework(int i, Link[] l, String s, String e, int f, int t, boolean w, String d, String o, int a, int y, int p, int n, boolean h, Subject[] u, Contact[] c, Classroom[] r, Group[] g, int m, boolean b) {
+        id = i;
+        links = l;
+        startDate = s;
+        endDate = e;
+        classFrom = f;
+        classTo = t;
+        wholeDay = w;
+        description = d;
+        location = o;
+        status = a;
+        type = y;
+        displayType = p;
+        infoType = n;
+        finished = h;
+        subjects = u;
+        teachers = c;
+        classrooms = r;
+        groups = g;
+        homeworkId = m;
+        hasAttachment = b;
     }
 
-    public int getId() {
-        return Id;
-    }
-
-    public Link[] getLinks() {
-        return Links;
-    }
-
-    public String getStartDate() {
-        return Start;
-    }
-
-    public String getEndDate() {
-        return Einde;
-    }
-
-    public int getClassFrom() {
-        return LesuurVan;
-    }
-
-    public int getClassTo() {
-        return LesuurTotMet;
-    }
-
-    public boolean isWholeDay() {
-        return DuurtHeleDag;
-    }
-
-    public String getDescription() {
-        return Omschrijving;
-    }
-
-    public String getLocation() {
-        return Lokatie;
-    }
-
-    public int getStatus() {
-        return Status;
-    }
-
-    public int getType() {
-        return Type;
-    }
-
-    public int getDisplayType() {
-        return WeergaveType;
-    }
-
-    public int getInfoType() {
-        return InfoType;
-    }
-
-    public boolean isFinished() {
-        return Afgerond;
-    }
-
-    public Subject[] getSubjects() {
-        return Vakken;
-    }
-
-    public Teacher[] getTeachers() {
-        return Docenten;
-    }
-
-    public Classroom[] getClassrooms() {
-        return Lokalen;
-    }
-
-    public Group[] getGroups() {
-        return Groepen;
-    }
-
-    public int getHomeworkId() {
-        return OpdrachtId;
-    }
-
-    public boolean hasAttachments() {
-        return HeeftBijlagen;
+    public String getId() {
+        return id + "";
     }
 }

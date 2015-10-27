@@ -30,31 +30,19 @@ import net.ilexiconn.magister.cache.Cachable;
 import java.io.Serializable;
 
 public class Group implements Serializable, Cachable {
-    private int Id;
-    private Link[] Links;
-    private String Omschrijving;
-    private int LocatieId;
+    public final int id;
+    public final Link[] links;
+    public final String description;
+    public final int locationId;
 
     public Group(int i, Link[] l, String d, int o) {
-        Id = i;
-        Links = l;
-        Omschrijving = d;
-        LocatieId = o;
+        id = i;
+        links = l;
+        description = d;
+        locationId = o;
     }
 
-    public int getId() {
-        return Id;
-    }
-
-    public Link[] getLinks() {
-        return Links;
-    }
-
-    public String getDescription() {
-        return Omschrijving;
-    }
-
-    public int getLocationId() {
-        return LocatieId;
+    public String getId() {
+        return description;
     }
 }

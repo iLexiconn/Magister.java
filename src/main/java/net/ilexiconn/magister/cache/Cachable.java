@@ -26,5 +26,5 @@
 package net.ilexiconn.magister.cache;
 
 public interface Cachable {
-    int getId();
+    String getId();
 }

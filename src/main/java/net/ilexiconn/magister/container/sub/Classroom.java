@@ -25,16 +25,18 @@
 
 package net.ilexiconn.magister.container.sub;
 
+import net.ilexiconn.magister.cache.Cachable;
+
 import java.io.Serializable;
 
-public class Classroom implements Serializable {
-    private String Naam;
+public class Classroom implements Serializable, Cachable {
+    public final String name;
 
     public Classroom(String n) {
-        Naam = n;
+        name = n;
     }
 
-    public String getName() {
-        return Naam;
+    public String getId() {
+        return name;
     }
 }

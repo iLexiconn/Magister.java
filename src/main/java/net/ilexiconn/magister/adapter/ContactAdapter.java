@@ -60,17 +60,17 @@ public class ContactAdapter extends TypeAdapter<Contact[]> {
             JsonArray items = contactObject.getAsJsonArray("Items");
             for (JsonElement item : items) {
                 JsonObject contact = item.getAsJsonObject();
-                int id = contact.get("Id").getAsInt();
-                Contact c = ContainerCache.get(id, Contact.class);
+                String fullName = contact.get("Naam").getAsString();
+                Contact c = ContainerCache.get(fullName, Contact.class);
                 if (c != null) {
                     contactList.add(c);
                     continue;
                 }
+                int id = contact.get("Id").getAsInt();
                 Link[] links = contact.get("Links") instanceof JsonNull ? null : linkTypeAdapter.fromJsonTree(contact.getAsJsonArray("Links"));
                 String surname = contact.get("Achternaam").getAsString();
                 String firstName = contact.get("Voornaam").getAsString();
                 String surnamePrefix = contact.get("Tussenvoegsel") instanceof JsonNull ? null : contact.get("Tussenvoegsel").getAsString();
-                String fullName = contact.get("Naam").getAsString();
                 int type = contact.get("Type").getAsInt();
                 contactList.add(new Contact(id, links, surname, firstName, surnamePrefix, fullName, type));
             }

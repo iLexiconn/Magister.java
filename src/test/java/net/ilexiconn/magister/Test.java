@@ -75,12 +75,12 @@ public class Test {
 
             System.out.println("Please enter a name:");
             for (Contact contact : magister.getPupilInfo(scanner.nextLine())) {
-                System.out.print("[" + contact.getFullName() + "], ");
+                System.out.print("[" + contact.fullName + "], ");
             }
 
             System.out.println("Please enter a name:");
             for (Contact contact : magister.getPupilInfo(scanner.nextLine())) {
-                System.out.print("[" + contact.getFullName() + "], ");
+                System.out.print("[" + contact.fullName + "], ");
             }
         } catch (IOException e) {
             e.printStackTrace();

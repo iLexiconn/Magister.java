@@ -32,53 +32,27 @@ import net.ilexiconn.magister.container.sub.Link;
 import java.io.Serializable;
 
 public class Contact implements Serializable, Cachable {
-    private int Id;
-    private Link[] Links;
-    private String Achternaam;
-    private String Voornaam;
-    private String Tussenvoegsel;
-    private String Naam;
-    private int Type;
+    public final int id;
+    public final Link[] links;
+    public final String surname;
+    public final String firstName;
+    public final String surnamePrefix;
+    public final String fullName;
+    public final int type;
 
     public Contact(int i, Link[] l, String s, String f, String p, String n, int t) {
-        Id = i;
-        Links = l;
-        Achternaam = s;
-        Voornaam = f;
-        Tussenvoegsel = p;
-        Naam = n;
-        Type = t;
+        id = i;
+        links = l;
+        surname = s;
+        firstName = f;
+        surnamePrefix = p;
+        fullName = n;
+        type = t;
 
-        if (ContainerCache.get(Id, getClass()) == null) {
-            ContainerCache.put(this, getClass());
-        }
+        ContainerCache.put(this, getClass());
     }
 
-    public int getId() {
-        return Id;
-    }
-
-    public Link[] getLinks() {
-        return Links;
-    }
-
-    public String getSurname() {
-        return Achternaam;
-    }
-
-    public String getFirstName() {
-        return Voornaam;
-    }
-
-    public String getSurnamePrefix() {
-        return Tussenvoegsel;
-    }
-
-    public String getFullName() {
-        return Naam;
-    }
-
-    public int getType() {
-        return Type;
+    public String getId() {
+        return fullName;
     }
 }
