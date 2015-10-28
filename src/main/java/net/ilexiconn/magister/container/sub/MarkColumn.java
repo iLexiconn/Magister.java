@@ -26,6 +26,7 @@
 package net.ilexiconn.magister.container.sub;
 
 import net.ilexiconn.magister.cache.Cachable;
+import net.ilexiconn.magister.cache.ContainerCache;
 
 import java.io.Serializable;
 
@@ -54,6 +55,7 @@ public class MarkColumn implements Serializable, Cachable {
         teacherColumn = e;
         columnUnderneath = o;
         pta = p;
+        ContainerCache.put(this, getClass());
     }
 
     public String getId() {

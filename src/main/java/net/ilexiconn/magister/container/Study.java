@@ -23,22 +23,35 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.ilexiconn.magister.container.sub;
+package net.ilexiconn.magister.container;
 
 import net.ilexiconn.magister.cache.Cachable;
 import net.ilexiconn.magister.cache.ContainerCache;
+import net.ilexiconn.magister.container.sub.Group;
+import net.ilexiconn.magister.container.sub.Link;
+import net.ilexiconn.magister.container.sub.SubStudy;
 
 import java.io.Serializable;
 
-public class MarkPeriod implements Serializable, Cachable {
+public class Study implements Serializable, Cachable {
     public final int id;
-    public final String name;
-    public final int followId;
+    public final Link[] links;
+    public final int pupilId;
+    public final String startDate;
+    public final String endDate;
+    public final String classPeriod;
+    public final SubStudy study;
+    public final Group group;
 
-    public MarkPeriod(int i, String n, int f) {
+    public Study(int i, Link[] l, int p, String s, String e, String c, SubStudy t, Group g) {
         id = i;
-        name = n;
-        followId = f;
+        links = l;
+        pupilId = p;
+        startDate = s;
+        endDate = e;
+        classPeriod = c;
+        study = t;
+        group = g;
         ContainerCache.put(this, getClass());
     }
 

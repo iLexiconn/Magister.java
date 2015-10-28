@@ -51,8 +51,8 @@ public class MarkAdapter extends TypeAdapter<Mark[]> {
 
     public Mark[] read(JsonReader jsonReader) throws IOException {
         List<Mark> markList = new ArrayList<>();
-        JsonObject homeworkObject = magister.gson.getAdapter(JsonElement.class).read(jsonReader).getAsJsonObject();
-        JsonArray items = homeworkObject.get("Items").getAsJsonArray();
+        JsonObject object = magister.gson.getAdapter(JsonElement.class).read(jsonReader).getAsJsonObject();
+        JsonArray items = object.get("Items").getAsJsonArray();
         for (JsonElement element : items) {
             JsonObject item = element.getAsJsonObject();
             int id = item.get("CijferId").getAsInt();

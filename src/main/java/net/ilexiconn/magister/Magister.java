@@ -29,11 +29,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.ilexiconn.magister.adapter.HomeworkAdapter;
 import net.ilexiconn.magister.adapter.MarkAdapter;
+import net.ilexiconn.magister.adapter.StudyAdapter;
 import net.ilexiconn.magister.adapter.SubjectAdapter;
 import net.ilexiconn.magister.adapter.sub.*;
 import net.ilexiconn.magister.container.Contact;
 import net.ilexiconn.magister.container.Homework;
 import net.ilexiconn.magister.container.Mark;
+import net.ilexiconn.magister.container.Study;
 import net.ilexiconn.magister.container.sub.*;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -70,8 +72,8 @@ public class Magister {
     private Version version;
     private Session session;
     private Profile profile;
-    private Study study;
-    private Study.Items currentStudy;
+    private Study[] studies;
+    private Study currentStudy;
 
     public Magister(School school, String username, String password) {
         if (school != null) setSchool(school);
@@ -87,6 +89,8 @@ public class Magister {
                 .registerTypeAdapter(MarkPeriod.class, new MarkPeriodAdapter(this))
                 .registerTypeAdapter(MarkColumn.class, new MarkColumnAdapter(this))
                 .registerTypeAdapter(Mark[].class, new MarkAdapter(this))
+                .registerTypeAdapter(SubStudy.class, new SubStudyAdapter(this))
+                .registerTypeAdapter(Study[].class, new StudyAdapter(this))
                 .create();
     }
 
@@ -139,12 +143,12 @@ public class Magister {
                 return;
             }
             profile = gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/account")), Profile.class);
-            study = gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen")), Study.class);
+            studies = gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen")), Study[].class);
             DateFormat format = new SimpleDateFormat("Y-m-d");
             Date now = new Date();
-            for (Study.Items item : study.getItems()) {
-                if (format.parse(item.getEnd().substring(0, 10)).after(now)) {
-                    currentStudy = item;
+            for (Study study : studies) {
+                if (format.parse(study.endDate.substring(0, 10)).after(now)) {
+                    currentStudy = study;
                 }
             }
         }
@@ -162,11 +166,11 @@ public class Magister {
         return profile;
     }
 
-    public Study getStudy() {
-        return study;
+    public Study[] getStudies() {
+        return studies;
     }
 
-    public Study.Items getCurrentStudy() {
+    public Study getCurrentStudy() {
         return currentStudy;
     }
 

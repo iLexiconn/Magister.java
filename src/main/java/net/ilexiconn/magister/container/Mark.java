@@ -28,6 +28,7 @@ package net.ilexiconn.magister.container;
 import com.google.gson.JsonObject;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.cache.Cachable;
+import net.ilexiconn.magister.cache.ContainerCache;
 import net.ilexiconn.magister.container.sub.MarkColumn;
 import net.ilexiconn.magister.container.sub.MarkPeriod;
 import net.ilexiconn.magister.container.sub.Subject;
@@ -65,6 +66,7 @@ public class Mark implements Serializable, Cachable {
         teacher = t;
         dispensation = a;
         subjectExemption = j;
+        ContainerCache.put(this, getClass());
     }
 
     public Subject getSubject(Magister magister) {

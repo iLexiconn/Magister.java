@@ -33,58 +33,47 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.cache.ContainerCache;
-import net.ilexiconn.magister.container.Homework;
-import net.ilexiconn.magister.container.sub.Classroom;
+import net.ilexiconn.magister.container.Study;
+import net.ilexiconn.magister.container.sub.Group;
 import net.ilexiconn.magister.container.sub.Link;
-import net.ilexiconn.magister.container.sub.Subject;
+import net.ilexiconn.magister.container.sub.SubStudy;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeworkAdapter extends TypeAdapter<Homework[]> {
+public class StudyAdapter extends TypeAdapter<Study[]> {
     public Magister magister;
 
-    public HomeworkAdapter(Magister m) {
+    public StudyAdapter(Magister m) {
         magister = m;
     }
 
-    public void write(JsonWriter jsonWriter, Homework[] value) throws IOException {
+    public void write(JsonWriter jsonWriter, Study[] value) throws IOException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    public Homework[] read(JsonReader jsonReader) throws IOException {
-        List<Homework> homeworkList = new ArrayList<>();
+    public Study[] read(JsonReader jsonReader) throws IOException {
+        List<Study> studyList = new ArrayList<>();
         JsonObject object = magister.gson.getAdapter(JsonElement.class).read(jsonReader).getAsJsonObject();
         JsonArray items = object.get("Items").getAsJsonArray();
         for (JsonElement element : items) {
             JsonObject item = element.getAsJsonObject();
             int id = item.get("Id").getAsInt();
-            Homework h = ContainerCache.get(id + "", Homework.class);
-            if (h != null) {
-                homeworkList.add(h);
+            Study s = ContainerCache.get(id + "", Study.class);
+            if (s != null) {
+                studyList.add(s);
                 continue;
             }
-            Link[] links = magister.gson.getAdapter(Link[].class).fromJsonTree(item.getAsJsonArray("Links"));
+            Link[] links = magister.gson.getAdapter(Link[].class).fromJsonTree(item.get("Links"));
+            int pupilId = item.get("LeerlingId").getAsInt();
             String startDate = item.get("Start").getAsString();
             String endDate = item.get("Einde").getAsString();
-            int classFrom = item.get("LesuurVan").getAsInt();
-            int classTo = item.get("LesuurTotMet").getAsInt();
-            boolean wholeDay = item.get("DuurtHeleDag").getAsBoolean();
-            String description = item.get("Omschrijving").getAsString();
-            String location = item.get("Lokatie").getAsString();
-            int status = item.get("Status").getAsInt();
-            int type = item.get("Type").getAsInt();
-            int displayType = item.get("WeergaveType").getAsInt();
-            int infoType = item.get("InfoType").getAsInt();
-            boolean finished = item.get("Afgerond").getAsBoolean();
-            Subject[] subjects = magister.gson.getAdapter(Subject[].class).fromJsonTree(item.getAsJsonArray("Vakken"));
-            JsonArray teachers = item.getAsJsonArray("Docenten");
-            Classroom[] classrooms = magister.gson.getAdapter(Classroom[].class).fromJsonTree(item.getAsJsonArray("Lokalen"));
-            int homeworkId = item.get("OpdrachtId").getAsInt();
-            boolean hasAttachment = item.get("HeeftBijlagen").getAsBoolean();
-            homeworkList.add(new Homework(id, links, startDate, endDate, classFrom, classTo, wholeDay, description, location, status, type, displayType, infoType, finished, subjects, teachers, classrooms, homeworkId, hasAttachment));
+            String classPeriod = item.get("Lesperiode").getAsString();
+            SubStudy study = magister.gson.getAdapter(SubStudy.class).fromJsonTree(item.get("Studie"));
+            Group group = magister.gson.getAdapter(Group.class).fromJsonTree(item.get("Groep"));
+            studyList.add(new Study(id, links, pupilId, startDate, endDate, classPeriod, study, group));
         }
-        return homeworkList.toArray(new Homework[homeworkList.size()]);
+        return studyList.toArray(new Study[studyList.size()]);
     }
 }

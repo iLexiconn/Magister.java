@@ -57,7 +57,7 @@ public class Test {
         }
 
         System.out.println("Hey, " + magister.getProfile().getPerson().getNickname() + "!");
-        System.out.println(magister.getCurrentStudy().getStudy().getDescription());
+        System.out.println(magister.getCurrentStudy().study.description);
 
         try {
             for (Subject subject : magister.getSubjects()) {

@@ -23,26 +23,38 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.ilexiconn.magister.container.sub;
+package net.ilexiconn.magister.adapter.sub;
 
-import net.ilexiconn.magister.cache.Cachable;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.cache.ContainerCache;
+import net.ilexiconn.magister.container.sub.SubStudy;
 
-import java.io.Serializable;
+import java.io.IOException;
 
-public class MarkPeriod implements Serializable, Cachable {
-    public final int id;
-    public final String name;
-    public final int followId;
+public class SubStudyAdapter extends TypeAdapter<SubStudy> {
+    public Magister magister;
 
-    public MarkPeriod(int i, String n, int f) {
-        id = i;
-        name = n;
-        followId = f;
-        ContainerCache.put(this, getClass());
+    public SubStudyAdapter(Magister m) {
+        magister = m;
     }
 
-    public String getId() {
-        return id + "";
+    public void write(JsonWriter jsonWriter, SubStudy value) throws IOException {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
+    public SubStudy read(JsonReader jsonReader) throws IOException {
+        JsonObject object = (JsonObject) magister.gson.getAdapter(JsonElement.class).read(jsonReader);
+        int id = object.get("Id").getAsInt();
+        SubStudy subStudy = ContainerCache.get(id + "", SubStudy.class);
+        if (subStudy == null) {
+            String description = object.get("Omschrijving").getAsString();
+            subStudy = new SubStudy(id, description);
+        }
+        return subStudy;
     }
 }

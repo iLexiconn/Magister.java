@@ -30,15 +30,13 @@ import net.ilexiconn.magister.cache.ContainerCache;
 
 import java.io.Serializable;
 
-public class MarkPeriod implements Serializable, Cachable {
+public class SubStudy implements Serializable, Cachable {
     public final int id;
-    public final String name;
-    public final int followId;
+    public final String description;
 
-    public MarkPeriod(int i, String n, int f) {
+    public SubStudy(int i, String d) {
         id = i;
-        name = n;
-        followId = f;
+        description = d;
         ContainerCache.put(this, getClass());
     }
 
