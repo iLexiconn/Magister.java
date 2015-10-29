@@ -23,28 +23,26 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.ilexiconn.magister.util;
+package net.ilexiconn.magister.container.sub;
 
-public class Triplet<A, B, C> {
-    private A a;
-    private B b;
-    private C c;
+import net.ilexiconn.magister.cache.Cachable;
+import net.ilexiconn.magister.cache.ContainerCache;
 
-    public Triplet(A a, B b, C c) {
-        this.a = a;
-        this.b = b;
-        this.c = c;
+import java.io.Serializable;
+
+public class Privilege implements Serializable, Cachable {
+    public final String type;
+    public final String name;
+    public final String[] accessType;
+
+    public Privilege(String t, String n, String[] a) {
+        type = t;
+        name = n;
+        accessType = a;
+        ContainerCache.put(this, getClass());
     }
 
-    public A getA() {
-        return a;
-    }
-
-    public B getB() {
-        return b;
-    }
-
-    public C getC() {
-        return c;
+    public String getId() {
+        return type + name;
     }
 }

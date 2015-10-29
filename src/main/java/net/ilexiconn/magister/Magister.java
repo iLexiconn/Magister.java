@@ -27,15 +27,9 @@ package net.ilexiconn.magister;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.ilexiconn.magister.adapter.HomeworkAdapter;
-import net.ilexiconn.magister.adapter.MarkAdapter;
-import net.ilexiconn.magister.adapter.StudyAdapter;
-import net.ilexiconn.magister.adapter.SubjectAdapter;
+import net.ilexiconn.magister.adapter.*;
 import net.ilexiconn.magister.adapter.sub.*;
-import net.ilexiconn.magister.container.Contact;
-import net.ilexiconn.magister.container.Homework;
-import net.ilexiconn.magister.container.Mark;
-import net.ilexiconn.magister.container.Study;
+import net.ilexiconn.magister.container.*;
 import net.ilexiconn.magister.container.sub.*;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
@@ -91,6 +85,8 @@ public class Magister {
                 .registerTypeAdapter(Mark[].class, new MarkAdapter(this))
                 .registerTypeAdapter(SubStudy.class, new SubStudyAdapter(this))
                 .registerTypeAdapter(Study[].class, new StudyAdapter(this))
+                .registerTypeAdapter(Privilege[].class, new PrivilegeAdapter(this))
+                .registerTypeAdapter(Profile.class, new ProfileAdapter(this))
                 .create();
     }
 
@@ -143,7 +139,7 @@ public class Magister {
                 return;
             }
             profile = gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/account")), Profile.class);
-            studies = gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen")), Study[].class);
+            studies = gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.id + "/aanmeldingen")), Study[].class);
             DateFormat format = new SimpleDateFormat("Y-m-d");
             Date now = new Date();
             for (Study study : studies) {
@@ -180,7 +176,7 @@ public class Magister {
 
     public Mark[] getMarks(String subject) throws IOException {
         if (session == null) return null;
-        Mark[] marks = gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen/" + currentStudy.getId() + "/cijfers/cijferoverzichtvooraanmelding?actievePerioden=" + true + "&alleenBerekendeKolommen=" + false + "&alleenPTAKolommen=" + false)), Mark[].class);
+        Mark[] marks = gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.id + "/aanmeldingen/" + currentStudy.getId() + "/cijfers/cijferoverzichtvooraanmelding?actievePerioden=" + true + "&alleenBerekendeKolommen=" + false + "&alleenPTAKolommen=" + false)), Mark[].class);
         if (subject == null) return marks;
         List<Mark> itemsList = new ArrayList<>();
         for (Mark item : marks) {
@@ -195,7 +191,7 @@ public class Magister {
 
     public BufferedImage getImage(int width, int height, boolean crop) throws IOException {
         if (session == null) return null;
-        return ImageIO.read(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/foto" + (width != 42 || height != 64 || crop ? "?width=" + width + "&height=" + height + "&crop=" + crop : "")));
+        return ImageIO.read(getInputStream(school.getUrl() + "/api/personen/" + profile.id + "/foto" + (width != 42 || height != 64 || crop ? "?width=" + width + "&height=" + height + "&crop=" + crop : "")));
     }
 
     public Homework[] getHomework() throws IOException {
@@ -205,22 +201,22 @@ public class Magister {
     public Homework[] getHomework(Calendar from, Calendar to) throws IOException {
         if (session == null) return null;
         SimpleDateFormat format = new SimpleDateFormat("Y-m-d");
-        return gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/afspraken" + (from == null || to == null ? "" : "?van=" + format.format(from.getTime()) + "&tot=" + format.format(to.getTime())))), Homework[].class);
+        return gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.id + "/afspraken" + (from == null || to == null ? "" : "?van=" + format.format(from.getTime()) + "&tot=" + format.format(to.getTime())))), Homework[].class);
     }
 
     public Subject[] getSubjects() throws IOException {
         if (session == null) return null;
-        return gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/aanmeldingen/" + currentStudy.getId() + "/vakken")), Subject[].class);
+        return gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.id + "/aanmeldingen/" + currentStudy.getId() + "/vakken")), Subject[].class);
     }
 
     public Contact[] getTeacherInfo(String name) throws IOException {
         if (session == null || name == null || name.isEmpty()) return null;
-        return gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/contactpersonen?contactPersoonType=Personeel&q=" + name)), Contact[].class);
+        return gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.id + "/contactpersonen?contactPersoonType=Personeel&q=" + name)), Contact[].class);
     }
 
     public Contact[] getPupilInfo(String name) throws IOException {
         if (session == null || name == null || name.isEmpty()) return null;
-        return gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.getPerson().getId() + "/contactpersonen?contactPersoonType=Leerling&q=" + name)), Contact[].class);
+        return gson.fromJson(new InputStreamReader(getInputStream(school.getUrl() + "/api/personen/" + profile.id + "/contactpersonen?contactPersoonType=Leerling&q=" + name)), Contact[].class);
     }
 
     private InputStream getInputStream(String url) throws IOException {

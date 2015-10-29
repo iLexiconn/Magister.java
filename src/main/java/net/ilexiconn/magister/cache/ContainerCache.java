@@ -25,24 +25,22 @@
 
 package net.ilexiconn.magister.cache;
 
-import net.ilexiconn.magister.util.Triplet;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class ContainerCache {
-    private static List<Triplet<String, Class<?>, Object>> cacheList = new ArrayList<>();
+    private static Map<Class<?>, Cachable> cacheMap = new HashMap<>();
 
     public static <T> T put(Cachable cachable, Class<T> type) {
-        cacheList.add(new Triplet<String, Class<?>, Object>(cachable.getId(), type, cachable));
+        cacheMap.put(type, cachable);
         return (T) cachable;
     }
 
     public static <T> T get(String d, Class<T> type) {
-        for (Triplet<String, Class<?>, Object> triplet : cacheList) {
-            if (Objects.equals(triplet.getA(), d) && triplet.getB() == type) {
-                return (T) triplet.getC();
+        for (Map.Entry<Class<?>, Cachable> entry : cacheMap.entrySet()) {
+            if (entry.getKey() == type && Objects.equals(entry.getValue().getId(), d)) {
+                return (T) entry.getValue();
             }
         }
         return null;

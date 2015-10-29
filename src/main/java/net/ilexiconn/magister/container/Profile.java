@@ -25,51 +25,42 @@
 
 package net.ilexiconn.magister.container;
 
-import com.google.gson.JsonObject;
-import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.cache.Cachable;
 import net.ilexiconn.magister.cache.ContainerCache;
-import net.ilexiconn.magister.container.sub.MarkColumn;
-import net.ilexiconn.magister.container.sub.MarkPeriod;
+import net.ilexiconn.magister.container.sub.Privilege;
 
 import java.io.Serializable;
 
-public class Mark implements Serializable, Cachable {
+public class Profile implements Serializable, Cachable {
     public final int id;
-    public final String mark;
-    public final boolean sufficient;
-    public final String date;
-    public final MarkPeriod markPeriod;
-    public final boolean canCatch;
-    public final boolean hasExemption;
-    public final boolean counts;
-    public final MarkColumn markColumn;
-    public final int eloId;
-    public final String teacher;
-    public final boolean dispensation;
-    public final boolean subjectExemption;
-    private final JsonObject subject;
+    public final String nickname;
+    public final String surnamePrefix;
+    public final String surname;
+    public final String officialFirstNames;
+    public final String initials;
+    public final String officialSurnamePrefixes;
+    public final String officialSurname;
+    public final String dateOfBirth;
+    public final String birthSurname;
+    public final String birthSurnamePrefix;
+    public final boolean useBirthName;
+    public final Privilege[] privileges;
 
-    public Mark(int i, String n, boolean s, String d, MarkPeriod p, JsonObject u, boolean c, boolean e, boolean o, MarkColumn l, int m, String t, boolean a, boolean j) {
+    public Profile(int i, String n, String s, String u, String f, String t, String p, String r, String d, String b, String h, boolean e, Privilege[] v) {
         id = i;
-        mark = n;
-        sufficient = s;
-        date = d;
-        markPeriod = p;
-        subject = u;
-        canCatch = c;
-        hasExemption = e;
-        counts = o;
-        markColumn = l;
-        eloId = m;
-        teacher = t;
-        dispensation = a;
-        subjectExemption = j;
+        nickname = n;
+        surnamePrefix = s;
+        surname = u;
+        officialFirstNames = f;
+        initials = t;
+        officialSurnamePrefixes = p;
+        officialSurname = r;
+        dateOfBirth = d;
+        birthSurname = b;
+        birthSurnamePrefix = h;
+        useBirthName = e;
+        privileges = v;
         ContainerCache.put(this, getClass());
-    }
-
-    public Subject getSubject(Magister magister) {
-        return magister.gson.getAdapter(Subject[].class).fromJsonTree(subject)[0];
     }
 
     public String getId() {

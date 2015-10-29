@@ -28,9 +28,7 @@ package net.ilexiconn.magister;
 import net.ilexiconn.magister.container.Contact;
 import net.ilexiconn.magister.container.Homework;
 import net.ilexiconn.magister.container.Mark;
-import net.ilexiconn.magister.container.sub.Subject;
-
-import java.io.IOException;
+import net.ilexiconn.magister.container.Subject;
 
 public class Test {
     public static void main(String[] args) {
@@ -52,34 +50,22 @@ public class Test {
 
         try {
             magister.login();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        System.out.println("Hey, " + magister.getProfile().getPerson().getNickname() + "!");
-        System.out.println(magister.getCurrentStudy().study.description);
-
-        try {
+            System.out.println("Hey, " + magister.getProfile().nickname + "!");
+            System.out.println(magister.getCurrentStudy().study.description);
             for (Subject subject : magister.getSubjects()) {
                 System.out.print("[" + subject.abbreviation + ", " + subject.teacher + "], ");
-            }
-            System.out.println();
-
+            } System.out.println();
             for (Mark mark : magister.getMarks("bi")) {
                 System.out.print("[" + mark.mark + ", " + mark.getSubject(magister).abbreviation + "], ");
-            }
-            System.out.println();
-
+            } System.out.println();
             for (Contact contact : magister.getTeacherInfo(args[3])) {
                 System.out.print("[" + contact.fullName + "], ");
-            }
-            System.out.println();
-
+            } System.out.println();
             for (Homework homework : magister.getHomework()) {
                 System.out.print("[" + homework.subjects[0].abbreviation + ", " + homework.getTeachers(magister)[0].fullName + "], ");
-            }
-            System.out.println();
-        } catch (IOException e) {
+            } System.out.println();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

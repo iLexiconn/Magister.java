@@ -31,7 +31,7 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.cache.ContainerCache;
-import net.ilexiconn.magister.container.sub.Subject;
+import net.ilexiconn.magister.container.Subject;
 
 import java.io.IOException;
 import java.util.ArrayList;

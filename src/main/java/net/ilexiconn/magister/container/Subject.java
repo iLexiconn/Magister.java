@@ -23,7 +23,7 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.ilexiconn.magister.container.sub;
+package net.ilexiconn.magister.container;
 
 import net.ilexiconn.magister.cache.Cachable;
 import net.ilexiconn.magister.cache.ContainerCache;

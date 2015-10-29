@@ -48,7 +48,7 @@ public class SubStudyAdapter extends TypeAdapter<SubStudy> {
     }
 
     public SubStudy read(JsonReader jsonReader) throws IOException {
-        JsonObject object = (JsonObject) magister.gson.getAdapter(JsonElement.class).read(jsonReader);
+        JsonObject object = magister.gson.getAdapter(JsonElement.class).read(jsonReader).getAsJsonObject();
         int id = object.get("Id").getAsInt();
         SubStudy subStudy = ContainerCache.get(id + "", SubStudy.class);
         if (subStudy == null) {

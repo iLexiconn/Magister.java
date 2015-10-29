@@ -23,7 +23,7 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.ilexiconn.magister.adapter.sub;
+package net.ilexiconn.magister.adapter;
 
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;

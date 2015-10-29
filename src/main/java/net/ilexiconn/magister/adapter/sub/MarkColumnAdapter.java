@@ -49,7 +49,7 @@ public class MarkColumnAdapter extends TypeAdapter<MarkColumn> {
     }
 
     public MarkColumn read(JsonReader jsonReader) throws IOException {
-        JsonObject object = (JsonObject) magister.gson.getAdapter(JsonElement.class).read(jsonReader);
+        JsonObject object = magister.gson.getAdapter(JsonElement.class).read(jsonReader).getAsJsonObject();
         int id = object.get("Id").getAsInt();
         MarkColumn markColumn = ContainerCache.get(id + "", MarkColumn.class);
         if (markColumn == null) {

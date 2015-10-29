@@ -31,7 +31,6 @@ import net.ilexiconn.magister.cache.Cachable;
 import net.ilexiconn.magister.cache.ContainerCache;
 import net.ilexiconn.magister.container.sub.Classroom;
 import net.ilexiconn.magister.container.sub.Link;
-import net.ilexiconn.magister.container.sub.Subject;
 
 import java.io.Serializable;
 
@@ -53,11 +52,11 @@ public class Homework implements Serializable, Cachable {
     //Aantekening?
     public final boolean finished;
     public final Subject[] subjects;
-    private final JsonArray teachers;
     public final Classroom[] classrooms;
     //Groepen?
     public final int homeworkId;
     public final boolean hasAttachment;
+    private final JsonArray teachers;
     //Bijlagen?
 
     public Homework(int i, Link[] l, String s, String e, int f, int t, boolean w, String d, String o, int a, int y, int p, int n, boolean h, Subject[] u, JsonArray c, Classroom[] r, int m, boolean b) {

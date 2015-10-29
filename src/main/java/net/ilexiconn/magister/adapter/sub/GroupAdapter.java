@@ -49,7 +49,7 @@ public class GroupAdapter extends TypeAdapter<Group> {
     }
 
     public Group read(JsonReader jsonReader) throws IOException {
-        JsonObject object = (JsonObject) magister.gson.getAdapter(JsonElement.class).read(jsonReader);
+        JsonObject object = magister.gson.getAdapter(JsonElement.class).read(jsonReader).getAsJsonObject();
         int id = object.get("Id").getAsInt();
         Group group = ContainerCache.get(id + "", Group.class);
         if (group == null) {
