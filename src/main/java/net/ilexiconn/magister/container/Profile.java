@@ -25,45 +25,45 @@
 
 package net.ilexiconn.magister.container;
 
-import net.ilexiconn.magister.cache.Cachable;
-import net.ilexiconn.magister.cache.ContainerCache;
+import com.google.gson.annotations.SerializedName;
 import net.ilexiconn.magister.container.sub.Privilege;
 
-import java.io.Serializable;
+public class Profile {
+    @SerializedName("Id")
+    public int id;
 
-public class Profile implements Serializable, Cachable {
-    public final int id;
-    public final String nickname;
-    public final String surnamePrefix;
-    public final String surname;
-    public final String officialFirstNames;
-    public final String initials;
-    public final String officialSurnamePrefixes;
-    public final String officialSurname;
-    public final String dateOfBirth;
-    public final String birthSurname;
-    public final String birthSurnamePrefix;
-    public final boolean useBirthName;
-    public final Privilege[] privileges;
+    @SerializedName("Roepnaam")
+    public String nickname;
 
-    public Profile(int i, String n, String s, String u, String f, String t, String p, String r, String d, String b, String h, boolean e, Privilege[] v) {
-        id = i;
-        nickname = n;
-        surnamePrefix = s;
-        surname = u;
-        officialFirstNames = f;
-        initials = t;
-        officialSurnamePrefixes = p;
-        officialSurname = r;
-        dateOfBirth = d;
-        birthSurname = b;
-        birthSurnamePrefix = h;
-        useBirthName = e;
-        privileges = v;
-        ContainerCache.put(this, getClass());
-    }
+    @SerializedName("Tussenvoegsel")
+    public String surnamePrefix;
 
-    public String getId() {
-        return id + "";
-    }
+    @SerializedName("Achternaam")
+    public String surname;
+
+    @SerializedName("OfficieleVoornamen")
+    public String officialFirstNames;
+
+    @SerializedName("Voorletters")
+    public String initials;
+
+    @SerializedName("OfficieleTussenvoegsels")
+    public String officialSurnamePrefixes;
+
+    @SerializedName("OfficieleAchternaam")
+    public String officialSurname;
+
+    @SerializedName("Geboortedatum")
+    public String dateOfBirth;
+
+    @SerializedName("GeboorteAchternaam")
+    public String birthSurname;
+
+    @SerializedName("GeboortenaamTussenvoegsel")
+    public String birthSurnamePrefix;
+
+    @SerializedName("GebruikGeboortenaam")
+    public boolean useBirthName;
+
+    public transient Privilege[] privileges;
 }

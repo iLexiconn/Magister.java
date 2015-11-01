@@ -25,14 +25,12 @@
 
 package net.ilexiconn.magister.container.sub;
 
-import java.io.Serializable;
+import com.google.gson.annotations.SerializedName;
 
-public class Link implements Serializable {
-    public final String href;
-    public final String rel;
+public class Link {
+    @SerializedName(value = "href", alternate = "Href")
+    public String href;
 
-    public Link(String h, String r) {
-        href = h;
-        rel = r;
-    }
+    @SerializedName(value = "rel", alternate = "Rel")
+    public String rel;
 }

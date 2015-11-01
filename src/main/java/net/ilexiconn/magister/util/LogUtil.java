@@ -23,22 +23,37 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.ilexiconn.magister;
-
-import net.ilexiconn.magister.container.School;
-import net.ilexiconn.magister.container.sub.Privilege;
+package net.ilexiconn.magister.util;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
-public class Test {
-    public static void main(String[] args) throws IOException {
-        Magister magister = Magister.login(School.findSchool(args[0])[0], args[1], args[2]);
+public class LogUtil {
+    public static void printError(String description, Throwable throwable) {
+        String details = toPrettyString("Operating System", System.getProperty("os.name") + " (" + System.getProperty("os.arch") + ")") + toPrettyString("Java Version", System.getProperty("java.version"));
+        String report = "---- Error Report ----\n\nDescription: " + description + "\n\n-- Crash Log --\n" + getStackTrace(throwable) + "\n-- System Details --\n" + details;
+        System.err.println(report);
+    }
 
-        if (magister != null) {
-            System.out.println("Hey, " + magister.profile.nickname + "!");
-            for (Privilege privilege : magister.profile.privileges) {
-                System.out.println(privilege.name);
-            }
+    private static String toPrettyString(String key, String value) {
+        return "\t" + key + ": " + value + "\n";
+    }
+
+    private static String getStackTrace(Throwable throwable) {
+        StringWriter stringWriter = new StringWriter();
+        PrintWriter printWriter = new PrintWriter(stringWriter);
+
+        throwable.printStackTrace(printWriter);
+        String s = stringWriter.toString();
+
+        try {
+            stringWriter.close();
+            printWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
+        return s;
     }
 }

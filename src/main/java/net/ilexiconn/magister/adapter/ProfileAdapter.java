@@ -25,50 +25,26 @@
 
 package net.ilexiconn.magister.adapter;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
-import com.google.gson.JsonObject;
-import com.google.gson.TypeAdapter;
+import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import net.ilexiconn.magister.Magister;
-import net.ilexiconn.magister.cache.ContainerCache;
+import net.ilexiconn.magister.adapter.sub.PrivilegeAdapter;
 import net.ilexiconn.magister.container.Profile;
 import net.ilexiconn.magister.container.sub.Privilege;
 
 import java.io.IOException;
 
 public class ProfileAdapter extends TypeAdapter<Profile> {
-    public Magister magister;
+    public Gson gson = new GsonBuilder().registerTypeAdapter(Privilege[].class, new PrivilegeAdapter()).create();
 
-    public ProfileAdapter(Magister m) {
-        magister = m;
-    }
-
-    public void write(JsonWriter jsonWriter, Profile value) throws IOException {
+    public void write(JsonWriter out, Profile value) throws IOException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    public Profile read(JsonReader jsonReader) throws IOException {
-        JsonObject object = magister.gson.getAdapter(JsonElement.class).read(jsonReader).getAsJsonObject();
-        JsonObject person = object.get("Persoon").getAsJsonObject();
-        int id = person.get("Id").getAsInt();
-        Profile p = ContainerCache.get(id + "", Profile.class);
-        if (p != null) {
-            return p;
-        }
-        String nickname = person.get("Roepnaam").getAsString();
-        String surnamePrefix = person.get("Tussenvoegsel") instanceof JsonNull ? null : person.get("Tussenvoegsel").getAsString();
-        String surname = person.get("Achternaam").getAsString();
-        String officialFirstNames = person.get("OfficieleVoornamen").getAsString();
-        String initials = person.get("Voorletters").getAsString();
-        String officialSurnamePrefixes = person.get("OfficieleTussenvoegsels") instanceof JsonNull ? null : person.get("OfficieleTussenvoegsels").getAsString();
-        String officialSurname = person.get("OfficieleAchternaam").getAsString();
-        String dateOfBirth = person.get("Geboortedatum").getAsString();
-        String birthSurname = person.get("GeboorteAchternaam") instanceof JsonNull ? null : person.get("GeboorteAchternaam").getAsString();
-        String birthSurnamePrefix = person.get("GeboortenaamTussenvoegsel") instanceof JsonNull ? null : person.get("GeboortenaamTussenvoegsel").getAsString();
-        boolean useBirthName = person.get("GebruikGeboortenaam").getAsBoolean();
-        Privilege[] privileges = magister.gson.getAdapter(Privilege[].class).fromJsonTree(object.get("Groep").getAsJsonArray());
-        return new Profile(id, nickname, surnamePrefix, surname, officialFirstNames, initials, officialSurnamePrefixes, officialSurname, dateOfBirth, birthSurname, birthSurnamePrefix, useBirthName, privileges);
+    public Profile read(JsonReader in) throws IOException {
+        JsonObject object = gson.getAdapter(JsonElement.class).read(in).getAsJsonObject();
+        Profile profile = gson.fromJson(object.getAsJsonObject("Persoon"), Profile.class);
+        profile.privileges = gson.getAdapter(Privilege[].class).fromJsonTree(object.get("Groep"));
+        return profile;
     }
 }

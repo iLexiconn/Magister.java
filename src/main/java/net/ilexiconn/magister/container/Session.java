@@ -23,16 +23,21 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.ilexiconn.magister.container.sub;
+package net.ilexiconn.magister.container;
 
 import com.google.gson.annotations.SerializedName;
+import net.ilexiconn.magister.container.sub.Link;
 
-public class Privilege {
-    @SerializedName("Naam")
-    public String name;
+public class Session {
+    @SerializedName("id")
+    public String id;
 
-    @SerializedName("AccessType")
-    public String[] accessTypes;
+    @SerializedName("state")
+    public String state;
 
-    public transient String group;
+    @SerializedName("isVerified")
+    public boolean isVerified;
+
+    @SerializedName("links")
+    public Link[] links;
 }

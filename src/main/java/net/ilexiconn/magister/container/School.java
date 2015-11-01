@@ -23,16 +23,30 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.ilexiconn.magister.container.sub;
+package net.ilexiconn.magister.container;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
+import net.ilexiconn.magister.util.HttpUtil;
 
-public class Privilege {
-    @SerializedName("Naam")
+import java.io.IOException;
+
+public class School {
+    @SerializedName("Id")
+    public String id;
+
+    @SerializedName("Name")
     public String name;
 
-    @SerializedName("AccessType")
-    public String[] accessTypes;
+    @SerializedName("Url")
+    public String url;
 
-    public transient String group;
+    public static School[] findSchool(String s) {
+        try {
+            return new Gson().fromJson(HttpUtil.httpGet("https://mijn.magister.net/api/schools?filter=" + s), School[].class);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return new School[] {};
+        }
+    }
 }

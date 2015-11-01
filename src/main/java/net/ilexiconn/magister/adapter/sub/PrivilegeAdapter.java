@@ -25,14 +25,9 @@
 
 package net.ilexiconn.magister.adapter.sub;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.TypeAdapter;
+import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import net.ilexiconn.magister.Magister;
-import net.ilexiconn.magister.cache.ContainerCache;
 import net.ilexiconn.magister.container.sub.Privilege;
 
 import java.io.IOException;
@@ -40,37 +35,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PrivilegeAdapter extends TypeAdapter<Privilege[]> {
-    public Magister magister;
+    public Gson gson = new Gson();
 
-    public PrivilegeAdapter(Magister m) {
-        magister = m;
-    }
-
-    public void write(JsonWriter jsonWriter, Privilege[] value) throws IOException {
+    public void write(JsonWriter out, Privilege[] value) throws IOException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    public Privilege[] read(JsonReader jsonReader) throws IOException {
+    public Privilege[] read(JsonReader in) throws IOException {
+        JsonArray array = gson.getAdapter(JsonElement.class).read(in).getAsJsonArray();
         List<Privilege> privilegeList = new ArrayList<>();
-        JsonArray array = magister.gson.getAdapter(JsonElement.class).read(jsonReader).getAsJsonArray();
         for (JsonElement element : array) {
             JsonObject object = element.getAsJsonObject();
-            String type = object.get("Naam").getAsString();
+            String group = object.get("Naam").getAsString();
             JsonArray array1 = object.get("Privileges").getAsJsonArray();
             for (JsonElement element1 : array1) {
-                JsonObject object1 = element1.getAsJsonObject();
-                String name = object1.get("Naam").getAsString();
-                Privilege p = ContainerCache.get(type + name, Privilege.class);
-                if (p != null) {
-                    privilegeList.add(p);
-                    continue;
-                }
-                List<String> stringList = new ArrayList<>();
-                JsonArray array2 = object1.get("AccessType").getAsJsonArray();
-                for (JsonElement element2 : array2) {
-                    stringList.add(element2.getAsString());
-                }
-                privilegeList.add(new Privilege(type, name, stringList.toArray(new String[stringList.size()])));
+                Privilege privilege = gson.fromJson(element1, Privilege.class);
+                privilege.group = group;
+                privilegeList.add(privilege);
             }
         }
         return privilegeList.toArray(new Privilege[privilegeList.size()]);
