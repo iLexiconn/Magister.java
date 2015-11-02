@@ -25,26 +25,18 @@
 
 package net.ilexiconn.magister.container.sub;
 
-import net.ilexiconn.magister.cache.Cachable;
-import net.ilexiconn.magister.cache.ContainerCache;
+import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
+public class Group {
+    @SerializedName("Id")
+    public int id;
 
-public class Group implements Serializable, Cachable {
-    public final int id;
-    public final Link[] links;
-    public final String description;
-    public final int locationId;
+    @SerializedName("Links")
+    public Link[] links;
 
-    public Group(int i, Link[] l, String d, int o) {
-        id = i;
-        links = l;
-        description = d;
-        locationId = o;
-        ContainerCache.put(this, getClass());
-    }
+    @SerializedName("Omschrijving")
+    public String description;
 
-    public String getId() {
-        return id + "";
-    }
+    @SerializedName("LocatieId")
+    public int locationId;
 }

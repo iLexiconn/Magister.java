@@ -28,14 +28,13 @@ package net.ilexiconn.magister;
 import net.ilexiconn.magister.container.School;
 import net.ilexiconn.magister.container.sub.Privilege;
 
-import java.io.IOException;
-
 public class Test {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws Exception {
         Magister magister = Magister.login(School.findSchool(args[0])[0], args[1], args[2]);
 
         if (magister != null) {
             System.out.println("Hey, " + magister.profile.nickname + "!");
+            System.out.println(magister.currentStudy.description);
             for (Privilege privilege : magister.profile.privileges) {
                 System.out.println(privilege.name);
             }

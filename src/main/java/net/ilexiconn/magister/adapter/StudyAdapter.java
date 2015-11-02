@@ -25,54 +25,33 @@
 
 package net.ilexiconn.magister.adapter;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.TypeAdapter;
+import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import net.ilexiconn.magister.Magister;
-import net.ilexiconn.magister.cache.ContainerCache;
 import net.ilexiconn.magister.container.Study;
-import net.ilexiconn.magister.container.sub.Group;
-import net.ilexiconn.magister.container.sub.Link;
-import net.ilexiconn.magister.container.sub.SubStudy;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class StudyAdapter extends TypeAdapter<Study[]> {
-    public Magister magister;
+    public Gson gson = new Gson();
 
-    public StudyAdapter(Magister m) {
-        magister = m;
-    }
-
-    public void write(JsonWriter jsonWriter, Study[] value) throws IOException {
+    public void write(JsonWriter out, Study[] value) throws IOException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    public Study[] read(JsonReader jsonReader) throws IOException {
+    public Study[] read(JsonReader in) throws IOException {
+        JsonObject object = gson.getAdapter(JsonElement.class).read(in).getAsJsonObject();
+        JsonArray array = object.get("Items").getAsJsonArray();
         List<Study> studyList = new ArrayList<>();
-        JsonObject object = magister.gson.getAdapter(JsonElement.class).read(jsonReader).getAsJsonObject();
-        JsonArray items = object.get("Items").getAsJsonArray();
-        for (JsonElement element : items) {
-            JsonObject item = element.getAsJsonObject();
-            int id = item.get("Id").getAsInt();
-            Study s = ContainerCache.get(id + "", Study.class);
-            if (s != null) {
-                studyList.add(s);
-                continue;
-            }
-            Link[] links = magister.gson.getAdapter(Link[].class).fromJsonTree(item.get("Links"));
-            int pupilId = item.get("LeerlingId").getAsInt();
-            String startDate = item.get("Start").getAsString();
-            String endDate = item.get("Einde").getAsString();
-            String classPeriod = item.get("Lesperiode").getAsString();
-            SubStudy study = magister.gson.getAdapter(SubStudy.class).fromJsonTree(item.get("Studie"));
-            Group group = magister.gson.getAdapter(Group.class).fromJsonTree(item.get("Groep"));
-            studyList.add(new Study(id, links, pupilId, startDate, endDate, classPeriod, study, group));
+        for (JsonElement element : array) {
+            JsonObject object1 = element.getAsJsonObject();
+            Study study = gson.fromJson(object1, Study.class);
+            JsonObject object2 = object1.get("Studie").getAsJsonObject();
+            study.studyId = object2.get("Id").getAsInt();
+            study.description = object2.get("Omschrijving").getAsString();
+            studyList.add(study);
         }
         return studyList.toArray(new Study[studyList.size()]);
     }

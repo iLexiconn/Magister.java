@@ -25,37 +25,33 @@
 
 package net.ilexiconn.magister.container;
 
-import net.ilexiconn.magister.cache.Cachable;
-import net.ilexiconn.magister.cache.ContainerCache;
+import com.google.gson.annotations.SerializedName;
 import net.ilexiconn.magister.container.sub.Group;
 import net.ilexiconn.magister.container.sub.Link;
-import net.ilexiconn.magister.container.sub.SubStudy;
 
-import java.io.Serializable;
+public class Study {
+    @SerializedName("Id")
+    public int id;
 
-public class Study implements Serializable, Cachable {
-    public final int id;
-    public final Link[] links;
-    public final int pupilId;
-    public final String startDate;
-    public final String endDate;
-    public final String classPeriod;
-    public final SubStudy study;
-    public final Group group;
+    @SerializedName("Links")
+    public Link[] links;
 
-    public Study(int i, Link[] l, int p, String s, String e, String c, SubStudy t, Group g) {
-        id = i;
-        links = l;
-        pupilId = p;
-        startDate = s;
-        endDate = e;
-        classPeriod = c;
-        study = t;
-        group = g;
-        ContainerCache.put(this, getClass());
-    }
+    @SerializedName("LeerlingId")
+    public int pupilId;
 
-    public String getId() {
-        return id + "";
-    }
+    @SerializedName("Start")
+    public String startDate;
+
+    @SerializedName("Einde")
+    public String endDate;
+
+    @SerializedName("Lesperiode")
+    public String classPeriod;
+
+    @SerializedName("Groep")
+    public Group group;
+
+    public transient int studyId;
+
+    public transient String description;
 }

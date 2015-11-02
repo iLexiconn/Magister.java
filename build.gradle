@@ -1,5 +1,8 @@
-apply plugin: "java"
-apply plugin: "idea"
+plugins {
+    id "java"
+    id "idea"
+    id "maven-publish"
+}
 
 version = "0.1.0"
 group = "net.ilexiconn"
@@ -13,4 +16,54 @@ repositories {
 dependencies {
     compile "org.apache.httpcomponents:httpclient:4.5.1"
     compile "com.google.code.gson:gson:2.4"
+}
+
+task sourceJar(type: Jar, dependsOn: classes) {
+    classifier = "sources"
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = "javadoc"
+    from javadoc.destinationDir
+}
+
+artifacts {
+    archives sourceJar, javadocJar
+}
+
+import groovy.json.*
+publishing {
+    def configFile = file "config.json"
+    def config = new JsonSlurper().parseText configFile.text
+    publications {
+        mavenJava(MavenPublication) {
+            groupId "net.ilexiconn"
+            artifactId "magister"
+            version "0.1.0"
+
+            from components.java
+
+            artifact sourceJar {
+                classifier "sources"
+            }
+            
+            artifact javadocJar {
+                classifier "javadoc"
+            }
+            
+            pom.withXml {
+                asNode().appendNode("url", "https://github.com/iLexiconn/Magister.java")
+            }
+        }
+    }
+    repositories {
+        maven {
+            credentials {
+                username config.username
+                password config.password
+            }
+            url config.repo
+        }
+    }
 }

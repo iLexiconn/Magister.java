@@ -28,30 +28,35 @@ package net.ilexiconn.magister;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.ilexiconn.magister.adapter.ProfileAdapter;
-import net.ilexiconn.magister.container.Profile;
-import net.ilexiconn.magister.container.School;
-import net.ilexiconn.magister.container.Session;
-import net.ilexiconn.magister.container.Version;
+import net.ilexiconn.magister.adapter.StudyAdapter;
+import net.ilexiconn.magister.container.*;
 import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import java.io.IOException;
 import java.security.InvalidParameterException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Magister {
-    public Gson gson = new GsonBuilder().registerTypeAdapter(Profile.class, new ProfileAdapter()).create();
+    public Gson gson = new GsonBuilder()
+            .registerTypeAdapter(Profile.class, new ProfileAdapter())
+            .registerTypeAdapter(Study[].class, new StudyAdapter())
+            .create();
 
     public School school;
 
     public Version version;
     public Session session;
     public Profile profile;
+    public Study[] studies;
+    public Study currentStudy;
 
-    public static Magister login(School school, String username, String password) throws IOException {
+    public static Magister login(School school, String username, String password) throws Exception {
         Magister magister = new Magister();
         magister.school = school;
         magister.version = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/versie"), Version.class);
@@ -65,6 +70,14 @@ public class Magister {
             return null;
         }
         magister.profile = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/account"), Profile.class);
+        magister.studies = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + magister.profile.id + "/aanmeldingen"), Study[].class);
+        DateFormat format = new SimpleDateFormat("Y-m-d");
+        Date now = new Date();
+        for (Study study : magister.studies) {
+            if (format.parse(study.endDate.substring(0, 10)).after(now)) {
+                magister.currentStudy = study;
+            }
+        }
         return magister;
     }
 }
