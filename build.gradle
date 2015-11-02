@@ -33,9 +33,13 @@ artifacts {
 }
 
 import groovy.json.*
+def configFile = file "config.json"
+def config = null
+if (configFile.exists()) {
+    config = new JsonSlurper().parseText configFile.text
+}
+
 publishing {
-    def configFile = file "config.json"
-    def config = new JsonSlurper().parseText configFile.text
     publications {
         mavenJava(MavenPublication) {
             groupId "net.ilexiconn"
@@ -60,10 +64,19 @@ publishing {
     repositories {
         maven {
             credentials {
-                username config.username
-                password config.password
+                if (config != null) {
+                    username config.username
+                    password config.password
+                } else {
+                    username ""
+                    password ""
+                }
             }
-            url config.repo
+            if (config != null) {
+                url config.repo
+            } else {
+                url ""
+            }
         }
     }
 }
