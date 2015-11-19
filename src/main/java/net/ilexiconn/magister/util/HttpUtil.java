@@ -26,30 +26,23 @@
 package net.ilexiconn.magister.util;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
 public class HttpUtil {
-    private static CookieStore httpCookieStore = new BasicCookieStore();
-    private static CloseableHttpClient httpClient = HttpClientBuilder.create().setDefaultCookieStore(httpCookieStore).build();
+    private static CloseableHttpClient httpClient = HttpClients.createDefault();
 
     public static CloseableHttpClient getHttpClient() {
         return httpClient;
-    }
-
-    public static CookieStore getCookieStore() {
-        return httpCookieStore;
     }
 
     public static InputStreamReader httpDelete(String url) throws IOException {
@@ -58,9 +51,8 @@ public class HttpUtil {
         return getReader(response);
     }
 
-    public static InputStreamReader httpPost(String url, List<NameValuePair> nameValuePairList, String sessionId, String username) throws IOException {
+    public static InputStreamReader httpPost(String url, List<NameValuePair> nameValuePairList) throws IOException {
         HttpPost post = new HttpPost(url);
-        post.addHeader("Cookie", "SESSION_ID=" + sessionId + "; M6UserName=" + username);
         post.setEntity(new UrlEncodedFormEntity(nameValuePairList));
         CloseableHttpResponse response = getHttpClient().execute(post);
         return getReader(response);

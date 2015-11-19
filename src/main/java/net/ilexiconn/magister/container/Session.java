@@ -35,9 +35,6 @@ public class Session {
     @SerializedName("state")
     public String state;
 
-    @SerializedName("isVerified")
-    public boolean isVerified;
-
     @SerializedName("links")
     public Link[] links;
 }
