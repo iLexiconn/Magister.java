@@ -32,12 +32,12 @@ import java.io.StringWriter;
 public class LogUtil {
     public static void printError(String description, Throwable throwable) {
         String details = toPrettyString("Operating System", System.getProperty("os.name") + " (" + System.getProperty("os.arch") + ")") + toPrettyString("Java Version", System.getProperty("java.version"));
-        String report = "---- Error Report ----\n\nDescription: " + description + "\n\n-- Crash Log --\n" + getStackTrace(throwable) + "\n-- System Details --\n" + details;
+        String report = "---- Error Report ----\n" + description + "\n\n-- Crash Log --\n" + getStackTrace(throwable) + "\n-- System Details --\n" + details;
         System.err.println(report);
     }
 
     private static String toPrettyString(String key, String value) {
-        return "\t" + key + ": " + value + "\n";
+        return key + "\n\t" + value + "\n";
     }
 
     private static String getStackTrace(Throwable throwable) {
