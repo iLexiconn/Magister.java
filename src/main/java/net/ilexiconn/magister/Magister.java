@@ -33,6 +33,7 @@ import net.ilexiconn.magister.container.*;
 import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
 import org.apache.http.NameValuePair;
+import org.apache.http.cookie.Cookie;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.security.InvalidParameterException;
@@ -61,10 +62,11 @@ public class Magister {
         magister.school = school;
         magister.version = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/versie"), Version.class);
         HttpUtil.httpDelete(school.url + "/api/sessies/huidige");
+        Cookie sessionCookie = HttpUtil.getCookieStore().getCookies().get(0);
         List<NameValuePair> nameValuePairList = new ArrayList<>();
         nameValuePairList.add(new BasicNameValuePair("Gebruikersnaam", username));
         nameValuePairList.add(new BasicNameValuePair("Wachtwoord", password));
-        magister.session = magister.gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairList), Session.class);
+        magister.session = magister.gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairList, sessionCookie.getValue(), username), Session.class);
         if (!magister.session.isVerified || !magister.session.state.equals("active")) {
             LogUtil.printError("Invalid credentials", new InvalidParameterException());
             return null;
