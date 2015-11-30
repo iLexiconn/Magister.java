@@ -27,11 +27,19 @@ package net.ilexiconn.magister;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import net.ilexiconn.magister.adapter.AppointmentAdapter;
 import net.ilexiconn.magister.adapter.ProfileAdapter;
 import net.ilexiconn.magister.adapter.StudyAdapter;
-import net.ilexiconn.magister.container.*;
+import net.ilexiconn.magister.container.Appointment;
+import net.ilexiconn.magister.container.Profile;
+import net.ilexiconn.magister.container.School;
+import net.ilexiconn.magister.container.Session;
+import net.ilexiconn.magister.container.Study;
+import net.ilexiconn.magister.container.Version;
 import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
+
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -41,11 +49,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class Magister {
     public Gson gson = new GsonBuilder()
             .registerTypeAdapter(Profile.class, new ProfileAdapter())
             .registerTypeAdapter(Study[].class, new StudyAdapter())
+            .registerTypeAdapter(Appointment[].class, new AppointmentAdapter())
             .create();
 
     public School school;
@@ -71,7 +81,7 @@ public class Magister {
         }
         magister.profile = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/account"), Profile.class);
         magister.studies = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + magister.profile.id + "/aanmeldingen"), Study[].class);
-        DateFormat format = new SimpleDateFormat("Y-m-d");
+        DateFormat format = new SimpleDateFormat("y-m-d", Locale.ENGLISH);
         Date now = new Date();
         for (Study study : magister.studies) {
             if (format.parse(study.endDate.substring(0, 10)).after(now)) {
@@ -79,5 +89,21 @@ public class Magister {
             }
         }
         return magister;
+    }
+
+    public Appointment[] getAppointments(Date from, Date until) throws Exception{
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        String Date1 = format.format(from);
+        String Date2 = format.format(until);
+        return this.gson.fromJson(HttpUtil.httpGet(this.school.url + "/api/personen/" + this.profile.id + "/afspraken?status=0&van=" + Date1 + "&tot=" + Date2), Appointment[].class);
+    }
+
+    public Appointment[] getAppointmentsOfToday(){
+        Date now = new Date();
+        try {
+            return getAppointments(now, now);
+        }catch (Exception e){
+            return null;
+        }
     }
 }
