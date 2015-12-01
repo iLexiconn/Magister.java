@@ -4,10 +4,10 @@ plugins {
     id "maven-publish"
 }
 
-version = "0.1.0"
+version = getVersionFromJava()
 group = "net.ilexiconn"
 archivesBaseName = "magister"
-sourceCompatibility = targetCompatibility = 1.7
+sourceCompatibility = targetCompatibility = "1.6"
 
 repositories {
     mavenCentral()
@@ -15,7 +15,7 @@ repositories {
 
 dependencies {
     compile "org.apache.httpcomponents:httpclient:4.5.1"
-    compile "com.google.code.gson:gson:2.4"
+    compile "com.google.code.gson:gson:2.5"
 }
 
 task sourceJar(type: Jar, dependsOn: classes) {
@@ -32,11 +32,14 @@ artifacts {
     archives sourceJar, javadocJar
 }
 
-import groovy.json.*
-def configFile = file "config.json"
+def configFile = file "secret.properties"
 def config = null
 if (configFile.exists()) {
-    config = new JsonSlurper().parseText configFile.text
+    configFile.withReader {
+        def prop = new Properties()
+        prop.load(it)
+        config = new ConfigSlurper().parse prop
+    }
 }
 
 publishing {
@@ -44,7 +47,7 @@ publishing {
         mavenJava(MavenPublication) {
             groupId "net.ilexiconn"
             artifactId "magister"
-            version "0.1.0"
+            version getVersionFromJava()
 
             from components.java
 
@@ -79,4 +82,23 @@ publishing {
             }
         }
     }
+}
+
+String getVersionFromJava() {
+    String major = "0";
+    String revision = "0";
+    String patch = "0";
+    String prefix = "public static final String VERSION = \"";
+    File file = file("src/main/java/net/ilexiconn/magister/Magister.java")
+    file.eachLine { String s ->
+        s = s.trim();
+        if (s.startsWith(prefix)) {
+            s = s.substring(prefix.length(), s.length() - 2);
+            String[] parts = s.split("\\.");
+            major = parts[0];
+            revision = parts[1];
+            patch = parts[2];
+        }
+    }
+    return "$major.$revision.$patch";
 }
