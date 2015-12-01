@@ -4,3 +4,5 @@ out/
 *.ipr
 *.iws
 config.json
+.idea
+build/

@@ -49,7 +49,7 @@ public class AppointmentAdapter extends TypeAdapter<Appointment[]> {
     public Appointment[] read(JsonReader in) throws IOException {
         JsonObject object = gson.getAdapter(JsonElement.class).read(in).getAsJsonObject();
         JsonArray array = object.get("Items").getAsJsonArray();
-        List<Appointment> AppointmentList = new ArrayList<>();
+        List<Appointment> AppointmentList = new ArrayList<Appointment>();
         for (JsonElement element : array) {
             JsonObject object1 = element.getAsJsonObject();
             Appointment appointment = gson.fromJson(object1, Appointment.class);

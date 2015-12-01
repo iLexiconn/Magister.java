@@ -44,7 +44,7 @@ public class StudyAdapter extends TypeAdapter<Study[]> {
     public Study[] read(JsonReader in) throws IOException {
         JsonObject object = gson.getAdapter(JsonElement.class).read(in).getAsJsonObject();
         JsonArray array = object.get("Items").getAsJsonArray();
-        List<Study> studyList = new ArrayList<>();
+        List<Study> studyList = new ArrayList<Study>();
         for (JsonElement element : array) {
             JsonObject object1 = element.getAsJsonObject();
             Study study = gson.fromJson(object1, Study.class);

@@ -43,7 +43,7 @@ public class PrivilegeAdapter extends TypeAdapter<Privilege[]> {
 
     public Privilege[] read(JsonReader in) throws IOException {
         JsonArray array = gson.getAdapter(JsonElement.class).read(in).getAsJsonArray();
-        List<Privilege> privilegeList = new ArrayList<>();
+        List<Privilege> privilegeList = new ArrayList<Privilege>();
         for (JsonElement element : array) {
             JsonObject object = element.getAsJsonObject();
             String group = object.get("Naam").getAsString();
