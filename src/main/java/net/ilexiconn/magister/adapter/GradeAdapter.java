@@ -35,10 +35,12 @@ public class GradeAdapter extends TypeAdapter<Grade[]> {
                 gradeList.add(ContainerCache.get("grade-" + id, Grade.class));
             } else {
                 Grade grade = gson.fromJson(object1, Grade.class);
-                try {
-                    grade.filledInDate = Appointment.appointmentDateToDate(grade.filledInDateString);
-                } catch (ParseException e) {
-                    LogUtil.printError("Unable to parse date", e);
+                if (grade.filledInDateString != null) {
+                    try {
+                        grade.filledInDate = Appointment.appointmentDateToDate(grade.filledInDateString);
+                    } catch (ParseException e) {
+                        LogUtil.printError("Unable to parse date", e);
+                    }
                 }
                 ContainerCache.add(grade);
                 gradeList.add(grade);
