@@ -71,7 +71,7 @@ public class Magister {
         magister.school = school;
         magister.version = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/versie"), Version.class);
         HttpUtil.httpDelete(school.url + "/api/sessies/huidige");
-        List<NameValuePair> nameValuePairList = new ArrayList<>();
+        List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
         nameValuePairList.add(new BasicNameValuePair("Gebruikersnaam", username));
         nameValuePairList.add(new BasicNameValuePair("Wachtwoord", password));
         magister.session = magister.gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairList), Session.class);
