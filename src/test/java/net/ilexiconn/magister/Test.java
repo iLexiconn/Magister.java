@@ -29,11 +29,43 @@ import net.ilexiconn.magister.container.Appointment;
 import net.ilexiconn.magister.container.School;
 import net.ilexiconn.magister.container.sub.Privilege;
 
-import java.util.Date;
+import java.util.Scanner;
 
 public class Test {
     public static void main(String[] args) throws Exception {
-        Magister magister = Magister.login(School.findSchool(args[0])[0], args[1], args[2]);
+        School school = null;
+        if (args.length == 2) {
+            Scanner scanner = new Scanner(System.in);
+            while (school == null) {
+                System.out.print("Please enter your school's name: ");
+                String name = scanner.next();
+                School[] schools = School.findSchool(name);
+                if (schools.length > 1) {
+                    for (int i = 0; i < schools.length; i++) {
+                        System.out.println((i + 1) + ". " + schools[i].name);
+                    }
+                    int id = 0;
+                    while (id <= 0 || id > schools.length) {
+                        System.out.print("Please select your school: ");
+                        try {
+                            id = Integer.parseInt(scanner.next());
+                        } catch (NumberFormatException e) {
+                            id = 0;
+                        }
+                    }
+                    school = schools[id - 1];
+                } else if (schools.length == 1) {
+                    school = schools[0];
+                }
+            }
+        } else if (args.length == 3) {
+            school = School.findSchool(args[0])[0];
+        } else {
+            return;
+        }
+
+        System.out.println("Using school " + school.name);
+        Magister magister = Magister.login(school, args[args.length == 2 ? 0 : 1], args[args.length == 2 ? 1 : 2]);
 
         if (magister != null) {
             System.out.println("Hey, " + magister.profile.nickname + "!");
