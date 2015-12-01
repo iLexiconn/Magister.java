@@ -20,6 +20,11 @@ Before creating issues
 2. Make sure your code doesn't contain any errors.
 3. Make sure you're not using a modified version of the api.
 
+Credits
+==========
+[MrWolvetech](https://github.com/MrWolvetech)
+[KeizerDev](https://github.com/KeizerDev)
+
 License
 ==========
 [MIT](LICENSE.md)
