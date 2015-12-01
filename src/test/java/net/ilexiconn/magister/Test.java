@@ -77,8 +77,8 @@ public class Test {
             }
 
             System.out.println("=========== Grades ===========");
-            for (Grade grade : magister.getAllGrades()){
-                System.out.println(grade.grade);
+            for (Grade grade : magister.getAllGrades()) {
+                System.out.println(grade.course.name + ": " + grade.grade);
             }
 
             System.out.println("========= Privileges =========");
