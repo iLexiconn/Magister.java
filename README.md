@@ -22,7 +22,7 @@ Before creating issues
 
 Credits
 ==========
-[MrWolvetech](https://github.com/MrWolvetech)
+[MrWolvetech](https://github.com/MrWolvetech)  
 [KeizerDev](https://github.com/KeizerDev)
 
 License
