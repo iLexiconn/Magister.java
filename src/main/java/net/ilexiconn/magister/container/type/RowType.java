@@ -1,19 +1,19 @@
 package net.ilexiconn.magister.container.type;
 
-public enum DisplayType {
-    AVAILABLE(1),
-    PROVISIONALLY_SCHEDULED(2),
-    SCHEDULED(3),
-    ABSENT(4);
+public enum RowType {
+    NULL(0),
+    UNKNOWN(1),
+    AVERAGE(2),
+    NORMAL(3);
 
     private int id;
 
-    private DisplayType(int i) {
+    private RowType(int i) {
         id = i;
     }
 
-    public static DisplayType getTypeById(int i) {
-        for (DisplayType type : values()) {
+    public static RowType getTypeById(int i) {
+        for (RowType type : values()) {
             if (type.getID() == i) {
                 return type;
             }

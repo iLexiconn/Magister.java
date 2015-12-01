@@ -27,10 +27,6 @@ public enum AppointmentType {
         id = i;
     }
 
-    public int getID() {
-        return id;
-    }
-
     public static AppointmentType getTypeById(int i) {
         for (AppointmentType type : values()) {
             if (type.getID() == i) {
@@ -38,5 +34,9 @@ public enum AppointmentType {
             }
         }
         return null;
+    }
+
+    public int getID() {
+        return id;
     }
 }

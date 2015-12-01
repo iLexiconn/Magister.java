@@ -1,9 +1,9 @@
 package net.ilexiconn.magister.container.sub;
 
 import com.google.gson.annotations.SerializedName;
+import net.ilexiconn.magister.container.type.RowType;
 
 public class GradeRow {
-
     @SerializedName("Id")
     public int id;
 
@@ -16,24 +16,14 @@ public class GradeRow {
     @SerializedName("KolomNummer")
     public String rowNumber;
 
-    public transient String rowDiscription; //Discription of grade
-    /*
-        Not Implemented yet.
-        Can't use @SerializedName("KolomOmschrijving") because this is always null.
-     */
+    @SerializedName("KolomOmschrijving")
+    public String rowDiscription; //TODO: See if this works
 
     @SerializedName("KolomKop")
     public String rowTitle;
 
     @SerializedName("KolomSoort")
-    public int rowSort;
-    /*
-        rowSort:
-            when 0 : null
-            when 1 : unknown
-            when 2 : Average
-            when 3 : normal
-    */
+    public RowType rowSort;
 
     @SerializedName("IsDocentKolom")
     public boolean isTeacherOnly;

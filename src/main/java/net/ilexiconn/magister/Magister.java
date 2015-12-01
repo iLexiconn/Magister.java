@@ -27,21 +27,13 @@ package net.ilexiconn.magister;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import net.ilexiconn.magister.adapter.AppointmentAdapter;
 import net.ilexiconn.magister.adapter.GradeAdapter;
 import net.ilexiconn.magister.adapter.ProfileAdapter;
 import net.ilexiconn.magister.adapter.StudyAdapter;
-import net.ilexiconn.magister.container.Appointment;
-import net.ilexiconn.magister.container.Grade;
-import net.ilexiconn.magister.container.Profile;
-import net.ilexiconn.magister.container.School;
-import net.ilexiconn.magister.container.Session;
-import net.ilexiconn.magister.container.Study;
-import net.ilexiconn.magister.container.Version;
+import net.ilexiconn.magister.container.*;
 import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -55,14 +47,14 @@ import java.util.List;
 import java.util.Locale;
 
 public class Magister {
-    public static final String VERSION = "0.1.0";
+    public static final String VERSION = "0.1.0-develop";
 
     public Gson gson = new GsonBuilder()
             .registerTypeAdapter(Profile.class, new ProfileAdapter())
             .registerTypeAdapter(Study[].class, new StudyAdapter())
             .registerTypeAdapter(Appointment[].class, new AppointmentAdapter())
             .registerTypeAdapter(Grade[].class, new GradeAdapter())
-    .create();
+            .create();
 
     public School school;
 
@@ -97,7 +89,7 @@ public class Magister {
         return magister;
     }
 
-    public Appointment[] getAppointments(Date from, Date until) throws IOException{
+    public Appointment[] getAppointments(Date from, Date until) throws IOException {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         String dateNow = format.format(from);
         String dateFrom = format.format(until);
@@ -110,7 +102,7 @@ public class Magister {
     }
 
     public Grade[] getGrades(boolean onlyAverage, boolean onlyPTA, boolean onlyActiveStudy) throws IOException {
-        return this.gson.fromJson(HttpUtil.httpGet(this.school.url + "/api/personen/" + this.profile.id + "/aanmeldingen/" + this.currentStudy.id + "/cijfers/cijferoverzichtvooraanmelding?alleenBerekendeKolommen=" + onlyAverage + "&alleenPTAKolommen=" + onlyPTA + "&actievePerioden=" + onlyActiveStudy), Grade[].class);
+        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/aanmeldingen/" + currentStudy.id + "/cijfers/cijferoverzichtvooraanmelding?alleenBerekendeKolommen=" + onlyAverage + "&alleenPTAKolommen=" + onlyPTA + "&actievePerioden=" + onlyActiveStudy), Grade[].class);
     }
 
     public Grade[] getAllGrades() throws IOException {

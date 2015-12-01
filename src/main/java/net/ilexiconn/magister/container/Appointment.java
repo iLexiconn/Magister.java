@@ -1,12 +1,7 @@
 package net.ilexiconn.magister.container;
 
 import com.google.gson.annotations.SerializedName;
-
-import net.ilexiconn.magister.container.sub.Classroom;
-import net.ilexiconn.magister.container.sub.Course;
-import net.ilexiconn.magister.container.sub.Group;
-import net.ilexiconn.magister.container.sub.Link;
-import net.ilexiconn.magister.container.sub.Teacher;
+import net.ilexiconn.magister.container.sub.*;
 import net.ilexiconn.magister.container.type.AppointmentType;
 import net.ilexiconn.magister.container.type.DisplayType;
 import net.ilexiconn.magister.container.type.InfoType;
@@ -71,13 +66,12 @@ public class Appointment {
     @SerializedName("Omschrijving")
     public String description;
 
-    public static Date appointmentDateToDate(String date) throws ParseException{
-        if(date == null){
+    public static Date appointmentDateToDate(String date) throws ParseException {
+        if (date == null) {
             throw new ParseException("String parameter was null", 0);
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss.SSSSSSS");
         format.setTimeZone(TimeZone.getTimeZone("GMT-0"));
         return format.parse(date.replace("T", "-").replace("Z", ""));
     }
-
 }

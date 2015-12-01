@@ -71,17 +71,17 @@ public class Test {
         if (magister != null) {
             System.out.println("Hey, " + magister.profile.nickname + "!");
 
-            System.out.println("Apponitments:");
+            System.out.println("======== Appointments ========");
             for (Appointment appointment : magister.getAppointmentsOfToday()) {
                 System.out.println(appointment.description);
             }
 
-            System.out.println("Grades:");
+            System.out.println("=========== Grades ===========");
             for (Grade grade : magister.getAllGrades()){
                 System.out.println(grade.grade);
             }
 
-            System.out.println("Privileges:");
+            System.out.println("========= Privileges =========");
             for (Privilege privilege : magister.profile.privileges) {
                 System.out.println(privilege.name);
             }

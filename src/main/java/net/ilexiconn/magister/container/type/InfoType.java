@@ -16,10 +16,6 @@ public enum InfoType {
         id = i;
     }
 
-    public int getID() {
-        return id;
-    }
-
     public static InfoType getTypeById(int i) {
         for (InfoType type : values()) {
             if (type.getID() == i) {
@@ -27,5 +23,9 @@ public enum InfoType {
             }
         }
         return null;
+    }
+
+    public int getID() {
+        return id;
     }
 }
