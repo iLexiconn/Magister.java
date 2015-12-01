@@ -1,11 +1,13 @@
 package net.ilexiconn.magister.container;
 
 import com.google.gson.annotations.SerializedName;
-
-import net.ilexiconn.magister.container.sub.ClassRoom;
+import net.ilexiconn.magister.container.sub.Classroom;
 import net.ilexiconn.magister.container.sub.Group;
 import net.ilexiconn.magister.container.sub.Link;
 import net.ilexiconn.magister.container.sub.Teacher;
+import net.ilexiconn.magister.container.type.AppointmentType;
+import net.ilexiconn.magister.container.type.DisplayType;
+import net.ilexiconn.magister.container.type.InfoType;
 
 public class Appointment {
     @SerializedName("Id")
@@ -24,85 +26,41 @@ public class Appointment {
     public String endDate;
 
     @SerializedName("LesuurVan")
-    public int PeriodFrom;
+    public int periodFrom;
 
     @SerializedName("LesuurTotMet")
-    public int PeriodUpToAndIncluding;
+    public int periodUpToAndIncluding;
 
     @SerializedName("DuurtHeleDag")
-    public boolean TakesAllDag;
+    public boolean takesAllDay;
 
     @SerializedName("Lokatie")
     public String location;
 
+    /**
+     * 1 = normal
+     * 4 = falls out
+     */
     @SerializedName("Status")
-    public int ClassState;// 1 = normal, 4 = falls out
+    public int classState;
 
-    @SerializedName("Type")
-    public int Type;
-    /*
-        Types:
-                when 1 then 'personal'
-				when 2 then 'general'
-				when 3 then 'schoolwide'
-				when 4 then 'internship'
-				when 5 then 'intake'
-				when 6 then 'scheduleFree'
-				when 7 then 'kwt'
-				when 8 then 'standby'
-				when 9 then 'block'
-				when 10 then 'miscellaneous'
-				when 11 then 'localBlock'
-				when 12 then 'classBlock'
-				when 13 then 'lesson'
-				when 14 then 'studiehuis'
-				when 15 then 'scheduleFreeStudy'
-				when 16 then 'planning'
-				# what's up with this big hole here, schoolmaster?
-				when 101 then 'actions'
-				when 102 then 'presences'
-				when 103 then 'examSchedule'
+    public transient AppointmentType type;
 
-     */
+    public transient DisplayType displayType;
 
-    @SerializedName("WeergaveType")
-    public int DisplayType;
-
-    /*
-        DisplayTypes:
-    			when 1 then 'available'
-				when 2 then 'provisionallyScheduled'
-				when 3 then 'scheduled'
-				when 4 then 'absent'
-     */
-
-    @SerializedName("InfoType")
-    public int InfoType;
-
-    /*
-        InfoTypes:
-     			when 0 then 'none'
-				when 1 then 'homework'
-				when 2 then 'test'
-				when 3 then 'exam'
-				when 4 then 'quiz'
-				when 5 then 'oral'
-				when 6 then 'information'
-				when 7 then 'annotation'
-
-     */
+    public transient InfoType infoType;
 
     @SerializedName("Afgerond")
     public boolean finished;
 
     @SerializedName("Vakken")
-    public net.ilexiconn.magister.container.sub.Class[] Classes;
+    public net.ilexiconn.magister.container.sub.Class[] classes;
 
     @SerializedName("Lokalen")
-    public ClassRoom[] ClassRooms;
+    public Classroom[] classrooms;
 
     @SerializedName("Docenten")
-    public Teacher[] Teachers;
+    public Teacher[] teachers;
 
     @SerializedName("Groep")
     public Group group;

@@ -27,22 +27,16 @@ package net.ilexiconn.magister;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
 import net.ilexiconn.magister.adapter.AppointmentAdapter;
 import net.ilexiconn.magister.adapter.ProfileAdapter;
 import net.ilexiconn.magister.adapter.StudyAdapter;
-import net.ilexiconn.magister.container.Appointment;
-import net.ilexiconn.magister.container.Profile;
-import net.ilexiconn.magister.container.School;
-import net.ilexiconn.magister.container.Session;
-import net.ilexiconn.magister.container.Study;
-import net.ilexiconn.magister.container.Version;
+import net.ilexiconn.magister.container.*;
 import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
+import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -93,19 +87,15 @@ public class Magister {
         return magister;
     }
 
-    public Appointment[] getAppointments(Date from, Date until) throws Exception{
+    public Appointment[] getAppointments(Date from, Date until) throws IOException {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-        String Date1 = format.format(from);
-        String Date2 = format.format(until);
-        return this.gson.fromJson(HttpUtil.httpGet(this.school.url + "/api/personen/" + this.profile.id + "/afspraken?status=0&van=" + Date1 + "&tot=" + Date2), Appointment[].class);
+        String dateNow = format.format(from);
+        String dateFrom = format.format(until);
+        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/afspraken?status=0&van=" + dateNow + "&tot=" + dateFrom), Appointment[].class);
     }
 
-    public Appointment[] getAppointmentsOfToday(){
+    public Appointment[] getAppointmentsOfToday() throws IOException {
         Date now = new Date();
-        try {
-            return getAppointments(now, now);
-        }catch (Exception e){
-            return null;
-        }
+        return getAppointments(now, now);
     }
 }

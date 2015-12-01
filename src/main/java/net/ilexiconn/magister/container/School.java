@@ -28,6 +28,7 @@ package net.ilexiconn.magister.container;
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 import net.ilexiconn.magister.util.HttpUtil;
+import net.ilexiconn.magister.util.LogUtil;
 
 import java.io.IOException;
 
@@ -42,14 +43,15 @@ public class School {
     public String url;
 
     public static School[] findSchool(String s) {
-        if (s.length() <= 3)
-            return new School[] {};
+        if (s.length() <= 3) {
+            return new School[]{};
+        }
 
         try {
             return new Gson().fromJson(HttpUtil.httpGet("https://mijn.magister.net/api/schools?filter=" + s), School[].class);
         } catch (IOException e) {
-            e.printStackTrace();
-            return new School[] {};
+            LogUtil.printError("Unable to finish request", e);
+            return new School[]{};
         }
     }
 }

@@ -10,5 +10,5 @@ public class Teacher {
     public String name;
 
     @SerializedName("Docentcode")
-    public String TeacherAbbreviation;
+    public String abbreviation;
 }

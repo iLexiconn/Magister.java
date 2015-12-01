@@ -35,7 +35,9 @@ import net.ilexiconn.magister.container.sub.Privilege;
 import java.io.IOException;
 
 public class ProfileAdapter extends TypeAdapter<Profile> {
-    public Gson gson = new GsonBuilder().registerTypeAdapter(Privilege[].class, new PrivilegeAdapter()).create();
+    public Gson gson = new GsonBuilder()
+            .registerTypeAdapter(Privilege[].class, new PrivilegeAdapter())
+            .create();
 
     public void write(JsonWriter out, Profile value) throws IOException {
         throw new UnsupportedOperationException("Not implemented");
