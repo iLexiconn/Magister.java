@@ -26,6 +26,7 @@
 package net.ilexiconn.magister;
 
 import net.ilexiconn.magister.container.Appointment;
+import net.ilexiconn.magister.container.Grade;
 import net.ilexiconn.magister.container.School;
 import net.ilexiconn.magister.container.sub.Privilege;
 
@@ -70,10 +71,17 @@ public class Test {
         if (magister != null) {
             System.out.println("Hey, " + magister.profile.nickname + "!");
 
+            System.out.println("Apponitments:");
             for (Appointment appointment : magister.getAppointmentsOfToday()) {
                 System.out.println(appointment.description);
             }
 
+            System.out.println("Grades:");
+            for (Grade grade : magister.getAllGrades()){
+                System.out.println(grade.grade);
+            }
+
+            System.out.println("Privileges:");
             for (Privilege privilege : magister.profile.privileges) {
                 System.out.println(privilege.name);
             }
