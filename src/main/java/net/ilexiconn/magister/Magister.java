@@ -27,10 +27,7 @@ package net.ilexiconn.magister;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.ilexiconn.magister.adapter.AppointmentAdapter;
-import net.ilexiconn.magister.adapter.GradeAdapter;
-import net.ilexiconn.magister.adapter.ProfileAdapter;
-import net.ilexiconn.magister.adapter.StudyAdapter;
+import net.ilexiconn.magister.adapter.*;
 import net.ilexiconn.magister.container.*;
 import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
@@ -54,6 +51,7 @@ public class Magister {
             .registerTypeAdapter(Study[].class, new StudyAdapter())
             .registerTypeAdapter(Appointment[].class, new AppointmentAdapter())
             .registerTypeAdapter(Grade[].class, new GradeAdapter())
+            .registerTypeAdapter(Contact[].class, new ContactAdapter())
             .create();
 
     public School school;
@@ -107,5 +105,17 @@ public class Magister {
 
     public Grade[] getAllGrades() throws IOException {
         return getGrades(false, false, false);
+    }
+
+    public Contact[] getPupilInfo(String name) throws IOException {
+        return getContactInfo(name, "Leerling");
+    }
+
+    public Contact[] getTeacherInfo(String name) throws IOException {
+        return getContactInfo(name, "Personeel");
+    }
+
+    public Contact[] getContactInfo(String name, String type) throws IOException {
+        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/contactpersonen?contactPersoonType=" + type + "&q=" + name), Contact[].class);
     }
 }
