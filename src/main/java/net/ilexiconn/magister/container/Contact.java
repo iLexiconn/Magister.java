@@ -1,10 +1,9 @@
 package net.ilexiconn.magister.container;
 
 import com.google.gson.annotations.SerializedName;
-import net.ilexiconn.magister.cache.ICachable;
 import net.ilexiconn.magister.container.sub.Link;
 
-public class Contact implements ICachable {
+public class Contact {
     @SerializedName("Id")
     public int id;
 
@@ -25,12 +24,4 @@ public class Contact implements ICachable {
 
     @SerializedName("Type")
     public int type; //???
-
-    public String getID() {
-        return "contact-" + id;
-    }
-
-    public Class<? extends ICachable> getType() {
-        return Contact.class;
-    }
 }

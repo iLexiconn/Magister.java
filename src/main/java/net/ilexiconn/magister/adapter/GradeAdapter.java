@@ -4,7 +4,6 @@ import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.ilexiconn.magister.adapter.type.RowTypeAdapter;
-import net.ilexiconn.magister.cache.ContainerCache;
 import net.ilexiconn.magister.container.Appointment;
 import net.ilexiconn.magister.container.Grade;
 import net.ilexiconn.magister.container.type.RowType;
@@ -30,21 +29,15 @@ public class GradeAdapter extends TypeAdapter<Grade[]> {
         List<Grade> gradeList = new ArrayList<Grade>();
         for (JsonElement element : array) {
             JsonObject object1 = element.getAsJsonObject();
-            int id = object1.get("CijferId").getAsInt();
-            if (ContainerCache.has("grade-" + id, Grade.class)) {
-                gradeList.add(ContainerCache.get("grade-" + id, Grade.class));
-            } else {
-                Grade grade = gson.fromJson(object1, Grade.class);
-                if (grade.filledInDateString != null) {
-                    try {
-                        grade.filledInDate = Appointment.appointmentDateToDate(grade.filledInDateString);
-                    } catch (ParseException e) {
-                        LogUtil.printError("Unable to parse date", e);
-                    }
+            Grade grade = gson.fromJson(object1, Grade.class);
+            if (grade.filledInDateString != null) {
+                try {
+                    grade.filledInDate = Appointment.appointmentDateToDate(grade.filledInDateString);
+                } catch (ParseException e) {
+                    LogUtil.printError("Unable to parse date", e);
                 }
-                ContainerCache.add(grade);
-                gradeList.add(grade);
             }
+            gradeList.add(grade);
         }
         return gradeList.toArray(new Grade[gradeList.size()]);
     }

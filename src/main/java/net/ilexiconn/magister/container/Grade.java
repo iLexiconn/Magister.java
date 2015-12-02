@@ -1,14 +1,13 @@
 package net.ilexiconn.magister.container;
 
 import com.google.gson.annotations.SerializedName;
-import net.ilexiconn.magister.cache.ICachable;
 import net.ilexiconn.magister.container.sub.Course;
 import net.ilexiconn.magister.container.sub.GradePeriod;
 import net.ilexiconn.magister.container.sub.GradeRow;
 
 import java.util.Date;
 
-public class Grade implements ICachable {
+public class Grade {
     @SerializedName("CijferId")
     public int id;
 
@@ -55,12 +54,4 @@ public class Grade implements ICachable {
 
     @SerializedName("VakVrijstelling")
     public String dispensationForCourse2;
-
-    public String getID() {
-        return "grade-" + id;
-    }
-
-    public Class<? extends ICachable> getType() {
-        return Grade.class;
-    }
 }
