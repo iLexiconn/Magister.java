@@ -79,7 +79,7 @@ public class Test {
             }
 
             System.out.println("=========== Grades ===========");
-            for (Grade grade : magister.getGrades(true, true, true)) {
+            for (Grade grade : magister.getGrades(true, false, true)) {
                 System.out.println(grade.course.name + ": " + grade.grade);
             }
 
