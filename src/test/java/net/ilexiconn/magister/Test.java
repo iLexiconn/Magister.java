@@ -25,10 +25,7 @@
 
 package net.ilexiconn.magister;
 
-import net.ilexiconn.magister.container.Appointment;
-import net.ilexiconn.magister.container.Contact;
-import net.ilexiconn.magister.container.Grade;
-import net.ilexiconn.magister.container.School;
+import net.ilexiconn.magister.container.*;
 import net.ilexiconn.magister.container.sub.Privilege;
 
 import java.util.Scanner;
@@ -72,6 +69,11 @@ public class Test {
         if (magister != null) {
             System.out.println("Hey, " + magister.profile.nickname + "!");
             System.out.println("ID: " + magister.profile.id);
+
+            System.out.println("======== MessageFolders ========");
+            for (MessageFolder messageFolder : magister.getMessageFolders()) {
+                System.out.println(messageFolder.naam);
+            }
 
             System.out.println("======== Appointments ========");
             for (Appointment appointment : magister.getAppointmentsOfToday()) {
