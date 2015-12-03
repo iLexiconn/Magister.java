@@ -30,9 +30,21 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 public class LogUtil {
+    private static String TAG = "MAGISTER.JAVA";
+
     public static void printError(String description, Throwable throwable) {
         String details = toPrettyString("Operating System", System.getProperty("os.name") + " (" + System.getProperty("os.arch") + ")") + toPrettyString("Java Version", System.getProperty("java.version"));
         String report = "---- Error Report ----\n" + description + "\n\n-- Crash Log --\n" + getStackTrace(throwable) + "\n-- System Details --\n" + details;
+        if(AndroidUtil.getRunningOnAndroid()){
+            try {
+                Class logClass = Class.forName("android.util.Log");
+                logClass.getMethod("e", String.class, String.class, Throwable.class).invoke(null, TAG, description, throwable);
+            }catch (Exception e){
+                System.err.println(report);
+            }finally {
+                return;
+            }
+        }
         System.err.println(report);
     }
 
@@ -55,5 +67,9 @@ public class LogUtil {
         }
 
         return s;
+    }
+
+    public static void setAndroidTag(String s){
+        TAG = s;
     }
 }

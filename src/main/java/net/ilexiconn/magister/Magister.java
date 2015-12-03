@@ -38,10 +38,7 @@ import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class Magister {
     public static final String VERSION = "0.1.0-develop";
@@ -49,6 +46,7 @@ public class Magister {
     public Gson gson = new GsonBuilder()
             .registerTypeAdapter(Profile.class, new ProfileAdapter())
             .registerTypeAdapter(Study[].class, new StudyAdapter())
+            .registerTypeAdapter(Contact[].class, new ContactAdapter())
             .registerTypeAdapter(Contact[].class, new ContactAdapter())
             .registerTypeAdapter(Appointment[].class, new AppointmentAdapter())
             .registerTypeAdapter(Grade[].class, new GradeAdapter())
@@ -67,13 +65,14 @@ public class Magister {
 
     public static Magister login(School school, String username, String password) throws Exception {
         Magister magister = new Magister();
+        AndroidUtil.isRunningOnAndroid();
         magister.school = school;
         magister.version = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/versie"), Version.class);
         HttpUtil.httpDelete(school.url + "/api/sessies/huidige");
-        List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-        nameValuePairList.add(new BasicNameValuePair("Gebruikersnaam", username));
-        nameValuePairList.add(new BasicNameValuePair("Wachtwoord", password));
-        magister.session = magister.gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairList), Session.class);
+        HashMap<String, String> nameValuePairMap = new HashMap<String, String>();
+        nameValuePairMap.put("Gebruikersnaam", username);
+        nameValuePairMap.put("Wachtwoord", password);
+        magister.session = magister.gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairMap), Session.class);
         if (!magister.session.state.equals("active")) {
             LogUtil.printError("Invalid credentials", new InvalidParameterException());
             return null;
@@ -122,6 +121,24 @@ public class Magister {
     public Grade[] getAllGrades() throws IOException {
         return getGrades(false, false, false);
     }
+
+    public MessageFolder[] getMessageFolders() throws IOException {
+        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten/mappen"), MessageFolder[].class);
+    }
+
+    public Message[] getMessagesPerFolder(int folderID) throws IOException {
+        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten?mapId=" + folderID + "&orderby=soort+DESC&skip=0&top=25"), Message[].class);
+    }
+
+    public SingleMessage[] getSingleMessage(int messageID) throws IOException {
+        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten/" + messageID + "?berichtSoort=Bericht"), SingleMessage[].class);
+    }
+
+//    public SingleMessage[] postSingleMessage() throws IOException {
+//        TODO: Implement post
+//        return SingleMessage;
+//    }
+
 
     public MessageFolder[] getMessageFolders() throws IOException {
         return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten/mappen"), MessageFolder[].class);
