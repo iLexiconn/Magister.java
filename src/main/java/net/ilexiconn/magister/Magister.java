@@ -139,7 +139,7 @@ public class Magister {
         if (!hasPrivilege("Absenties")) {
             throw new PrivilegeException();
         }
-        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/absenties?tot=2016-07-31&van=2015-08-01"), Presence[].class);
+        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/absenties?tot=" + currentStudy.endDate + "&van=" + currentStudy.startDate), Presence[].class);
     }
 
     public Grade[] getGrades(boolean onlyAverage, boolean onlyPTA, boolean onlyActiveStudy) throws IOException, PrivilegeException {
