@@ -34,7 +34,11 @@ import net.ilexiconn.magister.exeption.PrivilegeException;
 import net.ilexiconn.magister.util.AndroidUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.text.DateFormat;
@@ -168,6 +172,16 @@ public class Magister {
             throw new PrivilegeException();
         }
         return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten/" + messageID + "?berichtSoort=Bericht"), SingleMessage[].class);
+    }
+
+    public BufferedImage getImage() throws IOException {
+        return getImage(42, 64, false);
+    }
+
+    public BufferedImage getImage(int width, int height, boolean crop) throws IOException {
+        HttpGet get = new HttpGet(school.url + "/api/personen/" + profile.id + "/foto" + (width != 42 || height != 64 || crop ? "?width=" + width + "&height=" + height + "&crop=" + crop : ""));
+        CloseableHttpResponse responseGet = HttpUtil.getHttpClient().execute(get);
+        return ImageIO.read(responseGet.getEntity().getContent());
     }
 
 //    public SingleMessage[] postSingleMessage() throws IOException {
