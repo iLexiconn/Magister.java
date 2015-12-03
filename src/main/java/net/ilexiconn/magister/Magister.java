@@ -171,7 +171,7 @@ public class Magister {
     }
 
     public BufferedImage getImage(int width, int height, boolean crop) throws IOException {
-        HttpGet get = new HttpGet(school.name + "/api/personen/" + profile.id + "/foto" + (width != 42 || height != 64 || crop ? "?width=" + width + "&height=" + height + "&crop=" + crop : ""));
+        HttpGet get = new HttpGet(school.url + "/api/personen/" + profile.id + "/foto" + (width != 42 || height != 64 || crop ? "?width=" + width + "&height=" + height + "&crop=" + crop : ""));
         CloseableHttpResponse responseGet = HttpUtil.getHttpClient().execute(get);
         return ImageIO.read(responseGet.getEntity().getContent());
     }
