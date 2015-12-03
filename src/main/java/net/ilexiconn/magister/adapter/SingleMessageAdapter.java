@@ -31,8 +31,6 @@ import com.google.gson.stream.JsonWriter;
 import net.ilexiconn.magister.adapter.type.AppointmentTypeAdapter;
 import net.ilexiconn.magister.adapter.type.DisplayTypeAdapter;
 import net.ilexiconn.magister.adapter.type.InfoTypeAdapter;
-import net.ilexiconn.magister.container.Appointment;
-import net.ilexiconn.magister.container.MessageFolder;
 import net.ilexiconn.magister.container.SingleMessage;
 import net.ilexiconn.magister.container.type.AppointmentType;
 import net.ilexiconn.magister.container.type.DisplayType;

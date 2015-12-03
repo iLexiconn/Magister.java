@@ -29,16 +29,17 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.ilexiconn.magister.adapter.*;
 import net.ilexiconn.magister.container.*;
+import net.ilexiconn.magister.util.AndroidUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 
 import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
 
 public class Magister {
     public static final String VERSION = "0.1.0-develop";
@@ -138,23 +139,4 @@ public class Magister {
 //        TODO: Implement post
 //        return SingleMessage;
 //    }
-
-
-    public MessageFolder[] getMessageFolders() throws IOException {
-        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten/mappen"), MessageFolder[].class);
-    }
-
-    public Message[] getMessagesPerFolder(int folderID) throws IOException {
-        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten?mapId=" + folderID + "&orderby=soort+DESC&skip=0&top=25"), Message[].class);
-    }
-
-    public SingleMessage[] getSingleMessage(int messageID) throws IOException {
-        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten/" + messageID + "?berichtSoort=Bericht"), SingleMessage[].class);
-    }
-
-//    public SingleMessage[] postSingleMessage() throws IOException {
-//        TODO: Implement post
-//        return SingleMessage;
-//    }
-
 }

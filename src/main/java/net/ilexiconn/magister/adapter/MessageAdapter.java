@@ -28,13 +28,9 @@ package net.ilexiconn.magister.adapter;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import net.ilexiconn.magister.adapter.type.AppointmentTypeAdapter;
 import net.ilexiconn.magister.adapter.type.DisplayTypeAdapter;
 import net.ilexiconn.magister.adapter.type.InfoTypeAdapter;
-import net.ilexiconn.magister.container.Appointment;
 import net.ilexiconn.magister.container.Message;
-import net.ilexiconn.magister.container.MessageFolder;
-import net.ilexiconn.magister.container.type.AppointmentType;
 import net.ilexiconn.magister.container.type.DisplayType;
 import net.ilexiconn.magister.container.type.InfoType;
 
