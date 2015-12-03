@@ -54,6 +54,7 @@ public class Magister {
             .registerTypeAdapter(Grade[].class, new GradeAdapter())
             .registerTypeAdapter(MessageFolder[].class, new MessageFolderAdapter())
             .registerTypeAdapter(Message[].class, new MessageAdapter())
+            .registerTypeAdapter(SingleMessage[].class, new SingleMessageAdapter())
             .create();
 
     public School school;
@@ -130,10 +131,13 @@ public class Magister {
         return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten?mapId=" + folderID + "&orderby=soort+DESC&skip=0&top=25"), Message[].class);
     }
 
-//    public Message[] getMessagesPerFolder(int folderID) throws IOException {
-//        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten?mapId=" + folderID + "&orderby=soort+DESC&skip=0&top=25"), Message[].class);
+    public SingleMessage[] getSingleMessage(int messageID) throws IOException {
+        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten/" + messageID + "?berichtSoort=Bericht"), SingleMessage[].class);
+    }
+
+//    public SingleMessage[] postSingleMessage() throws IOException {
+//        TODO: Implement post
+//        return SingleMessage;
 //    }
 
-
-//    https://trevianum.magister.net/api/personen/8561/berichten?mapId=1
 }

@@ -8,7 +8,7 @@ public enum RowType {
 
     private int id;
 
-    private RowType(int i) {
+    RowType(int i) {
         id = i;
     }
 

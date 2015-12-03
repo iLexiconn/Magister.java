@@ -58,9 +58,7 @@ public class MessageFolderAdapter extends TypeAdapter<MessageFolder[]> {
         JsonArray array = object.get("Items").getAsJsonArray();
         List<MessageFolder> MessageFolderList = new ArrayList<MessageFolder>();
         for (JsonElement element : array) {
-            JsonObject object1 = element.getAsJsonObject();
-            MessageFolder messageFolder = gson.fromJson(object1, MessageFolder.class);
-            MessageFolderList.add(messageFolder );
+            MessageFolderList.add(gson.fromJson(element.getAsJsonObject(), MessageFolder.class));
         }
         return MessageFolderList.toArray(new MessageFolder[MessageFolderList.size()]);
     }

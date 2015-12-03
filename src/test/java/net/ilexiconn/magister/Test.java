@@ -74,7 +74,10 @@ public class Test {
             for (MessageFolder messageFolder : magister.getMessageFolders()) {
                 System.out.println(messageFolder.naam);
                 for (Message message : magister.getMessagesPerFolder(messageFolder.id)) {
-                    System.out.println("=========> "+message.onderwerp);
+                    System.out.println("=========> " + message.onderwerp);
+                    for (SingleMessage singleMessage : magister.getSingleMessage(message.id)) {
+                        System.out.println("====================> " + singleMessage.inhoud);
+                    }
                 }
             }
 

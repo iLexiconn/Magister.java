@@ -12,7 +12,7 @@ public enum InfoType {
 
     private int id;
 
-    private InfoType(int i) {
+    InfoType(int i) {
         id = i;
     }
 
