@@ -5,49 +5,49 @@ import net.ilexiconn.magister.container.sub.Link;
 
 public class SingleMessage {
     @SerializedName("Inhoud")
-    public String inhoud;
+    public String content;
 
     /* TODO: KopieOntvangers */
 
     /* TODO: Bijlagen */
 
     @SerializedName("Id")
-    public int Id;
+    public int id;
 
     @SerializedName("MapId")
     public int mapId;
 
     @SerializedName("MapTitel")
-    public String mapTitel;
+    public String mapTitle;
 
     @SerializedName("Links")
     public Link[] links;
 
     @SerializedName("Onderwerp")
-    public String onderwerp;
+    public String topic;
 
     /* TODO: Afzender */
 
     @SerializedName("IngekortBericht")
-    public String ingekortBericht;
+    public String shortMessage;
 
     /* TODO: Ontvangers */
 
     @SerializedName("VerstuurdOp")
-    public String verstuurdOp;
+    public String sentOn;
 
     @SerializedName("IsGelezen")
-    public boolean isGelezen;
+    public boolean isRead;
 
     @SerializedName("Status")
     public int status;
 
     @SerializedName("HeeftPrioriteit")
-    public boolean heeftPrioriteit;
+    public boolean hasPriority;
 
     @SerializedName("HeeftBijlagen")
-    public boolean heeftBijlagen;
+    public boolean hasAttachments;
 
     @SerializedName("Soort")
-    public int soort;
+    public int type;
 }

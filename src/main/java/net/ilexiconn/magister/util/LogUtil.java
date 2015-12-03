@@ -39,10 +39,9 @@ public class LogUtil {
             try {
                 Class logClass = Class.forName("android.util.Log");
                 logClass.getMethod("e", String.class, String.class, Throwable.class).invoke(null, TAG, description, throwable);
+                return;
             } catch (Exception e) {
                 System.err.println(report);
-            } finally {
-                return;
             }
         }
         System.err.println(report);

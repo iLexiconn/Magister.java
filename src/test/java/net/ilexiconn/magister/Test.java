@@ -70,13 +70,13 @@ public class Test {
             System.out.println("Hey, " + magister.profile.nickname + "!");
             System.out.println("ID: " + magister.profile.id);
 
-            System.out.println("======== MessageFolders ========");
+            System.out.println("======= MessageFolders =======");
             for (MessageFolder messageFolder : magister.getMessageFolders()) {
                 System.out.println(messageFolder.naam);
                 for (Message message : magister.getMessagesPerFolder(messageFolder.id)) {
-                    System.out.println("=========> " + message.onderwerp);
+                    System.out.println("=> " + message.topic);
                     for (SingleMessage singleMessage : magister.getSingleMessage(message.id)) {
-                        System.out.println("====================> " + singleMessage.inhoud);
+                        System.out.println("==> " + singleMessage.content);
                     }
                 }
             }

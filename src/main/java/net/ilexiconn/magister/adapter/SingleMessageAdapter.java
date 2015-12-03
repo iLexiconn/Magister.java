@@ -28,24 +28,14 @@ package net.ilexiconn.magister.adapter;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import net.ilexiconn.magister.adapter.type.AppointmentTypeAdapter;
-import net.ilexiconn.magister.adapter.type.DisplayTypeAdapter;
-import net.ilexiconn.magister.adapter.type.InfoTypeAdapter;
 import net.ilexiconn.magister.container.SingleMessage;
-import net.ilexiconn.magister.container.type.AppointmentType;
-import net.ilexiconn.magister.container.type.DisplayType;
-import net.ilexiconn.magister.container.type.InfoType;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SingleMessageAdapter extends TypeAdapter<SingleMessage[]> {
-    public Gson gson = new GsonBuilder()
-            .registerTypeAdapter(AppointmentType.class, new AppointmentTypeAdapter())
-            .registerTypeAdapter(DisplayType.class, new DisplayTypeAdapter())
-            .registerTypeAdapter(InfoType.class, new InfoTypeAdapter())
-            .create();
+    public Gson gson = new Gson();
 
     @Override
     public void write(JsonWriter out, SingleMessage[] value) throws IOException {
@@ -54,9 +44,8 @@ public class SingleMessageAdapter extends TypeAdapter<SingleMessage[]> {
 
     public SingleMessage[] read(JsonReader in) throws IOException {
         JsonObject object = gson.getAdapter(JsonElement.class).read(in).getAsJsonObject();
-        List<SingleMessage> SingleMessageList = new ArrayList<SingleMessage>();
-        SingleMessageList.add(gson.fromJson(object.getAsJsonObject(), SingleMessage.class));
-
-        return SingleMessageList.toArray(new SingleMessage[SingleMessageList.size()]);
+        List<SingleMessage> singleMessageList = new ArrayList<SingleMessage>();
+        singleMessageList.add(gson.fromJson(object.getAsJsonObject(), SingleMessage.class));
+        return singleMessageList.toArray(new SingleMessage[singleMessageList.size()]);
     }
 }

@@ -29,6 +29,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import net.ilexiconn.magister.adapter.*;
 import net.ilexiconn.magister.container.*;
+import net.ilexiconn.magister.container.sub.Privilege;
+import net.ilexiconn.magister.exeption.PrivilegeException;
 import net.ilexiconn.magister.util.AndroidUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
@@ -47,7 +49,6 @@ public class Magister {
     public Gson gson = new GsonBuilder()
             .registerTypeAdapter(Profile.class, new ProfileAdapter())
             .registerTypeAdapter(Study[].class, new StudyAdapter())
-            .registerTypeAdapter(Contact[].class, new ContactAdapter())
             .registerTypeAdapter(Contact[].class, new ContactAdapter())
             .registerTypeAdapter(Appointment[].class, new AppointmentAdapter())
             .registerTypeAdapter(Grade[].class, new GradeAdapter())
@@ -90,49 +91,75 @@ public class Magister {
         return magister;
     }
 
-    public Contact[] getPupilInfo(String name) throws IOException {
+    public Contact[] getPupilInfo(String name) throws IOException, PrivilegeException {
         return getContactInfo(name, "Leerling");
     }
 
-    public Contact[] getTeacherInfo(String name) throws IOException {
+    public Contact[] getTeacherInfo(String name) throws IOException, PrivilegeException {
         return getContactInfo(name, "Personeel");
     }
 
-    public Contact[] getContactInfo(String name, String type) throws IOException {
+    public Contact[] getContactInfo(String name, String type) throws IOException, PrivilegeException {
+        if (!hasPrivilege("Contactpersonen")) {
+            throw new PrivilegeException();
+        }
         return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/contactpersonen?contactPersoonType=" + type + "&q=" + name), Contact[].class);
     }
 
-
-    public Appointment[] getAppointments(Date from, Date until) throws IOException {
+    public Appointment[] getAppointments(Date from, Date until) throws IOException, PrivilegeException {
+        if (!hasPrivilege("Afspraken")) {
+            throw new PrivilegeException();
+        }
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         String dateNow = format.format(from);
         String dateFrom = format.format(until);
         return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/afspraken?status=0&van=" + dateNow + "&tot=" + dateFrom), Appointment[].class);
     }
 
-    public Appointment[] getAppointmentsOfToday() throws IOException {
+    public Appointment[] getAppointmentsOfToday() throws IOException, PrivilegeException {
         Date now = new Date();
         return getAppointments(now, now);
     }
 
-    public Grade[] getGrades(boolean onlyAverage, boolean onlyPTA, boolean onlyActiveStudy) throws IOException {
+    public Grade[] getGrades(boolean onlyAverage, boolean onlyPTA, boolean onlyActiveStudy) throws IOException, PrivilegeException {
+        if (!hasPrivilege("Cijfers")) {
+            throw new PrivilegeException();
+        }
         return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/aanmeldingen/" + currentStudy.id + "/cijfers/cijferoverzichtvooraanmelding?alleenBerekendeKolommen=" + onlyAverage + "&alleenPTAKolommen=" + onlyPTA + "&actievePerioden=" + onlyActiveStudy), Grade[].class);
     }
 
-    public Grade[] getAllGrades() throws IOException {
+    public Grade[] getAllGrades() throws IOException, PrivilegeException {
         return getGrades(false, false, false);
     }
 
-    public MessageFolder[] getMessageFolders() throws IOException {
+    public MessageFolder[] getMessageFolders() throws IOException, PrivilegeException {
+        if (!hasPrivilege("Berichten")) {
+            throw new PrivilegeException();
+        }
         return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten/mappen"), MessageFolder[].class);
     }
 
-    public Message[] getMessagesPerFolder(int folderID) throws IOException {
+    public Message[] getMessagesPerFolder(int folderID) throws IOException, PrivilegeException {
+        if (!hasPrivilege("Berichten")) {
+            throw new PrivilegeException();
+        }
         return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten?mapId=" + folderID + "&orderby=soort+DESC&skip=0&top=25"), Message[].class);
     }
 
-    public SingleMessage[] getSingleMessage(int messageID) throws IOException {
+    public SingleMessage[] getSingleMessage(int messageID) throws IOException, PrivilegeException {
+        if (!hasPrivilege("Berichten")) {
+            throw new PrivilegeException();
+        }
         return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten/" + messageID + "?berichtSoort=Bericht"), SingleMessage[].class);
+    }
+
+    public boolean hasPrivilege(String privilege) {
+        for (Privilege p : profile.privileges) {
+            if (p.name.equals(privilege)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 //    public SingleMessage[] postSingleMessage() throws IOException {
