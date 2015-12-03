@@ -8,7 +8,7 @@ public enum DisplayType {
 
     private int id;
 
-    private DisplayType(int i) {
+    DisplayType(int i) {
         id = i;
     }
 

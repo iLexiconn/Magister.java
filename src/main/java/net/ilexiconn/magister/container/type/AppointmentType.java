@@ -23,7 +23,7 @@ public enum AppointmentType {
 
     private int id;
 
-    private AppointmentType(int i) {
+    AppointmentType(int i) {
         id = i;
     }
 

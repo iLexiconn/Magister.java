@@ -33,6 +33,7 @@ import net.ilexiconn.magister.adapter.type.DisplayTypeAdapter;
 import net.ilexiconn.magister.adapter.type.InfoTypeAdapter;
 import net.ilexiconn.magister.container.Appointment;
 import net.ilexiconn.magister.container.MessageFolder;
+import net.ilexiconn.magister.container.SingleMessage;
 import net.ilexiconn.magister.container.type.AppointmentType;
 import net.ilexiconn.magister.container.type.DisplayType;
 import net.ilexiconn.magister.container.type.InfoType;
@@ -41,7 +42,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageFolderAdapter extends TypeAdapter<MessageFolder[]> {
+public class SingleMessageAdapter extends TypeAdapter<SingleMessage[]> {
     public Gson gson = new GsonBuilder()
             .registerTypeAdapter(AppointmentType.class, new AppointmentTypeAdapter())
             .registerTypeAdapter(DisplayType.class, new DisplayTypeAdapter())
@@ -49,17 +50,15 @@ public class MessageFolderAdapter extends TypeAdapter<MessageFolder[]> {
             .create();
 
     @Override
-    public void write(JsonWriter out, MessageFolder[] value) throws IOException {
+    public void write(JsonWriter out, SingleMessage[] value) throws IOException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    public MessageFolder[] read(JsonReader in) throws IOException {
+    public SingleMessage[] read(JsonReader in) throws IOException {
         JsonObject object = gson.getAdapter(JsonElement.class).read(in).getAsJsonObject();
-        JsonArray array = object.get("Items").getAsJsonArray();
-        List<MessageFolder> MessageFolderList = new ArrayList<MessageFolder>();
-        for (JsonElement element : array) {
-            MessageFolderList.add(gson.fromJson(element.getAsJsonObject(), MessageFolder.class));
-        }
-        return MessageFolderList.toArray(new MessageFolder[MessageFolderList.size()]);
+        List<SingleMessage> SingleMessageList = new ArrayList<SingleMessage>();
+        SingleMessageList.add(gson.fromJson(object.getAsJsonObject(), SingleMessage.class));
+
+        return SingleMessageList.toArray(new SingleMessage[SingleMessageList.size()]);
     }
 }

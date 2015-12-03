@@ -32,6 +32,7 @@ import net.ilexiconn.magister.adapter.type.AppointmentTypeAdapter;
 import net.ilexiconn.magister.adapter.type.DisplayTypeAdapter;
 import net.ilexiconn.magister.adapter.type.InfoTypeAdapter;
 import net.ilexiconn.magister.container.Appointment;
+import net.ilexiconn.magister.container.Message;
 import net.ilexiconn.magister.container.MessageFolder;
 import net.ilexiconn.magister.container.type.AppointmentType;
 import net.ilexiconn.magister.container.type.DisplayType;
@@ -41,25 +42,24 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageFolderAdapter extends TypeAdapter<MessageFolder[]> {
+public class MessageAdapter extends TypeAdapter<Message[]> {
     public Gson gson = new GsonBuilder()
-            .registerTypeAdapter(AppointmentType.class, new AppointmentTypeAdapter())
             .registerTypeAdapter(DisplayType.class, new DisplayTypeAdapter())
             .registerTypeAdapter(InfoType.class, new InfoTypeAdapter())
             .create();
 
     @Override
-    public void write(JsonWriter out, MessageFolder[] value) throws IOException {
+    public void write(JsonWriter out, Message[] value) throws IOException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    public MessageFolder[] read(JsonReader in) throws IOException {
+    public Message[] read(JsonReader in) throws IOException {
         JsonObject object = gson.getAdapter(JsonElement.class).read(in).getAsJsonObject();
         JsonArray array = object.get("Items").getAsJsonArray();
-        List<MessageFolder> MessageFolderList = new ArrayList<MessageFolder>();
+        List<Message> MessageList = new ArrayList<Message>();
         for (JsonElement element : array) {
-            MessageFolderList.add(gson.fromJson(element.getAsJsonObject(), MessageFolder.class));
+            MessageList.add(gson.fromJson(element.getAsJsonObject(), Message.class));
         }
-        return MessageFolderList.toArray(new MessageFolder[MessageFolderList.size()]);
+        return MessageList.toArray(new Message[MessageList.size()]);
     }
 }
