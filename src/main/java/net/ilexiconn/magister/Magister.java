@@ -49,9 +49,10 @@ public class Magister {
     public Gson gson = new GsonBuilder()
             .registerTypeAdapter(Profile.class, new ProfileAdapter())
             .registerTypeAdapter(Study[].class, new StudyAdapter())
+            .registerTypeAdapter(Contact[].class, new ContactAdapter())
             .registerTypeAdapter(Appointment[].class, new AppointmentAdapter())
             .registerTypeAdapter(Grade[].class, new GradeAdapter())
-            .registerTypeAdapter(Contact[].class, new ContactAdapter())
+            .registerTypeAdapter(MessageFolder[].class, new MessageFolderAdapter())
             .create();
 
     public School school;
@@ -87,6 +88,19 @@ public class Magister {
         return magister;
     }
 
+    public Contact[] getPupilInfo(String name) throws IOException {
+        return getContactInfo(name, "Leerling");
+    }
+
+    public Contact[] getTeacherInfo(String name) throws IOException {
+        return getContactInfo(name, "Personeel");
+    }
+
+    public Contact[] getContactInfo(String name, String type) throws IOException {
+        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/contactpersonen?contactPersoonType=" + type + "&q=" + name), Contact[].class);
+    }
+
+
     public Appointment[] getAppointments(Date from, Date until) throws IOException {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         String dateNow = format.format(from);
@@ -107,15 +121,7 @@ public class Magister {
         return getGrades(false, false, false);
     }
 
-    public Contact[] getPupilInfo(String name) throws IOException {
-        return getContactInfo(name, "Leerling");
-    }
-
-    public Contact[] getTeacherInfo(String name) throws IOException {
-        return getContactInfo(name, "Personeel");
-    }
-
-    public Contact[] getContactInfo(String name, String type) throws IOException {
-        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/contactpersonen?contactPersoonType=" + type + "&q=" + name), Contact[].class);
+    public MessageFolder[] getMessageFolders() throws IOException {
+        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten/mappen"), MessageFolder[].class);
     }
 }
