@@ -39,6 +39,7 @@ import net.ilexiconn.magister.container.School;
 import net.ilexiconn.magister.container.Session;
 import net.ilexiconn.magister.container.Study;
 import net.ilexiconn.magister.container.Version;
+import net.ilexiconn.magister.util.AndroidUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
 
@@ -49,10 +50,7 @@ import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class Magister {
     public static final String VERSION = "0.1.0";
@@ -74,13 +72,14 @@ public class Magister {
 
     public static Magister login(School school, String username, String password) throws Exception {
         Magister magister = new Magister();
+        AndroidUtil.isRunningOnAndroid();
         magister.school = school;
         magister.version = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/versie"), Version.class);
         HttpUtil.httpDelete(school.url + "/api/sessies/huidige");
-        List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
-        nameValuePairList.add(new BasicNameValuePair("Gebruikersnaam", username));
-        nameValuePairList.add(new BasicNameValuePair("Wachtwoord", password));
-        magister.session = magister.gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairList), Session.class);
+        HashMap<String, String> nameValuePairMap = new HashMap<String, String>();
+        nameValuePairMap.put("Gebruikersnaam", username);
+        nameValuePairMap.put("Wachtwoord", password);
+        magister.session = magister.gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairMap), Session.class);
         if (!magister.session.state.equals("active")) {
             LogUtil.printError("Invalid credentials", new InvalidParameterException());
             return null;

@@ -33,10 +33,18 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class HttpUtil {
     private static CloseableHttpClient httpClient = HttpClients.createDefault();
@@ -46,22 +54,55 @@ public class HttpUtil {
     }
 
     public static InputStreamReader httpDelete(String url) throws IOException {
-        HttpDelete delete = new HttpDelete(url);
-        CloseableHttpResponse response = getHttpClient().execute(delete);
-        return getReader(response);
+        if(AndroidUtil.getRunningOnAndroid()){
+            HttpURLConnection conn = (HttpURLConnection)new URL(url).openConnection();
+            conn.setRequestMethod("DELETE");
+            conn.connect();
+            return new InputStreamReader(conn.getInputStream());
+        }else {
+            HttpDelete delete = new HttpDelete(url);
+            CloseableHttpResponse response = getHttpClient().execute(delete);
+            return getReader(response);
+        }
     }
 
-    public static InputStreamReader httpPost(String url, List<NameValuePair> nameValuePairList) throws IOException {
-        HttpPost post = new HttpPost(url);
-        post.setEntity(new UrlEncodedFormEntity(nameValuePairList));
-        CloseableHttpResponse response = getHttpClient().execute(post);
-        return getReader(response);
+    public static InputStreamReader httpPost(String url, Map<String, String> nameValuePairMap) throws IOException {
+        if(AndroidUtil.getRunningOnAndroid()){
+            HttpURLConnection conn = (HttpURLConnection)new URL(url).openConnection();
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+            StringBuilder parameters = new StringBuilder();
+            for(String key : nameValuePairMap.keySet()){
+                parameters.append(key).append("=").append(nameValuePairMap.get(key)).append("&");
+            }
+            DataOutputStream dataOut = new DataOutputStream(conn.getOutputStream());
+            dataOut.write(parameters.substring(0, parameters.length() - 1).getBytes());
+            return new InputStreamReader(conn.getInputStream());
+        }else {
+            HttpPost post = new HttpPost(url);
+            List<NameValuePair> nameValuePairList = new ArrayList<NameValuePair>();
+            for(String key : nameValuePairMap.keySet()){
+                nameValuePairList.add(new BasicNameValuePair(key, nameValuePairMap.get(key)));
+            }
+            post.setEntity(new UrlEncodedFormEntity(nameValuePairList));
+            CloseableHttpResponse response = getHttpClient().execute(post);
+            return getReader(response);
+        }
     }
 
     public static InputStreamReader httpGet(String url) throws IOException {
-        HttpGet get = new HttpGet(url);
-        CloseableHttpResponse response = getHttpClient().execute(get);
-        return getReader(response);
+        if(AndroidUtil.getRunningOnAndroid()){
+            HttpURLConnection conn = (HttpURLConnection)new URL(url).openConnection();
+            if(AndroidUtil.getAndroidSupportCache()) {
+                conn.setUseCaches(true);
+            }
+            conn.connect();
+            return new InputStreamReader(conn.getInputStream());
+        }else {
+            HttpGet get = new HttpGet(url);
+            CloseableHttpResponse response = getHttpClient().execute(get);
+            return getReader(response);
+        }
     }
 
     public static InputStreamReader getReader(CloseableHttpResponse response) throws IOException {
