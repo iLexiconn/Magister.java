@@ -3,7 +3,6 @@ package net.ilexiconn.magister.container.sub;
 import com.google.gson.annotations.SerializedName;
 
 public class GradePeriod {
-
     @SerializedName("Id")
     public int id;
 

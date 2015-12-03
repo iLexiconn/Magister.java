@@ -32,7 +32,7 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.cache.CachingHttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.DataOutputStream;
@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Map;
 
 public class HttpUtil {
-    private static CloseableHttpClient httpClient = HttpClients.createDefault();
+    private static CloseableHttpClient httpClient = CachingHttpClientBuilder.create().build();
 
     public static CloseableHttpClient getHttpClient() {
         return httpClient;
@@ -61,7 +61,8 @@ public class HttpUtil {
             return new InputStreamReader(conn.getInputStream());
         }else {
             HttpDelete delete = new HttpDelete(url);
-            CloseableHttpResponse response = getHttpClient().execute(delete);
+            HttpCacheContext context = HttpCacheContext.create();
+            CloseableHttpResponse response = getHttpClient().execute(delete, context);
             return getReader(response);
         }
     }
@@ -85,7 +86,8 @@ public class HttpUtil {
                 nameValuePairList.add(new BasicNameValuePair(key, nameValuePairMap.get(key)));
             }
             post.setEntity(new UrlEncodedFormEntity(nameValuePairList));
-            CloseableHttpResponse response = getHttpClient().execute(post);
+            HttpCacheContext context = HttpCacheContext.create();
+            CloseableHttpResponse response = getHttpClient().execute(post, context);
             return getReader(response);
         }
     }
@@ -100,7 +102,8 @@ public class HttpUtil {
             return new InputStreamReader(conn.getInputStream());
         }else {
             HttpGet get = new HttpGet(url);
-            CloseableHttpResponse response = getHttpClient().execute(get);
+            HttpCacheContext context = HttpCacheContext.create();
+            CloseableHttpResponse response = getHttpClient().execute(get, context);
             return getReader(response);
         }
     }

@@ -1,7 +1,6 @@
 package net.ilexiconn.magister.container;
 
 import com.google.gson.annotations.SerializedName;
-
 import net.ilexiconn.magister.container.sub.Course;
 import net.ilexiconn.magister.container.sub.GradePeriod;
 import net.ilexiconn.magister.container.sub.GradeRow;
@@ -19,7 +18,7 @@ public class Grade {
     public boolean isSufficient;
 
     @SerializedName("IngevoerdDoor")
-    public Object filledInBy;  //Always returns null?
+    public String filledInBy;
 
     @SerializedName("DatumIngevoerd")
     public String filledInDateString;

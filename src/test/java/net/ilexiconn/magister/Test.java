@@ -25,9 +25,7 @@
 
 package net.ilexiconn.magister;
 
-import net.ilexiconn.magister.container.Appointment;
-import net.ilexiconn.magister.container.Grade;
-import net.ilexiconn.magister.container.School;
+import net.ilexiconn.magister.container.*;
 import net.ilexiconn.magister.container.sub.Privilege;
 
 import java.util.Scanner;
@@ -59,7 +57,7 @@ public class Test {
                     school = schools[0];
                 }
             }
-        } else if (args.length == 3) {
+        } else if (args.length >= 3) {
             school = School.findSchool(args[0])[0];
         } else {
             return;
@@ -70,20 +68,39 @@ public class Test {
 
         if (magister != null) {
             System.out.println("Hey, " + magister.profile.nickname + "!");
+            System.out.println("ID: " + magister.profile.id);
 
-            System.out.println("Apponitments:");
+            System.out.println("======== MessageFolders ========");
+            for (MessageFolder messageFolder : magister.getMessageFolders()) {
+                System.out.println(messageFolder.naam);
+                for (Message message : magister.getMessagesPerFolder(messageFolder.id)) {
+                    System.out.println("=========> " + message.onderwerp);
+                    for (SingleMessage singleMessage : magister.getSingleMessage(message.id)) {
+                        System.out.println("====================> " + singleMessage.inhoud);
+                    }
+                }
+            }
+
+            System.out.println("======== Appointments ========");
             for (Appointment appointment : magister.getAppointmentsOfToday()) {
                 System.out.println(appointment.description);
             }
 
-            System.out.println("Grades:");
-            for (Grade grade : magister.getAllGrades()){
-                System.out.println(grade.grade);
+            System.out.println("=========== Grades ===========");
+            for (Grade grade : magister.getGrades(true, false, true)) {
+                System.out.println(grade.course.name + ": " + grade.grade);
             }
 
-            System.out.println("Privileges:");
+            System.out.println("========= Privileges =========");
             for (Privilege privilege : magister.profile.privileges) {
                 System.out.println(privilege.name);
+            }
+
+            if (args.length > 3) {
+                System.out.println("========== Contact ==========");
+                for (Contact contact : magister.getPupilInfo(args[3])) {
+                    System.out.println(contact.name);
+                }
             }
         }
     }

@@ -1,15 +1,12 @@
 package net.ilexiconn.magister.adapter;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.TypeAdapter;
+import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-
+import net.ilexiconn.magister.adapter.type.RowTypeAdapter;
 import net.ilexiconn.magister.container.Appointment;
 import net.ilexiconn.magister.container.Grade;
+import net.ilexiconn.magister.container.type.RowType;
 import net.ilexiconn.magister.util.LogUtil;
 
 import java.io.IOException;
@@ -18,7 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GradeAdapter extends TypeAdapter<Grade[]> {
-    public Gson gson = new Gson();
+    public Gson gson = new GsonBuilder()
+            .registerTypeAdapter(RowType.class, new RowTypeAdapter())
+            .create();
 
     public void write(JsonWriter out, Grade[] value) throws IOException {
         throw new UnsupportedOperationException("Not implemented");
@@ -31,10 +30,12 @@ public class GradeAdapter extends TypeAdapter<Grade[]> {
         for (JsonElement element : array) {
             JsonObject object1 = element.getAsJsonObject();
             Grade grade = gson.fromJson(object1, Grade.class);
-            try {
-                grade.filledInDate = Appointment.appointmentDateToDate(grade.filledInDateString);
-            } catch (ParseException e) {
-                LogUtil.printError("Unable to finish request", e);
+            if (grade.filledInDateString != null) {
+                try {
+                    grade.filledInDate = Appointment.appointmentDateToDate(grade.filledInDateString);
+                } catch (ParseException e) {
+                    LogUtil.printError("Unable to parse date", e);
+                }
             }
             gradeList.add(grade);
         }

@@ -1,23 +1,19 @@
 package net.ilexiconn.magister.container.type;
 
-public enum InfoType {
-    NONE(0),
-    HOMEWORK(1),
-    TEST(2),
-    EXAM(3),
-    QUIZ(4),
-    ORAL(5),
-    INFORMATION(6),
-    ANNOTATION(7);
+public enum RowType {
+    NULL(0),
+    UNKNOWN(1),
+    AVERAGE(2),
+    NORMAL(3);
 
     private int id;
 
-    InfoType(int i) {
+    RowType(int i) {
         id = i;
     }
 
-    public static InfoType getTypeById(int i) {
-        for (InfoType type : values()) {
+    public static RowType getTypeById(int i) {
+        for (RowType type : values()) {
             if (type.getID() == i) {
                 return type;
             }

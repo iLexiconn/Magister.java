@@ -8,12 +8,8 @@ public enum DisplayType {
 
     private int id;
 
-    private DisplayType(int i) {
+    DisplayType(int i) {
         id = i;
-    }
-
-    public int getID() {
-        return id;
     }
 
     public static DisplayType getTypeById(int i) {
@@ -23,5 +19,9 @@ public enum DisplayType {
             }
         }
         return null;
+    }
+
+    public int getID() {
+        return id;
     }
 }

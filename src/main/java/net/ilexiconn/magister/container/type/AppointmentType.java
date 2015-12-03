@@ -23,12 +23,8 @@ public enum AppointmentType {
 
     private int id;
 
-    private AppointmentType(int i) {
+    AppointmentType(int i) {
         id = i;
-    }
-
-    public int getID() {
-        return id;
     }
 
     public static AppointmentType getTypeById(int i) {
@@ -38,5 +34,9 @@ public enum AppointmentType {
             }
         }
         return null;
+    }
+
+    public int getID() {
+        return id;
     }
 }

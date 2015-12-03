@@ -27,22 +27,10 @@ package net.ilexiconn.magister;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
-import net.ilexiconn.magister.adapter.AppointmentAdapter;
-import net.ilexiconn.magister.adapter.GradeAdapter;
-import net.ilexiconn.magister.adapter.ProfileAdapter;
-import net.ilexiconn.magister.adapter.StudyAdapter;
-import net.ilexiconn.magister.container.Appointment;
-import net.ilexiconn.magister.container.Grade;
-import net.ilexiconn.magister.container.Profile;
-import net.ilexiconn.magister.container.School;
-import net.ilexiconn.magister.container.Session;
-import net.ilexiconn.magister.container.Study;
-import net.ilexiconn.magister.container.Version;
-import net.ilexiconn.magister.util.AndroidUtil;
+import net.ilexiconn.magister.adapter.*;
+import net.ilexiconn.magister.container.*;
 import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
-
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
@@ -53,14 +41,19 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Magister {
-    public static final String VERSION = "0.1.0";
+    public static final String VERSION = "0.1.0-develop";
 
     public Gson gson = new GsonBuilder()
             .registerTypeAdapter(Profile.class, new ProfileAdapter())
             .registerTypeAdapter(Study[].class, new StudyAdapter())
+            .registerTypeAdapter(Contact[].class, new ContactAdapter())
+            .registerTypeAdapter(Contact[].class, new ContactAdapter())
             .registerTypeAdapter(Appointment[].class, new AppointmentAdapter())
             .registerTypeAdapter(Grade[].class, new GradeAdapter())
-    .create();
+            .registerTypeAdapter(MessageFolder[].class, new MessageFolderAdapter())
+            .registerTypeAdapter(Message[].class, new MessageAdapter())
+            .registerTypeAdapter(SingleMessage[].class, new SingleMessageAdapter())
+            .create();
 
     public School school;
 
@@ -96,7 +89,20 @@ public class Magister {
         return magister;
     }
 
-    public Appointment[] getAppointments(Date from, Date until) throws IOException{
+    public Contact[] getPupilInfo(String name) throws IOException {
+        return getContactInfo(name, "Leerling");
+    }
+
+    public Contact[] getTeacherInfo(String name) throws IOException {
+        return getContactInfo(name, "Personeel");
+    }
+
+    public Contact[] getContactInfo(String name, String type) throws IOException {
+        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/contactpersonen?contactPersoonType=" + type + "&q=" + name), Contact[].class);
+    }
+
+
+    public Appointment[] getAppointments(Date from, Date until) throws IOException {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
         String dateNow = format.format(from);
         String dateFrom = format.format(until);
@@ -109,10 +115,46 @@ public class Magister {
     }
 
     public Grade[] getGrades(boolean onlyAverage, boolean onlyPTA, boolean onlyActiveStudy) throws IOException {
-        return this.gson.fromJson(HttpUtil.httpGet(this.school.url + "/api/personen/" + this.profile.id + "/aanmeldingen/" + this.currentStudy.id + "/cijfers/cijferoverzichtvooraanmelding?alleenBerekendeKolommen=" + onlyAverage + "&alleenPTAKolommen=" + onlyPTA + "&actievePerioden=" + onlyActiveStudy), Grade[].class);
+        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/aanmeldingen/" + currentStudy.id + "/cijfers/cijferoverzichtvooraanmelding?alleenBerekendeKolommen=" + onlyAverage + "&alleenPTAKolommen=" + onlyPTA + "&actievePerioden=" + onlyActiveStudy), Grade[].class);
     }
 
     public Grade[] getAllGrades() throws IOException {
         return getGrades(false, false, false);
     }
+
+    public MessageFolder[] getMessageFolders() throws IOException {
+        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten/mappen"), MessageFolder[].class);
+    }
+
+    public Message[] getMessagesPerFolder(int folderID) throws IOException {
+        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten?mapId=" + folderID + "&orderby=soort+DESC&skip=0&top=25"), Message[].class);
+    }
+
+    public SingleMessage[] getSingleMessage(int messageID) throws IOException {
+        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten/" + messageID + "?berichtSoort=Bericht"), SingleMessage[].class);
+    }
+
+//    public SingleMessage[] postSingleMessage() throws IOException {
+//        TODO: Implement post
+//        return SingleMessage;
+//    }
+
+
+    public MessageFolder[] getMessageFolders() throws IOException {
+        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten/mappen"), MessageFolder[].class);
+    }
+
+    public Message[] getMessagesPerFolder(int folderID) throws IOException {
+        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten?mapId=" + folderID + "&orderby=soort+DESC&skip=0&top=25"), Message[].class);
+    }
+
+    public SingleMessage[] getSingleMessage(int messageID) throws IOException {
+        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten/" + messageID + "?berichtSoort=Bericht"), SingleMessage[].class);
+    }
+
+//    public SingleMessage[] postSingleMessage() throws IOException {
+//        TODO: Implement post
+//        return SingleMessage;
+//    }
+
 }

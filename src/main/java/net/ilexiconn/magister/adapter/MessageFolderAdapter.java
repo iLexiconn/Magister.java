@@ -32,6 +32,7 @@ import net.ilexiconn.magister.adapter.type.AppointmentTypeAdapter;
 import net.ilexiconn.magister.adapter.type.DisplayTypeAdapter;
 import net.ilexiconn.magister.adapter.type.InfoTypeAdapter;
 import net.ilexiconn.magister.container.Appointment;
+import net.ilexiconn.magister.container.MessageFolder;
 import net.ilexiconn.magister.container.type.AppointmentType;
 import net.ilexiconn.magister.container.type.DisplayType;
 import net.ilexiconn.magister.container.type.InfoType;
@@ -40,29 +41,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppointmentAdapter extends TypeAdapter<Appointment[]> {
+public class MessageFolderAdapter extends TypeAdapter<MessageFolder[]> {
     public Gson gson = new GsonBuilder()
             .registerTypeAdapter(AppointmentType.class, new AppointmentTypeAdapter())
             .registerTypeAdapter(DisplayType.class, new DisplayTypeAdapter())
             .registerTypeAdapter(InfoType.class, new InfoTypeAdapter())
             .create();
 
-    public void write(JsonWriter out, Appointment[] value) throws IOException {
+    @Override
+    public void write(JsonWriter out, MessageFolder[] value) throws IOException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
-    public Appointment[] read(JsonReader in) throws IOException {
+    public MessageFolder[] read(JsonReader in) throws IOException {
         JsonObject object = gson.getAdapter(JsonElement.class).read(in).getAsJsonObject();
         JsonArray array = object.get("Items").getAsJsonArray();
-        List<Appointment> appointmentList = new ArrayList<Appointment>();
+        List<MessageFolder> MessageFolderList = new ArrayList<MessageFolder>();
         for (JsonElement element : array) {
-            JsonObject object1 = element.getAsJsonObject();
-            Appointment appointment = gson.fromJson(object1, Appointment.class);
-            appointment.type = gson.getAdapter(AppointmentType.class).fromJsonTree(object1.getAsJsonPrimitive("Type"));
-            appointment.displayType = gson.getAdapter(DisplayType.class).fromJsonTree(object1.getAsJsonPrimitive("WeergaveType"));
-            appointment.infoType = gson.getAdapter(InfoType.class).fromJsonTree(object1.getAsJsonPrimitive("InfoType"));
-            appointmentList.add(appointment);
+            MessageFolderList.add(gson.fromJson(element.getAsJsonObject(), MessageFolder.class));
         }
-        return appointmentList.toArray(new Appointment[appointmentList.size()]);
+        return MessageFolderList.toArray(new MessageFolder[MessageFolderList.size()]);
     }
 }
