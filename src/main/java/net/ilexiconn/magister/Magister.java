@@ -55,6 +55,7 @@ public class Magister {
             .registerTypeAdapter(Study[].class, new StudyAdapter())
             .registerTypeAdapter(Contact[].class, new ContactAdapter())
             .registerTypeAdapter(Appointment[].class, new AppointmentAdapter())
+            .registerTypeAdapter(Presence[].class, new PresenceAdapter())
             .registerTypeAdapter(Grade[].class, new GradeAdapter())
             .registerTypeAdapter(MessageFolder[].class, new MessageFolderAdapter())
             .registerTypeAdapter(Message[].class, new MessageAdapter())
@@ -95,6 +96,15 @@ public class Magister {
         return magister;
     }
 
+    public boolean hasPrivilege(String privilege) {
+        for (Privilege p : profile.privileges) {
+            if (p.name.equals(privilege)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Contact[] getPupilInfo(String name) throws IOException, PrivilegeException {
         return getContactInfo(name, "Leerling");
     }
@@ -123,6 +133,13 @@ public class Magister {
     public Appointment[] getAppointmentsOfToday() throws IOException, PrivilegeException {
         Date now = new Date();
         return getAppointments(now, now);
+    }
+
+    public Presence[] getPresence() throws IOException, PrivilegeException {
+        if (!hasPrivilege("Absenties")) {
+            throw new PrivilegeException();
+        }
+        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/absenties?tot=2016-07-31&van=2015-08-01"), Presence[].class);
     }
 
     public Grade[] getGrades(boolean onlyAverage, boolean onlyPTA, boolean onlyActiveStudy) throws IOException, PrivilegeException {
@@ -155,15 +172,6 @@ public class Magister {
             throw new PrivilegeException();
         }
         return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten/" + messageID + "?berichtSoort=Bericht"), SingleMessage[].class);
-    }
-
-    public boolean hasPrivilege(String privilege) {
-        for (Privilege p : profile.privileges) {
-            if (p.name.equals(privilege)) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public BufferedImage getImage() throws IOException {

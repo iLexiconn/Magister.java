@@ -86,6 +86,11 @@ public class Test {
                 System.out.println(appointment.description);
             }
 
+            System.out.println("========= Presence =========");
+            for (Presence presence : magister.getPresence()) {
+                System.out.println(presence.description);
+            }
+
             System.out.println("=========== Grades ===========");
             for (Grade grade : magister.getGrades(true, false, true)) {
                 System.out.println(grade.course.name + ": " + grade.grade);
