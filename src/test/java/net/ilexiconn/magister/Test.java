@@ -86,7 +86,12 @@ public class Test {
                 System.out.println(appointment.description);
             }
 
-            System.out.println("========= Presence =========");
+            System.out.println("====== Presence Periods ======");
+            for (PresencePeriod presencePeriod : magister.getPresencePeriods()) {
+                System.out.println(presencePeriod.description);
+            }
+
+            System.out.println("========== Presence ==========");
             for (Presence presence : magister.getPresence()) {
                 System.out.println(presence.description);
             }
