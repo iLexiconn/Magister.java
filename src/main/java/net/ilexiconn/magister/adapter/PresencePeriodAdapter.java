@@ -28,30 +28,39 @@ package net.ilexiconn.magister.adapter;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import net.ilexiconn.magister.container.Contact;
+import net.ilexiconn.magister.container.Appointment;
+import net.ilexiconn.magister.container.PresencePeriod;
+import net.ilexiconn.magister.util.LogUtil;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ContactAdapter extends TypeAdapter<Contact[]> {
+public class PresencePeriodAdapter extends TypeAdapter<PresencePeriod[]> {
     public Gson gson = new Gson();
 
     @Override
-    public void write(JsonWriter out, Contact[] value) throws IOException {
+    public void write(JsonWriter out, PresencePeriod[] value) throws IOException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
     @Override
-    public Contact[] read(JsonReader in) throws IOException {
+    public PresencePeriod[] read(JsonReader in) throws IOException {
         JsonObject object = gson.getAdapter(JsonElement.class).read(in).getAsJsonObject();
         JsonArray array = object.get("Items").getAsJsonArray();
-        List<Contact> contactList = new ArrayList<Contact>();
+        List<PresencePeriod> presencePeriodList = new ArrayList<PresencePeriod>();
         for (JsonElement element : array) {
             JsonObject object1 = element.getAsJsonObject();
-            Contact contact = gson.fromJson(object1, Contact.class);
-            contactList.add(contact);
+            PresencePeriod presencePeriod = gson.fromJson(object1, PresencePeriod.class);
+            try {
+                presencePeriod.startDate = Appointment.appointmentDateToDate(presencePeriod.start);
+                presencePeriod.endDate = Appointment.appointmentDateToDate(presencePeriod.end);
+            } catch (ParseException e) {
+                LogUtil.printError("Failed to parse date.", e);
+            }
+            presencePeriodList.add(presencePeriod);
         }
-        return contactList.toArray(new Contact[contactList.size()]);
+        return presencePeriodList.toArray(new PresencePeriod[presencePeriodList.size()]);
     }
 }

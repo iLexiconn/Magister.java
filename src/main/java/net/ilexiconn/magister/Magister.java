@@ -56,6 +56,7 @@ public class Magister {
             .registerTypeAdapter(Contact[].class, new ContactAdapter())
             .registerTypeAdapter(Appointment[].class, new AppointmentAdapter())
             .registerTypeAdapter(Presence[].class, new PresenceAdapter())
+            .registerTypeAdapter(PresencePeriod[].class, new PresencePeriodAdapter())
             .registerTypeAdapter(Grade[].class, new GradeAdapter())
             .registerTypeAdapter(MessageFolder[].class, new MessageFolderAdapter())
             .registerTypeAdapter(Message[].class, new MessageAdapter())
@@ -136,10 +137,21 @@ public class Magister {
     }
 
     public Presence[] getPresence() throws IOException, PrivilegeException {
+        return getPresence(null);
+    }
+
+    public Presence[] getPresence(PresencePeriod period) throws IOException, PrivilegeException {
         if (!hasPrivilege("Absenties")) {
             throw new PrivilegeException();
         }
-        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/absenties?tot=" + currentStudy.endDate + "&van=" + currentStudy.startDate), Presence[].class);
+        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/absenties?tot=" + (period == null ? currentStudy.startDate : period.start) + "&van=" + (period == null ? currentStudy.endDate : period.end)), Presence[].class);
+    }
+
+    public PresencePeriod[] getPresencePeriods() throws IOException, PrivilegeException {
+        if (!hasPrivilege("Absenties")) {
+            throw new PrivilegeException();
+        }
+        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/absentieperioden"), PresencePeriod[].class);
     }
 
     public Grade[] getGrades(boolean onlyAverage, boolean onlyPTA, boolean onlyActiveStudy) throws IOException, PrivilegeException {

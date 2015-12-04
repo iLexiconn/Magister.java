@@ -26,46 +26,20 @@
 package net.ilexiconn.magister.container;
 
 import com.google.gson.annotations.SerializedName;
-import net.ilexiconn.magister.container.sub.Link;
 
-public class Message {
-    @SerializedName("Id")
-    public int id;
+import java.util.Date;
 
-    @SerializedName("MapId")
-    public int mapId;
+public class PresencePeriod {
+    @SerializedName("Start")
+    public String start;
 
-    @SerializedName("MapTitel")
-    public String mapTitle;
+    public transient Date startDate;
 
-    @SerializedName("Links")
-    public Link[] links;
+    @SerializedName("Eind")
+    public String end;
 
-    @SerializedName("Onderwerp")
-    public String topic;
+    public transient Date endDate;
 
-    /* TODO: Afzender */
-
-    @SerializedName("IngekortBericht")
-    public String shortMessage;
-
-    /* TODO: Ontvangers */
-
-    @SerializedName("VerstuurdOp")
-    public String sentOn;
-
-    @SerializedName("IsGelezen")
-    public boolean isRead;
-
-    @SerializedName("Status")
-    public int status;
-
-    @SerializedName("HeeftPrioriteit")
-    public boolean hasPriority;
-
-    @SerializedName("HeeftBijlagen")
-    public boolean hasAttachments;
-
-    @SerializedName("Soort")
-    public int type;
+    @SerializedName("Omschrijving")
+    public String description;
 }
