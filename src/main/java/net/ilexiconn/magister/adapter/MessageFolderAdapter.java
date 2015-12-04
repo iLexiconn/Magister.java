@@ -35,13 +35,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MessageFolderAdapter extends TypeAdapter<MessageFolder[]> {
-    public Gson gson = new GsonBuilder().create();
+    public Gson gson = new Gson();
 
     @Override
     public void write(JsonWriter out, MessageFolder[] value) throws IOException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public MessageFolder[] read(JsonReader in) throws IOException {
         JsonObject object = gson.getAdapter(JsonElement.class).read(in).getAsJsonObject();
         JsonArray array = object.get("Items").getAsJsonArray();

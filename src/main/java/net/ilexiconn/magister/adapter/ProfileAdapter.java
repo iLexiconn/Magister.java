@@ -39,10 +39,12 @@ public class ProfileAdapter extends TypeAdapter<Profile> {
             .registerTypeAdapter(Privilege[].class, new PrivilegeAdapter())
             .create();
 
+    @Override
     public void write(JsonWriter out, Profile value) throws IOException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public Profile read(JsonReader in) throws IOException {
         JsonObject object = gson.getAdapter(JsonElement.class).read(in).getAsJsonObject();
         Profile profile = gson.fromJson(object.getAsJsonObject("Persoon"), Profile.class);

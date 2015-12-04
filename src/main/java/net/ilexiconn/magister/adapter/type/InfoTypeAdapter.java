@@ -12,10 +12,12 @@ import java.io.IOException;
 public class InfoTypeAdapter extends TypeAdapter<InfoType> {
     public Gson gson = new Gson();
 
+    @Override
     public void write(JsonWriter out, InfoType value) throws IOException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public InfoType read(JsonReader in) throws IOException {
         JsonPrimitive primitive = gson.getAdapter(JsonPrimitive.class).read(in);
         int id = primitive.getAsInt();

@@ -19,10 +19,12 @@ public class GradeAdapter extends TypeAdapter<Grade[]> {
             .registerTypeAdapter(RowType.class, new RowTypeAdapter())
             .create();
 
+    @Override
     public void write(JsonWriter out, Grade[] value) throws IOException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public Grade[] read(JsonReader in) throws IOException {
         JsonObject object = gson.getAdapter(JsonElement.class).read(in).getAsJsonObject();
         JsonArray array = object.get("Items").getAsJsonArray();

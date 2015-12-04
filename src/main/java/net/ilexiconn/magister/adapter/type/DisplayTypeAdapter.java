@@ -12,10 +12,12 @@ import java.io.IOException;
 public class DisplayTypeAdapter extends TypeAdapter<DisplayType> {
     public Gson gson = new Gson();
 
+    @Override
     public void write(JsonWriter out, DisplayType value) throws IOException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public DisplayType read(JsonReader in) throws IOException {
         JsonPrimitive primitive = gson.getAdapter(JsonPrimitive.class).read(in);
         int id = primitive.getAsInt();

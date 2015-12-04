@@ -12,10 +12,12 @@ import java.util.List;
 public class ContactAdapter extends TypeAdapter<Contact[]> {
     public Gson gson = new Gson();
 
+    @Override
     public void write(JsonWriter out, Contact[] value) throws IOException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public Contact[] read(JsonReader in) throws IOException {
         JsonObject object = gson.getAdapter(JsonElement.class).read(in).getAsJsonObject();
         JsonArray array = object.get("Items").getAsJsonArray();

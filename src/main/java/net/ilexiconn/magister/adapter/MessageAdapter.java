@@ -42,6 +42,7 @@ public class MessageAdapter extends TypeAdapter<Message[]> {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public Message[] read(JsonReader in) throws IOException {
         JsonObject object = gson.getAdapter(JsonElement.class).read(in).getAsJsonObject();
         JsonArray array = object.get("Items").getAsJsonArray();

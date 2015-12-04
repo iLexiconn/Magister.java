@@ -47,10 +47,12 @@ public class AppointmentAdapter extends TypeAdapter<Appointment[]> {
             .registerTypeAdapter(InfoType.class, new InfoTypeAdapter())
             .create();
 
+    @Override
     public void write(JsonWriter out, Appointment[] value) throws IOException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public Appointment[] read(JsonReader in) throws IOException {
         JsonObject object = gson.getAdapter(JsonElement.class).read(in).getAsJsonObject();
         JsonArray array = object.get("Items").getAsJsonArray();

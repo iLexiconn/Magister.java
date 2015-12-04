@@ -37,10 +37,12 @@ import java.util.List;
 public class PrivilegeAdapter extends TypeAdapter<Privilege[]> {
     public Gson gson = new Gson();
 
+    @Override
     public void write(JsonWriter out, Privilege[] value) throws IOException {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public Privilege[] read(JsonReader in) throws IOException {
         JsonArray array = gson.getAdapter(JsonElement.class).read(in).getAsJsonArray();
         List<Privilege> privilegeList = new ArrayList<Privilege>();
