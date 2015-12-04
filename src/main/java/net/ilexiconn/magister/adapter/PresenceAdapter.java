@@ -28,7 +28,6 @@ package net.ilexiconn.magister.adapter;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import net.ilexiconn.magister.container.Message;
 import net.ilexiconn.magister.container.Presence;
 
 import java.io.IOException;
@@ -43,6 +42,7 @@ public class PresenceAdapter extends TypeAdapter<Presence[]> {
         throw new UnsupportedOperationException("Not implemented");
     }
 
+    @Override
     public Presence[] read(JsonReader in) throws IOException {
         JsonObject object = gson.getAdapter(JsonElement.class).read(in).getAsJsonObject();
         JsonArray array = object.get("Items").getAsJsonArray();
