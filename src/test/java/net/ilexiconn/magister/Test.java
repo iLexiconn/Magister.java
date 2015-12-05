@@ -28,6 +28,7 @@ package net.ilexiconn.magister;
 import net.ilexiconn.magister.container.*;
 import net.ilexiconn.magister.container.sub.Privilege;
 import net.ilexiconn.magister.handler.GradeHandler;
+import net.ilexiconn.magister.handler.PresenceHandler;
 
 import java.util.Scanner;
 
@@ -88,12 +89,12 @@ public class Test {
             }
 
             System.out.println("====== Presence Periods ======");
-            for (PresencePeriod presencePeriod : magister.getPresencePeriods()) {
+            for (PresencePeriod presencePeriod : magister.getHandler(PresenceHandler.class).getPresencePeriods()) {
                 System.out.println(presencePeriod.description);
             }
 
             System.out.println("========== Presence ==========");
-            for (Presence presence : magister.getPresence()) {
+            for (Presence presence : magister.getHandler(PresenceHandler.class).getPresence()) {
                 System.out.println(presence.description);
             }
 

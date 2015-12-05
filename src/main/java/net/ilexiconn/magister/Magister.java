@@ -33,6 +33,7 @@ import net.ilexiconn.magister.container.sub.Privilege;
 import net.ilexiconn.magister.exeption.PrivilegeException;
 import net.ilexiconn.magister.handler.GradeHandler;
 import net.ilexiconn.magister.handler.IHandler;
+import net.ilexiconn.magister.handler.PresenceHandler;
 import net.ilexiconn.magister.util.AndroidUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
@@ -63,9 +64,6 @@ public class Magister {
             .registerTypeAdapter(Study[].class, new StudyAdapter())
             .registerTypeAdapter(Contact[].class, new ContactAdapter())
             .registerTypeAdapter(Appointment[].class, new AppointmentAdapter())
-            .registerTypeAdapter(Presence[].class, new PresenceAdapter())
-            .registerTypeAdapter(PresencePeriod[].class, new PresencePeriodAdapter())
-            .registerTypeAdapter(Grade[].class, new GradeAdapter())
             .registerTypeAdapter(MessageFolder[].class, new MessageFolderAdapter())
             .registerTypeAdapter(Message[].class, new MessageAdapter())
             .registerTypeAdapter(SingleMessage[].class, new SingleMessageAdapter())
@@ -83,6 +81,7 @@ public class Magister {
 
     private Magister() {
         handlerList.add(new GradeHandler(this));
+        handlerList.add(new PresenceHandler(this));
     }
 
     /**
@@ -227,49 +226,6 @@ public class Magister {
     public Appointment[] getAppointmentsOfToday() throws IOException, PrivilegeException {
         Date now = new Date();
         return getAppointments(now, now);
-    }
-
-    /**
-     * Get an array with all {@link Presence} data of the current study. If no data can be found, an empty array will
-     * be returned instead.
-     *
-     * @return an array with all the {@link Presence} data.
-     * @throws IOException if there is no active internet connection.
-     * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
-     */
-    public Presence[] getPresence() throws IOException, PrivilegeException {
-        return getPresence(null);
-    }
-
-    /**
-     * Get an array with all {@link Presence} data of a specific period. If no data can be found, an empty array will
-     * be returned instead.
-     *
-     * @param period the {@link PresencePeriod}.
-     * @return an array with all the {@link Presence} data.
-     * @throws IOException if there is no active internet connection.
-     * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
-     */
-    public Presence[] getPresence(PresencePeriod period) throws IOException, PrivilegeException {
-        if (!hasPrivilege("Absenties")) {
-            throw new PrivilegeException();
-        }
-        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/absenties?tot=" + (period == null ? currentStudy.startDate : period.start) + "&van=" + (period == null ? currentStudy.endDate : period.end)), Presence[].class);
-    }
-
-    /**
-     * Get an array with all the {@link PresencePeriod}s of this profile. If no data can be found, an empty array will
-     * be returned instead.
-     *
-     * @return an array with all the {@link PresencePeriod}s.
-     * @throws IOException if there is no active internet connection.
-     * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
-     */
-    public PresencePeriod[] getPresencePeriods() throws IOException, PrivilegeException {
-        if (!hasPrivilege("Absenties")) {
-            throw new PrivilegeException();
-        }
-        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/absentieperioden"), PresencePeriod[].class);
     }
 
     /**

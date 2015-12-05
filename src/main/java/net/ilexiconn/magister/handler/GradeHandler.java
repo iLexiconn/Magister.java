@@ -25,13 +25,17 @@
 
 package net.ilexiconn.magister.handler;
 
+import com.google.gson.Gson;
 import net.ilexiconn.magister.Magister;
+import net.ilexiconn.magister.adapter.GradeAdapter;
 import net.ilexiconn.magister.container.Grade;
+import net.ilexiconn.magister.util.GsonUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 
 import java.io.IOException;
 
 public class GradeHandler implements IHandler {
+    private Gson gson = GsonUtil.getGsonWithAdapter(Grade[].class, new GradeAdapter());
     private Magister magister;
 
     public GradeHandler(Magister magister) {
@@ -49,7 +53,7 @@ public class GradeHandler implements IHandler {
      * @throws IOException if there is no active internet connection.
      */
     public Grade[] getGrades(boolean onlyAverage, boolean onlyPTA, boolean onlyActiveStudy) throws IOException {
-        return magister.gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/personen/" + magister.profile.id + "/aanmeldingen/" + magister.currentStudy.id + "/cijfers/cijferoverzichtvooraanmelding?alleenBerekendeKolommen=" + onlyAverage + "&alleenPTAKolommen=" + onlyPTA + "&actievePerioden=" + onlyActiveStudy), Grade[].class);
+        return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/personen/" + magister.profile.id + "/aanmeldingen/" + magister.currentStudy.id + "/cijfers/cijferoverzichtvooraanmelding?alleenBerekendeKolommen=" + onlyAverage + "&alleenPTAKolommen=" + onlyPTA + "&actievePerioden=" + onlyActiveStudy), Grade[].class);
     }
 
     /**
@@ -65,6 +69,7 @@ public class GradeHandler implements IHandler {
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getPrivilege() {
         return "Cijfers";
     }
