@@ -27,7 +27,7 @@ package net.ilexiconn.magister.handler;
 
 import com.google.gson.Gson;
 import net.ilexiconn.magister.Magister;
-import net.ilexiconn.magister.adapter.ContactAdapter;
+import net.ilexiconn.magister.adapter.ArrayAdapter;
 import net.ilexiconn.magister.container.Contact;
 import net.ilexiconn.magister.exeption.PrivilegeException;
 import net.ilexiconn.magister.util.GsonUtil;
@@ -36,7 +36,7 @@ import net.ilexiconn.magister.util.HttpUtil;
 import java.io.IOException;
 
 public class ContactHandler implements IHandler {
-    private Gson gson = GsonUtil.getGsonWithAdapter(Contact[].class, new ContactAdapter());
+    private Gson gson = GsonUtil.getGsonWithAdapter(Contact[].class, new ArrayAdapter<Contact>(Contact.class, Contact[].class));
     private Magister magister;
 
     public ContactHandler(Magister magister) {

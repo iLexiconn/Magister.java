@@ -28,7 +28,7 @@ package net.ilexiconn.magister.container.elo;
 import com.google.gson.annotations.SerializedName;
 import net.ilexiconn.magister.container.sub.Link;
 
-public class StudyGuide {
+public class SingleStudyGuide {
     @SerializedName("Id")
     public int id;
 
@@ -41,12 +41,17 @@ public class StudyGuide {
     @SerializedName("TotEnMet")
     public String to;
 
-    @SerializedName("VakCodes")
-    public String[] courses;
-
     @SerializedName("Titel")
     public String title;
 
+    @SerializedName("IsZichtbaar")
+    public boolean isVisible;
+
     @SerializedName("InLeerlingArchief")
     public boolean isArchived;
+
+    @SerializedName("VakCodes")
+    public String[] courses;
+
+    public transient StudyGuideItem[] items;
 }

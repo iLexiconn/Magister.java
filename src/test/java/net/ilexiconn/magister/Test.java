@@ -26,8 +26,10 @@
 package net.ilexiconn.magister;
 
 import net.ilexiconn.magister.container.*;
+import net.ilexiconn.magister.container.elo.SingleStudyGuide;
 import net.ilexiconn.magister.container.elo.Source;
 import net.ilexiconn.magister.container.elo.StudyGuide;
+import net.ilexiconn.magister.container.elo.StudyGuideItem;
 import net.ilexiconn.magister.container.sub.Privilege;
 import net.ilexiconn.magister.handler.*;
 
@@ -125,6 +127,10 @@ public class Test {
             System.out.println("== Study Guides ==");
             for (StudyGuide studyGuide : eloHandler.getStudyGuides()) {
                 System.out.println(studyGuide.title);
+                SingleStudyGuide singleStudyGuide = eloHandler.getStudyGuide(studyGuide);
+                for (StudyGuideItem item : singleStudyGuide.items) {
+                    System.out.println("=> " + item.title);
+                }
             }
 
             if (args.length > 3) {

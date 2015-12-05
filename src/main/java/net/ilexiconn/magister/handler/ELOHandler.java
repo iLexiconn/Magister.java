@@ -29,6 +29,8 @@ import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.adapter.ArrayAdapter;
+import net.ilexiconn.magister.adapter.SingleStudyGuideAdapter;
+import net.ilexiconn.magister.container.elo.SingleStudyGuide;
 import net.ilexiconn.magister.container.elo.Source;
 import net.ilexiconn.magister.container.elo.StudyGuide;
 import net.ilexiconn.magister.util.GsonUtil;
@@ -47,6 +49,7 @@ public class ELOHandler implements IHandler {
         Map<Class<?>, TypeAdapter<?>> map = new HashMap<Class<?>, TypeAdapter<?>>();
         map.put(Source[].class, new ArrayAdapter<Source>(Source.class, Source[].class));
         map.put(StudyGuide[].class, new ArrayAdapter<StudyGuide>(StudyGuide.class, StudyGuide[].class));
+        map.put(SingleStudyGuide.class, new SingleStudyGuideAdapter());
         gson = GsonUtil.getGsonWithAdapters(map);
     }
 
@@ -56,6 +59,14 @@ public class ELOHandler implements IHandler {
 
     public StudyGuide[] getStudyGuides() throws IOException {
         return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/leerlingen/" + magister.profile.id + "/studiewijzers"), StudyGuide[].class);
+    }
+
+    public SingleStudyGuide getStudyGuide(StudyGuide studyGuide) throws IOException {
+        return getStudyGuide(studyGuide.id);
+    }
+
+    public SingleStudyGuide getStudyGuide(int studyGuideID) throws IOException {
+        return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/leerlingen/" + magister.profile.id + "/studiewijzers/" + studyGuideID), SingleStudyGuide.class);
     }
 
     /**

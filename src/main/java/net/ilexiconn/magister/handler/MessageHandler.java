@@ -28,8 +28,7 @@ package net.ilexiconn.magister.handler;
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import net.ilexiconn.magister.Magister;
-import net.ilexiconn.magister.adapter.MessageAdapter;
-import net.ilexiconn.magister.adapter.MessageFolderAdapter;
+import net.ilexiconn.magister.adapter.ArrayAdapter;
 import net.ilexiconn.magister.adapter.SingleMessageAdapter;
 import net.ilexiconn.magister.container.Message;
 import net.ilexiconn.magister.container.MessageFolder;
@@ -49,8 +48,8 @@ public class MessageHandler implements IHandler {
     public MessageHandler(Magister magister) {
         this.magister = magister;
         Map<Class<?>, TypeAdapter<?>> map = new HashMap<Class<?>, TypeAdapter<?>>();
-        map.put(MessageFolder[].class, new MessageFolderAdapter());
-        map.put(Message[].class, new MessageAdapter());
+        map.put(MessageFolder[].class, new ArrayAdapter<MessageFolder>(MessageFolder.class, MessageFolder[].class));
+        map.put(Message[].class, new ArrayAdapter<Message>(Message.class, Message[].class));
         map.put(SingleMessage[].class, new SingleMessageAdapter());
         gson = GsonUtil.getGsonWithAdapters(map);
     }
