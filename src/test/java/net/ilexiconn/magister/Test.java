@@ -27,6 +27,7 @@ package net.ilexiconn.magister;
 
 import net.ilexiconn.magister.container.*;
 import net.ilexiconn.magister.container.sub.Privilege;
+import net.ilexiconn.magister.handler.GradeHandler;
 
 import java.util.Scanner;
 
@@ -97,7 +98,7 @@ public class Test {
             }
 
             System.out.println("=========== Grades ===========");
-            for (Grade grade : magister.getGrades(true, false, true)) {
+            for (Grade grade : magister.getHandler(GradeHandler.class).getGrades(true, false, true)) {
                 System.out.println(grade.course.name + ": " + grade.grade);
             }
 

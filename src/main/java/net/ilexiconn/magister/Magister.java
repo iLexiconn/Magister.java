@@ -31,6 +31,8 @@ import net.ilexiconn.magister.adapter.*;
 import net.ilexiconn.magister.container.*;
 import net.ilexiconn.magister.container.sub.Privilege;
 import net.ilexiconn.magister.exeption.PrivilegeException;
+import net.ilexiconn.magister.handler.GradeHandler;
+import net.ilexiconn.magister.handler.IHandler;
 import net.ilexiconn.magister.util.AndroidUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
@@ -44,9 +46,7 @@ import java.security.InvalidParameterException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * The main API class. You can get a new instance by running {@link Magister#login(School, String, String)}.
@@ -78,7 +78,11 @@ public class Magister {
     public Study[] studies;
     public Study currentStudy;
 
-    private Magister() {}
+    private List<IHandler> handlerList = new ArrayList<IHandler>();
+
+    private Magister() {
+        handlerList.add(new GradeHandler(this));
+    }
 
     /**
      * Create a new {@link Magister} instance by logging in. Will return null if login fails.
@@ -268,35 +272,6 @@ public class Magister {
     }
 
     /**
-     * Get an array of {@link Grade}s. If no grades can be found, an empty array
-     * will be returned instead.
-     *
-     * @param onlyAverage only count the average grades.
-     * @param onlyPTA only count the PTA grades.
-     * @param onlyActiveStudy only check the current study.
-     * @return an array of {@link Grade}s.
-     * @throws IOException if there is no active internet connection.
-     * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
-     */
-    public Grade[] getGrades(boolean onlyAverage, boolean onlyPTA, boolean onlyActiveStudy) throws IOException, PrivilegeException {
-        if (!hasPrivilege("Cijfers")) {
-            throw new PrivilegeException();
-        }
-        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/aanmeldingen/" + currentStudy.id + "/cijfers/cijferoverzichtvooraanmelding?alleenBerekendeKolommen=" + onlyAverage + "&alleenPTAKolommen=" + onlyPTA + "&actievePerioden=" + onlyActiveStudy), Grade[].class);
-    }
-
-    /**
-     * Get an array of all the {@link Grade}s this profile hs ever got.
-     *
-     * @return an array of all the {@link Grade}s this profile hs ever got.
-     * @throws IOException if there is no active internet connection.
-     * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
-     */
-    public Grade[] getAllGrades() throws IOException, PrivilegeException {
-        return getGrades(false, false, false);
-    }
-
-    /**
      * Get an array with all the {@link MessageFolder}s of this profile.
      *
      * @return an array with all the {@link MessageFolder}s of this profile.
@@ -394,5 +369,17 @@ public class Magister {
         HttpGet get = new HttpGet(school.url + "/api/personen/" + profile.id + "/foto" + (width != 42 || height != 64 || crop ? "?width=" + width + "&height=" + height + "&crop=" + crop : ""));
         CloseableHttpResponse responseGet = HttpUtil.getHttpClient().execute(get);
         return ImageIO.read(responseGet.getEntity().getContent());
+    }
+
+    public <T extends IHandler> T getHandler(Class<T> type) throws PrivilegeException {
+        for (IHandler handler : handlerList) {
+            if (handler.getClass() == type) {
+                if (!hasPrivilege(handler.getPrivilege())) {
+                    throw new PrivilegeException();
+                }
+                return (T) handler;
+            }
+        }
+        return null;
     }
 }
