@@ -72,7 +72,7 @@ public class AppointmentAdapter extends TypeAdapter<Appointment[]> {
             appointment.type = gson.getAdapter(AppointmentType.class).fromJsonTree(object.getAsJsonPrimitive("Type"));
             appointment.displayType = gson.getAdapter(DisplayType.class).fromJsonTree(object.getAsJsonPrimitive("WeergaveType"));
             appointment.infoType = gson.getAdapter(InfoType.class).fromJsonTree(object.getAsJsonPrimitive("InfoType"));
-            return new Appointment[] {appointment};
+            return new Appointment[]{appointment};
         }
     }
 }

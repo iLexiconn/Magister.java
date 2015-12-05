@@ -28,8 +28,8 @@ package net.ilexiconn.magister.adapter;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import net.ilexiconn.magister.container.Appointment;
 import net.ilexiconn.magister.container.PresencePeriod;
+import net.ilexiconn.magister.util.DateUtil;
 import net.ilexiconn.magister.util.LogUtil;
 
 import java.io.IOException;
@@ -54,8 +54,8 @@ public class PresencePeriodAdapter extends TypeAdapter<PresencePeriod[]> {
             JsonObject object1 = element.getAsJsonObject();
             PresencePeriod presencePeriod = gson.fromJson(object1, PresencePeriod.class);
             try {
-                presencePeriod.startDate = Appointment.appointmentDateToDate(presencePeriod.start);
-                presencePeriod.endDate = Appointment.appointmentDateToDate(presencePeriod.end);
+                presencePeriod.startDate = DateUtil.stringToDate(presencePeriod.start);
+                presencePeriod.endDate = DateUtil.stringToDate(presencePeriod.end);
             } catch (ParseException e) {
                 LogUtil.printError("Failed to parse date.", e);
             }

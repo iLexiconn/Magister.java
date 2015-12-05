@@ -29,9 +29,9 @@ import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.ilexiconn.magister.adapter.type.RowTypeAdapter;
-import net.ilexiconn.magister.container.Appointment;
 import net.ilexiconn.magister.container.Grade;
 import net.ilexiconn.magister.container.type.RowType;
+import net.ilexiconn.magister.util.DateUtil;
 import net.ilexiconn.magister.util.LogUtil;
 
 import java.io.IOException;
@@ -59,7 +59,7 @@ public class GradeAdapter extends TypeAdapter<Grade[]> {
             Grade grade = gson.fromJson(object1, Grade.class);
             if (grade.filledInDateString != null) {
                 try {
-                    grade.filledInDate = Appointment.appointmentDateToDate(grade.filledInDateString);
+                    grade.filledInDate = DateUtil.stringToDate(grade.filledInDateString);
                 } catch (ParseException e) {
                     LogUtil.printError("Unable to parse date", e);
                 }

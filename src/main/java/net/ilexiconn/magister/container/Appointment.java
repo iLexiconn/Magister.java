@@ -31,11 +31,6 @@ import net.ilexiconn.magister.container.type.AppointmentType;
 import net.ilexiconn.magister.container.type.DisplayType;
 import net.ilexiconn.magister.container.type.InfoType;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
-
 public class Appointment {
     @SerializedName("Id")
     public int id;
@@ -91,12 +86,4 @@ public class Appointment {
     @SerializedName("Omschrijving")
     public String description;
 
-    public static Date appointmentDateToDate(String date) throws ParseException {
-        if (date == null) {
-            throw new ParseException("String parameter was null", 0);
-        }
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss.SSSSSSS");
-        format.setTimeZone(TimeZone.getTimeZone("GMT-0"));
-        return format.parse(date.replace("T", "-").replace("Z", ""));
-    }
 }
