@@ -27,6 +27,7 @@ package net.ilexiconn.magister;
 
 import net.ilexiconn.magister.container.*;
 import net.ilexiconn.magister.container.elo.Source;
+import net.ilexiconn.magister.container.elo.StudyGuide;
 import net.ilexiconn.magister.container.sub.Privilege;
 import net.ilexiconn.magister.handler.*;
 
@@ -117,8 +118,13 @@ public class Test {
 
             System.out.println("============= ELO =============");
             ELOHandler eloHandler = magister.getHandler(ELOHandler.class);
+            System.out.println("==== Sources ====");
             for (Source source : eloHandler.getSources()) {
                 System.out.println(source.name);
+            }
+            System.out.println("== Study Guides ==");
+            for (StudyGuide studyGuide : eloHandler.getStudyGuides()) {
+                System.out.println(studyGuide.title);
             }
 
             if (args.length > 3) {

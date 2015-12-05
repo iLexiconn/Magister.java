@@ -26,24 +26,36 @@
 package net.ilexiconn.magister.handler;
 
 import com.google.gson.Gson;
+import com.google.gson.TypeAdapter;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.adapter.ArrayAdapter;
 import net.ilexiconn.magister.container.elo.Source;
+import net.ilexiconn.magister.container.elo.StudyGuide;
 import net.ilexiconn.magister.util.GsonUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ELOHandler implements IHandler {
-    public Gson gson = GsonUtil.getGsonWithAdapter(Source[].class, new ArrayAdapter<Source>(Source.class, Source[].class));
+    public Gson gson;
     private Magister magister;
 
     public ELOHandler(Magister magister) {
         this.magister = magister;
+        Map<Class<?>, TypeAdapter<?>> map = new HashMap<Class<?>, TypeAdapter<?>>();
+        map.put(Source[].class, new ArrayAdapter<Source>(Source.class, Source[].class));
+        map.put(StudyGuide[].class, new ArrayAdapter<StudyGuide>(StudyGuide.class, StudyGuide[].class));
+        gson = GsonUtil.getGsonWithAdapters(map);
     }
 
     public Source[] getSources() throws IOException {
         return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/personen/" + magister.profile.id + "/bronnen?soort=0"), Source[].class);
+    }
+
+    public StudyGuide[] getStudyGuides() throws IOException {
+        return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/leerlingen/" + magister.profile.id + "/studiewijzers"), StudyGuide[].class);
     }
 
     /**
