@@ -29,13 +29,14 @@ import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.ilexiconn.magister.container.Message;
+import net.ilexiconn.magister.util.GsonUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MessageAdapter extends TypeAdapter<Message[]> {
-    public Gson gson = new Gson();
+    public Gson gson = GsonUtil.getGson();
 
     @Override
     public void write(JsonWriter out, Message[] value) throws IOException {

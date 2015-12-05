@@ -31,13 +31,12 @@ import com.google.gson.stream.JsonWriter;
 import net.ilexiconn.magister.adapter.sub.PrivilegeAdapter;
 import net.ilexiconn.magister.container.Profile;
 import net.ilexiconn.magister.container.sub.Privilege;
+import net.ilexiconn.magister.util.GsonUtil;
 
 import java.io.IOException;
 
 public class ProfileAdapter extends TypeAdapter<Profile> {
-    public Gson gson = new GsonBuilder()
-            .registerTypeAdapter(Privilege[].class, new PrivilegeAdapter())
-            .create();
+    public Gson gson = GsonUtil.getGsonWithAdapter(Privilege[].class, new PrivilegeAdapter());
 
     @Override
     public void write(JsonWriter out, Profile value) throws IOException {

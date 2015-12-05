@@ -30,6 +30,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.ilexiconn.magister.container.PresencePeriod;
 import net.ilexiconn.magister.util.DateUtil;
+import net.ilexiconn.magister.util.GsonUtil;
 import net.ilexiconn.magister.util.LogUtil;
 
 import java.io.IOException;
@@ -38,7 +39,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PresencePeriodAdapter extends TypeAdapter<PresencePeriod[]> {
-    public Gson gson = new Gson();
+    public Gson gson = GsonUtil.getGson();
 
     @Override
     public void write(JsonWriter out, PresencePeriod[] value) throws IOException {

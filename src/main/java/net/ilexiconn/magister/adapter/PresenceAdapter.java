@@ -30,15 +30,14 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.ilexiconn.magister.container.Appointment;
 import net.ilexiconn.magister.container.Presence;
+import net.ilexiconn.magister.util.GsonUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PresenceAdapter extends TypeAdapter<Presence[]> {
-    public Gson gson = new GsonBuilder()
-            .registerTypeAdapter(Appointment[].class, new AppointmentAdapter())
-            .create();
+    public Gson gson = GsonUtil.getGsonWithAdapter(Appointment[].class, new AppointmentAdapter());
 
     @Override
     public void write(JsonWriter out, Presence[] value) throws IOException {

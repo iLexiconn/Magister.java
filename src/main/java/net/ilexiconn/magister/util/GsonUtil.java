@@ -23,19 +23,33 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.ilexiconn.magister.handler;
+package net.ilexiconn.magister.util;
 
-/**
- * Interface for all {@link net.ilexiconn.magister.Magister} action handlers.
- *
- * @since 0.1.0
- * @author iLexiconn
- */
-public interface IHandler {
-    /**
-     * Get the privilege needed for all actions in this handler.
-     *
-     * @return the privilege needed for all actions in this handler.
-     */
-    String getPrivilege();
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class GsonUtil {
+    private static Gson gson = new Gson();
+
+    public static Gson getGson() {
+        return gson;
+    }
+
+    public static Gson getGsonWithAdapter(Class<?> type, TypeAdapter<?> adapter) {
+        Map<Class<?>, TypeAdapter<?>> map = new HashMap<Class<?>, TypeAdapter<?>>();
+        map.put(type, adapter);
+        return getGsonWithAdapters(map);
+    }
+
+    public static Gson getGsonWithAdapters(Map<Class<?>, TypeAdapter<?>> map) {
+        GsonBuilder builder = new GsonBuilder();
+        for (Map.Entry<Class<?>, TypeAdapter<?>> entry : map.entrySet()) {
+            builder.registerTypeAdapter(entry.getKey(), entry.getValue());
+        }
+        return builder.create();
+    }
 }

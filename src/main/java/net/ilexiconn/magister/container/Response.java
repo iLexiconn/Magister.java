@@ -23,19 +23,11 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.ilexiconn.magister.handler;
+package net.ilexiconn.magister.container;
 
-/**
- * Interface for all {@link net.ilexiconn.magister.Magister} action handlers.
- *
- * @since 0.1.0
- * @author iLexiconn
- */
-public interface IHandler {
-    /**
-     * Get the privilege needed for all actions in this handler.
-     *
-     * @return the privilege needed for all actions in this handler.
-     */
-    String getPrivilege();
+import com.google.gson.annotations.SerializedName;
+
+public class Response {
+    @SerializedName("Message")
+    public String message;
 }

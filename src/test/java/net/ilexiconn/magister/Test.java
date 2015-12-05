@@ -107,6 +107,11 @@ public class Test {
                 System.out.println(privilege.name);
             }
 
+            System.out.println("========== Password ==========");
+            String current = args[args.length == 2 ? 1 : 2];
+            System.out.println(magister.changePassword(current, current + "-test", current + "-test"));
+            System.out.println(magister.changePassword(current + "-test", current, current));
+
             if (args.length > 3) {
                 System.out.println("========== Contact ==========");
                 for (Contact contact : magister.getPupilInfo(args[3])) {

@@ -31,11 +31,12 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.ilexiconn.magister.container.type.AppointmentType;
+import net.ilexiconn.magister.util.GsonUtil;
 
 import java.io.IOException;
 
 public class AppointmentTypeAdapter extends TypeAdapter<AppointmentType> {
-    public Gson gson = new Gson();
+    public Gson gson = GsonUtil.getGson();
 
     @Override
     public void write(JsonWriter out, AppointmentType value) throws IOException {

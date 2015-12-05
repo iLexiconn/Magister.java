@@ -31,11 +31,12 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.ilexiconn.magister.container.type.RowType;
+import net.ilexiconn.magister.util.GsonUtil;
 
 import java.io.IOException;
 
 public class RowTypeAdapter extends TypeAdapter<RowType> {
-    public Gson gson = new Gson();
+    public Gson gson = GsonUtil.getGson();
 
     @Override
     public void write(JsonWriter out, RowType value) throws IOException {

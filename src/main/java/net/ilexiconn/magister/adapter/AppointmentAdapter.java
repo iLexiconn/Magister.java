@@ -35,17 +35,24 @@ import net.ilexiconn.magister.container.Appointment;
 import net.ilexiconn.magister.container.type.AppointmentType;
 import net.ilexiconn.magister.container.type.DisplayType;
 import net.ilexiconn.magister.container.type.InfoType;
+import net.ilexiconn.magister.util.GsonUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AppointmentAdapter extends TypeAdapter<Appointment[]> {
-    public Gson gson = new GsonBuilder()
-            .registerTypeAdapter(AppointmentType.class, new AppointmentTypeAdapter())
-            .registerTypeAdapter(DisplayType.class, new DisplayTypeAdapter())
-            .registerTypeAdapter(InfoType.class, new InfoTypeAdapter())
-            .create();
+    private static Gson gson;
+
+    static {
+        Map<Class<?>, TypeAdapter<?>> map = new HashMap<Class<?>, TypeAdapter<?>>();
+        map.put(AppointmentType.class, new AppointmentTypeAdapter());
+        map.put(DisplayType.class, new DisplayTypeAdapter());
+        map.put(InfoType.class, new InfoTypeAdapter());
+        gson = GsonUtil.getGsonWithAdapters(map);
+    }
 
     @Override
     public void write(JsonWriter out, Appointment[] value) throws IOException {

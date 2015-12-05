@@ -32,13 +32,14 @@ import com.google.gson.TypeAdapter;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.ilexiconn.magister.container.SingleMessage;
+import net.ilexiconn.magister.util.GsonUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SingleMessageAdapter extends TypeAdapter<SingleMessage[]> {
-    public Gson gson = new Gson();
+    public Gson gson = GsonUtil.getGson();
 
     @Override
     public void write(JsonWriter out, SingleMessage[] value) throws IOException {

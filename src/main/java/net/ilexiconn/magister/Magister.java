@@ -36,6 +36,7 @@ import net.ilexiconn.magister.handler.IHandler;
 import net.ilexiconn.magister.util.AndroidUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
+import org.apache.http.auth.InvalidCredentialsException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 
@@ -93,9 +94,10 @@ public class Magister {
      * @return the new {@link Magister} instance, null if login fails.
      * @throws IOException if there is no active internet connection.
      * @throws ParseException if parsing the date fails.
-     * @throws InvalidParameterException if one of the arguments is null, or when the credentials are invalid.
+     * @throws InvalidParameterException if one of the arguments is null.
+     * @throws InvalidCredentialsException if the credentials are invalid.
      */
-    public static Magister login(School school, String username, String password) throws IOException, ParseException, InvalidParameterException {
+    public static Magister login(School school, String username, String password) throws IOException, ParseException, InvalidParameterException, InvalidCredentialsException {
         if (school == null || username == null || username.isEmpty() || password == null || password.isEmpty()) {
             throw new InvalidParameterException("Parameters can't be null or empty!");
         }
@@ -104,12 +106,12 @@ public class Magister {
         magister.school = school;
         magister.version = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/versie"), Version.class);
         HttpUtil.httpDelete(school.url + "/api/sessies/huidige");
-        HashMap<String, String> nameValuePairMap = new HashMap<String, String>();
+        Map<String, String> nameValuePairMap = new HashMap<String, String>();
         nameValuePairMap.put("Gebruikersnaam", username);
         nameValuePairMap.put("Wachtwoord", password);
         magister.session = magister.gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairMap), Session.class);
         if (!magister.session.state.equals("active")) {
-            LogUtil.printError("Invalid credentials", new InvalidParameterException());
+            LogUtil.printError("Invalid credentials", new InvalidCredentialsException());
             return null;
         }
         magister.profile = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/account"), Profile.class);
@@ -369,6 +371,29 @@ public class Magister {
         HttpGet get = new HttpGet(school.url + "/api/personen/" + profile.id + "/foto" + (width != 42 || height != 64 || crop ? "?width=" + width + "&height=" + height + "&crop=" + crop : ""));
         CloseableHttpResponse responseGet = HttpUtil.getHttpClient().execute(get);
         return ImageIO.read(responseGet.getEntity().getContent());
+    }
+
+    public String changePassword(String oldPassword, String newPassword, String newPassword2) throws IOException, InvalidParameterException, InvalidCredentialsException {
+        if (oldPassword == null || oldPassword.isEmpty() || newPassword == null || newPassword.isEmpty() || newPassword2 == null || newPassword2.isEmpty()) {
+            throw new InvalidParameterException("Parameters can't be null or empty!");
+        } else if (!newPassword.equals(newPassword2)) {
+            throw new InvalidParameterException("New passwords don't match!");
+        }
+        Map<String, String> nameValuePairMap = new HashMap<String, String>();
+        nameValuePairMap.put("HuidigWachtwoord", oldPassword);
+        nameValuePairMap.put("NieuwWachtwoord", newPassword);
+        nameValuePairMap.put("PersoonId", profile.id + "");
+        nameValuePairMap.put("WachtwoordBevestigen", newPassword2);
+        Response response = gson.fromJson(HttpUtil.httpPost(school.url + "/api/personen/account/wachtwoordwijzigen?persoonId=" + profile.id, nameValuePairMap), Response.class);
+        if (response == null) {
+            response = new Response();
+        }
+        if (response.message != null) {
+            LogUtil.printError(response.message, new InvalidParameterException());
+        } else {
+            response.message = "Successful";
+        }
+        return response.message;
     }
 
     public <T extends IHandler> T getHandler(Class<T> type) throws PrivilegeException {

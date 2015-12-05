@@ -32,6 +32,7 @@ import net.ilexiconn.magister.adapter.type.RowTypeAdapter;
 import net.ilexiconn.magister.container.Grade;
 import net.ilexiconn.magister.container.type.RowType;
 import net.ilexiconn.magister.util.DateUtil;
+import net.ilexiconn.magister.util.GsonUtil;
 import net.ilexiconn.magister.util.LogUtil;
 
 import java.io.IOException;
@@ -40,9 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GradeAdapter extends TypeAdapter<Grade[]> {
-    public Gson gson = new GsonBuilder()
-            .registerTypeAdapter(RowType.class, new RowTypeAdapter())
-            .create();
+    public Gson gson = GsonUtil.getGsonWithAdapter(RowType.class, new RowTypeAdapter());
 
     @Override
     public void write(JsonWriter out, Grade[] value) throws IOException {
