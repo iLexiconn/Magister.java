@@ -85,5 +85,4 @@ public class Appointment {
 
     @SerializedName("Omschrijving")
     public String description;
-
 }
