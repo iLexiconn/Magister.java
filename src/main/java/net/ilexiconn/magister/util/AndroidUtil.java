@@ -31,7 +31,7 @@ public class AndroidUtil {
     private static boolean runningOnAndroid = false;
     private static boolean androidSupportCache = false;
 
-    public static boolean isRunningOnAndroid() {
+    public static void checkAndroid() {
         try {
             Class.forName("android.view.View");
             runningOnAndroid = true;
@@ -39,7 +39,6 @@ public class AndroidUtil {
         } catch (ClassNotFoundException e) {
             runningOnAndroid = false;
         }
-        return runningOnAndroid;
     }
 
     public static boolean isCacheAvailableOnAndroid() {

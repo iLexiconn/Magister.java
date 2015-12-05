@@ -73,9 +73,9 @@ public class Test {
             System.out.println("======= MessageFolders =======");
             for (MessageFolder messageFolder : magister.getMessageFolders()) {
                 System.out.println(messageFolder.naam);
-                for (Message message : magister.getMessagesPerFolder(messageFolder.id)) {
+                for (Message message : magister.getMessagesPerFolder(messageFolder)) {
                     System.out.println("=> " + message.topic);
-                    for (SingleMessage singleMessage : magister.getSingleMessage(message.id)) {
+                    for (SingleMessage singleMessage : magister.getSingleMessage(message)) {
                         System.out.println("==> " + singleMessage.content);
                     }
                 }
