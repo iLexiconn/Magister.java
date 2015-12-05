@@ -31,9 +31,7 @@ import net.ilexiconn.magister.adapter.*;
 import net.ilexiconn.magister.container.*;
 import net.ilexiconn.magister.container.sub.Privilege;
 import net.ilexiconn.magister.exeption.PrivilegeException;
-import net.ilexiconn.magister.handler.GradeHandler;
-import net.ilexiconn.magister.handler.IHandler;
-import net.ilexiconn.magister.handler.PresenceHandler;
+import net.ilexiconn.magister.handler.*;
 import net.ilexiconn.magister.util.AndroidUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
@@ -62,11 +60,6 @@ public class Magister {
     public Gson gson = new GsonBuilder()
             .registerTypeAdapter(Profile.class, new ProfileAdapter())
             .registerTypeAdapter(Study[].class, new StudyAdapter())
-            .registerTypeAdapter(Contact[].class, new ContactAdapter())
-            .registerTypeAdapter(Appointment[].class, new AppointmentAdapter())
-            .registerTypeAdapter(MessageFolder[].class, new MessageFolderAdapter())
-            .registerTypeAdapter(Message[].class, new MessageAdapter())
-            .registerTypeAdapter(SingleMessage[].class, new SingleMessageAdapter())
             .create();
 
     public School school;
@@ -82,6 +75,9 @@ public class Magister {
     private Magister() {
         handlerList.add(new GradeHandler(this));
         handlerList.add(new PresenceHandler(this));
+        handlerList.add(new ContactHandler(this));
+        handlerList.add(new MessageHandler(this));
+        handlerList.add(new AppointmentHandler(this));
     }
 
     /**
@@ -140,170 +136,6 @@ public class Magister {
     }
 
     /**
-     * Get an array of {@link Contact}s with pupil contact information. If no contacts can be found, an empty array will
-     * be returned instead.
-     *
-     * @param name the name of the pupil.
-     * @return an array of {@link Contact}s with the contact information.
-     * @throws IOException if there is no active internet connection.
-     * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
-     */
-    public Contact[] getPupilInfo(String name) throws IOException, PrivilegeException {
-        return getContactInfo(name, "Leerling");
-    }
-
-    /**
-     * Get an array of {@link Contact}s with teacher contact information. If no contacts can be found, an empty array
-     * will be returned instead.
-     *
-     * @param name the name of the teacher.
-     * @return an array of {@link Contact} with the contact information.
-     * @throws IOException if there is no active internet connection.
-     * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
-     */
-    public Contact[] getTeacherInfo(String name) throws IOException, PrivilegeException {
-        return getContactInfo(name, "Personeel");
-    }
-
-    /**
-     * Get an array of {@link Contact}s with contact information. If no contacts can be found, an empty array will be
-     * returned instead.
-     *
-     * @param name the name.
-     * @return an array of {@link Contact} with the contact information.
-     * @throws IOException if there is no active internet connection.
-     * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
-     */
-    public Contact[] getContactInfo(String name, String type) throws IOException, PrivilegeException {
-        if (!hasPrivilege("Contactpersonen")) {
-            throw new PrivilegeException();
-        }
-        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/contactpersonen?contactPersoonType=" + type + "&q=" + name), Contact[].class);
-    }
-
-    /**
-     * Get an array with all the {@link Appointment}s of this {@link PresencePeriod}. If no appointments can be found,
-     * an empty array will be returned instead.
-     *
-     * @param period the {@link PresencePeriod} of the {@link Appointment}s.
-     * @return an array with the {@link Appointment}s of this period.
-     * @throws IOException if there is no active internet connection.
-     * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
-     */
-    public Appointment[] getAppointments(PresencePeriod period) throws IOException, PrivilegeException {
-        return getAppointments(period.startDate, period.endDate);
-    }
-
-    /**
-     * Get an array with all the {@link Appointment}s. If no appointments can be found, an empty array will be returned
-     * instead.
-     *
-     * @param from the start date.
-     * @param until the end date.
-     * @return an array with the {@link Appointment}s of this date period.
-     * @throws IOException if there is no active internet connection.
-     * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
-     */
-    public Appointment[] getAppointments(Date from, Date until) throws IOException, PrivilegeException {
-        if (!hasPrivilege("Afspraken")) {
-            throw new PrivilegeException();
-        }
-        DateFormat format = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-        String dateNow = format.format(from);
-        String dateFrom = format.format(until);
-        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/afspraken?status=0&van=" + dateNow + "&tot=" + dateFrom), Appointment[].class);
-    }
-
-    /**
-     * Get an array with all the {@link Appointment}s of today. If no appointments can be found, an empty array will be
-     * returned
-     * instead.
-     *
-     * @return an array with the {@link Appointment}s of this date period.
-     * @throws IOException if there is no active internet connection.
-     * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
-     */
-    public Appointment[] getAppointmentsOfToday() throws IOException, PrivilegeException {
-        Date now = new Date();
-        return getAppointments(now, now);
-    }
-
-    /**
-     * Get an array with all the {@link MessageFolder}s of this profile.
-     *
-     * @return an array with all the {@link MessageFolder}s of this profile.
-     * @throws IOException if there is no active internet connection.
-     * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
-     */
-    public MessageFolder[] getMessageFolders() throws IOException, PrivilegeException {
-        if (!hasPrivilege("Berichten")) {
-            throw new PrivilegeException();
-        }
-        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten/mappen"), MessageFolder[].class);
-    }
-
-    /**
-     * Get an array of {@link Message}s of a specific {@link MessageFolder}.
-     *
-     * @param folder the {@link MessageFolder} instance.
-     * @return an array of {@link Message}s.
-     * @throws IOException if there is no active internet connection.
-     * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
-     */
-    public Message[] getMessagesPerFolder(MessageFolder folder) throws IOException, PrivilegeException {
-        return getMessagesPerFolder(folder.id);
-    }
-
-    /**
-     * Get an array of {@link Message}s of a specific {@link MessageFolder}.
-     *
-     * @param folderID the {@link MessageFolder} ID.
-     * @return an array of {@link Message}s.
-     * @throws IOException if there is no active internet connection.
-     * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
-     */
-    public Message[] getMessagesPerFolder(int folderID) throws IOException, PrivilegeException {
-        if (!hasPrivilege("Berichten")) {
-            throw new PrivilegeException();
-        }
-        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten?mapId=" + folderID + "&orderby=soort+DESC&skip=0&top=25"), Message[].class);
-    }
-
-    /**
-     * Get an array of {@link SingleMessage}s of this specific {@link Message}.
-     *
-     * @param message the {@link Message} instance.
-     * @return an array of {@link SingleMessage}s.
-     * @throws IOException if there is no active internet connection.
-     * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
-     */
-    public SingleMessage[] getSingleMessage(Message message) throws IOException, PrivilegeException {
-        return getSingleMessage(message.id);
-    }
-
-    /**
-     * Get an array of {@link SingleMessage}s of this specific {@link Message}.
-     *
-     * @param messageID the {@link Message} ID.
-     * @return an array of {@link SingleMessage}s.
-     * @throws IOException if there is no active internet connection.
-     * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
-     */
-    public SingleMessage[] getSingleMessage(int messageID) throws IOException, PrivilegeException {
-        if (!hasPrivilege("Berichten")) {
-            throw new PrivilegeException();
-        }
-        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + profile.id + "/berichten/" + messageID + "?berichtSoort=Bericht"), SingleMessage[].class);
-    }
-
-    /**
-     * TODO: Implement post
-     */
-    public void postMessage(SingleMessage message) throws IOException, PrivilegeException {
-
-    }
-
-    /**
      * Get the current profile picture in the default size.
      *
      * @return the current profile picture in the default size.
@@ -338,8 +170,12 @@ public class Magister {
      * @throws IOException if there is no active internet connection.
      * @throws InvalidParameterException if one of the parameters is null or empty, or when the two new passwords aren't
      * the same.
+     * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
-    public String changePassword(String oldPassword, String newPassword, String newPassword2) throws IOException, InvalidParameterException {
+    public String changePassword(String oldPassword, String newPassword, String newPassword2) throws IOException, InvalidParameterException, PrivilegeException {
+        if (!hasPrivilege("WachtwoordWijzigen")) {
+            throw new PrivilegeException();
+        }
         if (oldPassword == null || oldPassword.isEmpty() || newPassword == null || newPassword.isEmpty() || newPassword2 == null || newPassword2.isEmpty()) {
             throw new InvalidParameterException("Parameters can't be null or empty!");
         } else if (!newPassword.equals(newPassword2)) {

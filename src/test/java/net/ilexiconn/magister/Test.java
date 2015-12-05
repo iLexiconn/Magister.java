@@ -27,8 +27,7 @@ package net.ilexiconn.magister;
 
 import net.ilexiconn.magister.container.*;
 import net.ilexiconn.magister.container.sub.Privilege;
-import net.ilexiconn.magister.handler.GradeHandler;
-import net.ilexiconn.magister.handler.PresenceHandler;
+import net.ilexiconn.magister.handler.*;
 
 import java.util.Scanner;
 
@@ -73,28 +72,30 @@ public class Test {
             System.out.println("ID: " + magister.profile.id);
 
             System.out.println("======= MessageFolders =======");
-            for (MessageFolder messageFolder : magister.getMessageFolders()) {
+            MessageHandler messageHandler = magister.getHandler(MessageHandler.class);
+            for (MessageFolder messageFolder : messageHandler.getMessageFolders()) {
                 System.out.println(messageFolder.naam);
-                for (Message message : magister.getMessagesPerFolder(messageFolder)) {
+                for (Message message : messageHandler.getMessagesPerFolder(messageFolder)) {
                     System.out.println("=> " + message.topic);
-                    for (SingleMessage singleMessage : magister.getSingleMessage(message)) {
+                    for (SingleMessage singleMessage : messageHandler.getSingleMessage(message)) {
                         System.out.println("==> " + singleMessage.content);
                     }
                 }
             }
 
             System.out.println("======== Appointments ========");
-            for (Appointment appointment : magister.getAppointmentsOfToday()) {
+            for (Appointment appointment : magister.getHandler(AppointmentHandler.class).getAppointmentsOfToday()) {
                 System.out.println(appointment.description);
             }
 
             System.out.println("====== Presence Periods ======");
-            for (PresencePeriod presencePeriod : magister.getHandler(PresenceHandler.class).getPresencePeriods()) {
+            PresenceHandler presenceHandler = magister.getHandler(PresenceHandler.class);
+            for (PresencePeriod presencePeriod : presenceHandler.getPresencePeriods()) {
                 System.out.println(presencePeriod.description);
             }
 
             System.out.println("========== Presence ==========");
-            for (Presence presence : magister.getHandler(PresenceHandler.class).getPresence()) {
+            for (Presence presence : presenceHandler.getPresence()) {
                 System.out.println(presence.description);
             }
 
@@ -115,7 +116,7 @@ public class Test {
 
             if (args.length > 3) {
                 System.out.println("========== Contact ==========");
-                for (Contact contact : magister.getPupilInfo(args[3])) {
+                for (Contact contact : magister.getHandler(ContactHandler.class).getPupilInfo(args[3])) {
                     System.out.println(contact.name);
                 }
             }
