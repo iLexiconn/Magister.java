@@ -35,8 +35,8 @@ public class DateUtil {
         if (date == null) {
             throw new ParseException("String parameter was null", 0);
         }
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd-HH:mm:ss.SSSSSSS");
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         format.setTimeZone(TimeZone.getTimeZone("GMT-0"));
-        return format.parse(date.replace("T", "-").replace("Z", ""));
+        return format.parse(date);
     }
 }
