@@ -78,6 +78,7 @@ public class Magister {
         handlerList.add(new ContactHandler(this));
         handlerList.add(new MessageHandler(this));
         handlerList.add(new AppointmentHandler(this));
+        handlerList.add(new ELOHandler(this));
     }
 
     /**

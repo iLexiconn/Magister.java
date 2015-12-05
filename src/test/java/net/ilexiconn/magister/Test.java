@@ -26,6 +26,7 @@
 package net.ilexiconn.magister;
 
 import net.ilexiconn.magister.container.*;
+import net.ilexiconn.magister.container.elo.Source;
 import net.ilexiconn.magister.container.sub.Privilege;
 import net.ilexiconn.magister.handler.*;
 
@@ -113,6 +114,12 @@ public class Test {
             String current = args[args.length == 2 ? 1 : 2];
             System.out.println(magister.changePassword(current, current + "-test", current + "-test"));
             System.out.println(magister.changePassword(current + "-test", current, current));
+
+            System.out.println("============= ELO =============");
+            ELOHandler eloHandler = magister.getHandler(ELOHandler.class);
+            for (Source source : eloHandler.getSources()) {
+                System.out.println(source.name);
+            }
 
             if (args.length > 3) {
                 System.out.println("========== Contact ==========");
