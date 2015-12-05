@@ -55,16 +55,24 @@ public class AppointmentAdapter extends TypeAdapter<Appointment[]> {
     @Override
     public Appointment[] read(JsonReader in) throws IOException {
         JsonObject object = gson.getAdapter(JsonElement.class).read(in).getAsJsonObject();
-        JsonArray array = object.get("Items").getAsJsonArray();
-        List<Appointment> appointmentList = new ArrayList<Appointment>();
-        for (JsonElement element : array) {
-            JsonObject object1 = element.getAsJsonObject();
-            Appointment appointment = gson.fromJson(object1, Appointment.class);
-            appointment.type = gson.getAdapter(AppointmentType.class).fromJsonTree(object1.getAsJsonPrimitive("Type"));
-            appointment.displayType = gson.getAdapter(DisplayType.class).fromJsonTree(object1.getAsJsonPrimitive("WeergaveType"));
-            appointment.infoType = gson.getAdapter(InfoType.class).fromJsonTree(object1.getAsJsonPrimitive("InfoType"));
-            appointmentList.add(appointment);
+        if (object.has("Items")) {
+            JsonArray array = object.get("Items").getAsJsonArray();
+            List<Appointment> appointmentList = new ArrayList<Appointment>();
+            for (JsonElement element : array) {
+                JsonObject object1 = element.getAsJsonObject();
+                Appointment appointment = gson.fromJson(object1, Appointment.class);
+                appointment.type = gson.getAdapter(AppointmentType.class).fromJsonTree(object1.getAsJsonPrimitive("Type"));
+                appointment.displayType = gson.getAdapter(DisplayType.class).fromJsonTree(object1.getAsJsonPrimitive("WeergaveType"));
+                appointment.infoType = gson.getAdapter(InfoType.class).fromJsonTree(object1.getAsJsonPrimitive("InfoType"));
+                appointmentList.add(appointment);
+            }
+            return appointmentList.toArray(new Appointment[appointmentList.size()]);
+        } else {
+            Appointment appointment = gson.fromJson(object, Appointment.class);
+            appointment.type = gson.getAdapter(AppointmentType.class).fromJsonTree(object.getAsJsonPrimitive("Type"));
+            appointment.displayType = gson.getAdapter(DisplayType.class).fromJsonTree(object.getAsJsonPrimitive("WeergaveType"));
+            appointment.infoType = gson.getAdapter(InfoType.class).fromJsonTree(object.getAsJsonPrimitive("InfoType"));
+            return new Appointment[] {appointment};
         }
-        return appointmentList.toArray(new Appointment[appointmentList.size()]);
     }
 }

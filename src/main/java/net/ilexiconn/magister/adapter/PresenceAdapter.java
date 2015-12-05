@@ -28,6 +28,7 @@ package net.ilexiconn.magister.adapter;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import net.ilexiconn.magister.container.Appointment;
 import net.ilexiconn.magister.container.Presence;
 
 import java.io.IOException;
@@ -35,7 +36,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PresenceAdapter extends TypeAdapter<Presence[]> {
-    public Gson gson = new Gson();
+    public Gson gson = new GsonBuilder()
+            .registerTypeAdapter(Appointment[].class, new AppointmentAdapter())
+            .create();
 
     @Override
     public void write(JsonWriter out, Presence[] value) throws IOException {
@@ -48,7 +51,9 @@ public class PresenceAdapter extends TypeAdapter<Presence[]> {
         JsonArray array = object.get("Items").getAsJsonArray();
         List<Presence> presenceList = new ArrayList<Presence>();
         for (JsonElement element : array) {
-            presenceList.add(gson.fromJson(element.getAsJsonObject(), Presence.class));
+            Presence presence = gson.fromJson(element.getAsJsonObject(), Presence.class);
+            presence.appointment = gson.fromJson(element.getAsJsonObject().get("Afspraak"), Appointment[].class)[0];
+            presenceList.add(presence);
         }
         return presenceList.toArray(new Presence[presenceList.size()]);
     }

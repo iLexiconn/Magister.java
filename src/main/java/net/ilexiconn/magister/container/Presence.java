@@ -55,6 +55,5 @@ public class Presence {
     @SerializedName("Code")
     public String code;
 
-    @SerializedName("Afspraak")
-    public Appointment appointment;
+    public transient Appointment appointment;
 }
