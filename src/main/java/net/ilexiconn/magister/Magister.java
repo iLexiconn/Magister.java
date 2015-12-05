@@ -95,9 +95,8 @@ public class Magister {
      * @throws IOException if there is no active internet connection.
      * @throws ParseException if parsing the date fails.
      * @throws InvalidParameterException if one of the arguments is null.
-     * @throws InvalidCredentialsException if the credentials are invalid.
      */
-    public static Magister login(School school, String username, String password) throws IOException, ParseException, InvalidParameterException, InvalidCredentialsException {
+    public static Magister login(School school, String username, String password) throws IOException, ParseException, InvalidParameterException {
         if (school == null || username == null || username.isEmpty() || password == null || password.isEmpty()) {
             throw new InvalidParameterException("Parameters can't be null or empty!");
         }
@@ -365,7 +364,7 @@ public class Magister {
      * @param height the height.
      * @param crop true if not in default ratio.
      * @return the current profile picture.
-     * @throws IOException
+     * @throws IOException if there is no active internet connection.
      */
     public BufferedImage getImage(int width, int height, boolean crop) throws IOException {
         HttpGet get = new HttpGet(school.url + "/api/personen/" + profile.id + "/foto" + (width != 42 || height != 64 || crop ? "?width=" + width + "&height=" + height + "&crop=" + crop : ""));
@@ -373,7 +372,18 @@ public class Magister {
         return ImageIO.read(responseGet.getEntity().getContent());
     }
 
-    public String changePassword(String oldPassword, String newPassword, String newPassword2) throws IOException, InvalidParameterException, InvalidCredentialsException {
+    /**
+     * Change the password of the current profile.
+     *
+     * @param oldPassword the current password.
+     * @param newPassword the new password.
+     * @param newPassword2 the new password.
+     * @return a String with the response. 'Successful' if the password changed successfully.
+     * @throws IOException if there is no active internet connection.
+     * @throws InvalidParameterException if one of the parameters is null or empty, or when the two new passwords aren't
+     * the same.
+     */
+    public String changePassword(String oldPassword, String newPassword, String newPassword2) throws IOException, InvalidParameterException {
         if (oldPassword == null || oldPassword.isEmpty() || newPassword == null || newPassword.isEmpty() || newPassword2 == null || newPassword2.isEmpty()) {
             throw new InvalidParameterException("Parameters can't be null or empty!");
         } else if (!newPassword.equals(newPassword2)) {
@@ -386,14 +396,11 @@ public class Magister {
         nameValuePairMap.put("WachtwoordBevestigen", newPassword2);
         Response response = gson.fromJson(HttpUtil.httpPost(school.url + "/api/personen/account/wachtwoordwijzigen?persoonId=" + profile.id, nameValuePairMap), Response.class);
         if (response == null) {
-            response = new Response();
-        }
-        if (response.message != null) {
-            LogUtil.printError(response.message, new InvalidParameterException());
+            return "Successful";
         } else {
-            response.message = "Successful";
+            LogUtil.printError(response.message, new InvalidParameterException());
+            return response.message;
         }
-        return response.message;
     }
 
     public <T extends IHandler> T getHandler(Class<T> type) throws PrivilegeException {
