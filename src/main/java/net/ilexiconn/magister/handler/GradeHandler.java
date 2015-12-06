@@ -66,6 +66,10 @@ public class GradeHandler implements IHandler {
         return getGrades(false, false, false);
     }
 
+    public Grade[] getRecentGrades() throws IOException {
+        return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/personen/" + magister.profile.id + "/aanmeldingen/" + magister.currentStudy.id + "/cijfers"), Grade[].class);
+    }
+
     /**
      * {@inheritDoc}
      */
