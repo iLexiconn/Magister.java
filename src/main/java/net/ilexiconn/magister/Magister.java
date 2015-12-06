@@ -55,7 +55,7 @@ import java.util.*;
  * @author iLexiconn
  */
 public class Magister {
-    public static final String VERSION = "0.1.0-develop";
+    public static final String VERSION = "0.1.0-SNAPSHOT";
 
     public Gson gson = new GsonBuilder()
             .registerTypeAdapter(Profile.class, new ProfileAdapter())
