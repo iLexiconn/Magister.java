@@ -11,14 +11,14 @@ A Java implementation of the [Magister 6](http://magister6.nl/) API.
 
 How to compile from source
 ==========
-1. Be sure you have a JDK (minimal version 7) installed.
+1. Make sure you have a JDK (minimal version 6) installed.
 2. If you have Gradle installed, simply run `gradle build` from the project root. Otherwise, run `gradlew.bat build` from the project directory. If you are on Mac or Linux, run `./gradew build`.
 
 Before creating issues
 ==========
-1. Make sure to use the latest version.
-2. Make sure your code doesn't contain any errors.
-3. Make sure you're not using a modified version of the api.
+1. Make sure you're running the latest version.
+2. Make sure you're using the API correctly.
+3. Make sure you're using an unmodified version of the API.
 
 Credits
 ==========
