@@ -99,11 +99,11 @@ public class Magister {
         AndroidUtil.checkAndroid();
         magister.school = school;
         magister.version = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/versie"), Version.class);
-        user = new User(username, password, true);
+        magister.user = new User(username, password, true);
 
         HttpUtil.httpDelete(school.url + "/api/sessies/huidige");
 
-        Map<String,String> nameValuePairMap = magister.gson.fromJson(magister.gson.toJson(user), new TypeToken<Map<String, String>>(){}.getType());
+        Map<String,String> nameValuePairMap = magister.gson.fromJson(magister.gson.toJson(magister.user), new TypeToken<Map<String, String>>(){}.getType());
 
         magister.session = magister.gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairMap), Session.class);
         if (!magister.session.state.equals("active")) {
