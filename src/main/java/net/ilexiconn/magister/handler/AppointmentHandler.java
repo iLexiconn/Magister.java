@@ -26,11 +26,7 @@
 package net.ilexiconn.magister.handler;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
-import com.sun.xml.internal.bind.v2.TODO;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.adapter.AppointmentAdapter;
 import net.ilexiconn.magister.container.Appointment;
@@ -42,7 +38,6 @@ import net.ilexiconn.magister.util.HttpUtil;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -61,7 +61,7 @@ public class ArrayAdapter<T> extends TypeAdapter<T[]> {
             return Arrays.copyOf(list.toArray(), list.size(), clsArray);
         } else {
             T t = gson.fromJson(object, cls);
-            return (T[]) new Object[] {t};
+            return (T[]) new Object[]{t};
         }
     }
 }
