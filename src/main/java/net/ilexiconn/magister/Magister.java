@@ -27,6 +27,7 @@ package net.ilexiconn.magister;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import net.ilexiconn.magister.adapter.ProfileAdapter;
 import net.ilexiconn.magister.adapter.StudyAdapter;
 import net.ilexiconn.magister.container.*;
@@ -59,6 +60,7 @@ public class Magister {
             .create();
 
     public School school;
+    public User user;
 
     public Version version;
     public Session session;
@@ -96,10 +98,9 @@ public class Magister {
         AndroidUtil.checkAndroid();
         magister.school = school;
         magister.version = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/versie"), Version.class);
+        magister.user = new User(username, password, true);
         HttpUtil.httpDelete(school.url + "/api/sessies/huidige");
-        Map<String, String> nameValuePairMap = new HashMap<String, String>();
-        nameValuePairMap.put("Gebruikersnaam", username);
-        nameValuePairMap.put("Wachtwoord", password);
+        Map<String, String> nameValuePairMap = magister.gson.fromJson(magister.gson.toJson(magister.user), new TypeToken<Map<String, String>>() {}.getType());
         magister.session = magister.gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairMap), Session.class);
         if (!magister.session.state.equals("active")) {
             LogUtil.printError("Invalid credentials", new InvalidParameterException());
@@ -156,41 +157,6 @@ public class Magister {
         CloseableHttpResponse responseGet = HttpUtil.getHttpClient().execute(get);
         return ImageIO.read(responseGet.getEntity().getContent());
     }*/
-
-    /**
-     * Change the password of the current profile.
-     *
-     * @param oldPassword  the current password.
-     * @param newPassword  the new password.
-     * @param newPassword2 the new password.
-     * @return a String with the response. 'Successful' if the password changed successfully.
-     * @throws IOException               if there is no active internet connection.
-     * @throws InvalidParameterException if one of the parameters is null or empty, or when the two new passwords aren't
-     *                                   the same.
-     * @throws PrivilegeException        if the profile doesn't have the privilege to perform this action.
-     */
-    public String changePassword(String oldPassword, String newPassword, String newPassword2) throws IOException, InvalidParameterException, PrivilegeException {
-        if (!hasPrivilege("WachtwoordWijzigen")) {
-            throw new PrivilegeException();
-        }
-        if (oldPassword == null || oldPassword.isEmpty() || newPassword == null || newPassword.isEmpty() || newPassword2 == null || newPassword2.isEmpty()) {
-            throw new InvalidParameterException("Parameters can't be null or empty!");
-        } else if (!newPassword.equals(newPassword2)) {
-            throw new InvalidParameterException("New passwords don't match!");
-        }
-        Map<String, String> nameValuePairMap = new HashMap<String, String>();
-        nameValuePairMap.put("HuidigWachtwoord", oldPassword);
-        nameValuePairMap.put("NieuwWachtwoord", newPassword);
-        nameValuePairMap.put("PersoonId", profile.id + "");
-        nameValuePairMap.put("WachtwoordBevestigen", newPassword2);
-        Response response = gson.fromJson(HttpUtil.httpPost(school.url + "/api/personen/account/wachtwoordwijzigen?persoonId=" + profile.id, nameValuePairMap), Response.class);
-        if (response == null) {
-            return "Successful";
-        } else {
-            LogUtil.printError(response.message, new InvalidParameterException());
-            return response.message;
-        }
-    }
 
     public <T extends IHandler> T getHandler(Class<T> type) throws PrivilegeException {
         for (IHandler handler : handlerList) {
