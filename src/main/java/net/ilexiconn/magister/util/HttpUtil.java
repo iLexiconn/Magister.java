@@ -25,48 +25,77 @@
 
 package net.ilexiconn.magister.util;
 
-import com.google.gson.JsonObject;
-
+import javax.net.ssl.HttpsURLConnection;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.io.UnsupportedEncodingException;
+import java.net.*;
+import java.util.List;
 import java.util.Map;
 
 public class HttpUtil {
+    private static CookieManager cookieManager = new CookieManager();
+
     public static InputStreamReader httpDelete(String url) throws IOException {
-        HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
-        conn.setRequestMethod("DELETE");
-        conn.connect();
-        return new InputStreamReader(conn.getInputStream());
+        HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
+        connection.setRequestMethod("DELETE");
+        connection.setRequestProperty("Cookie", getCurrentCookies());
+        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        connection.connect();
+        storeCookies(connection);
+        return new InputStreamReader(connection.getInputStream());
     }
 
-    public static InputStreamReader httpPost(String url, Map<String, String> nameValuePairMap) throws IOException {
-        HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
-        conn.setRequestMethod("POST");
-        conn.setDoOutput(true);
-        conn.setDoInput(true);
-        JsonObject json = new JsonObject();
-        for (Map.Entry<String, String> entry : nameValuePairMap.entrySet()) {
-            json.addProperty(entry.getKey(), entry.getValue());
-        }
-        conn.setRequestProperty("Content-Type", "application/json;charset=utf-8");
-        conn.setRequestProperty("Content-Length", Integer.toString(json.toString().getBytes().length));
-        conn.setRequestProperty("Connection", "Keep-Alive");
-        DataOutputStream dataOut = new DataOutputStream(conn.getOutputStream());
-        dataOut.writeBytes(URLEncoder.encode(json.toString(),"UTF-8"));
-        dataOut.flush();
-        return new InputStreamReader(conn.getInputStream());
+    public static InputStreamReader httpPost(String url, Map<String, String> data) throws IOException {
+        HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
+        connection.setDoOutput(true);
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Cookie", getCurrentCookies());
+        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        byte[] data_url = convertToDataString(data).getBytes("UTF-8");
+        DataOutputStream dos = new DataOutputStream(connection.getOutputStream());
+        dos.write(data_url);
+        storeCookies(connection);
+        return new InputStreamReader(connection.getInputStream());
     }
 
     public static InputStreamReader httpGet(String url) throws IOException {
-        HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
+        HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Cookie", getCurrentCookies());
         if (AndroidUtil.getAndroidSupportCache()) {
-            conn.setUseCaches(true);
+            connection.setUseCaches(true);
         }
-        conn.connect();
-        return new InputStreamReader(conn.getInputStream());
+        connection.connect();
+        storeCookies(connection);
+        return new InputStreamReader(connection.getInputStream());
+    }
+
+    private static void storeCookies(HttpURLConnection connection) {
+        Map<String, List<String>> headers = connection.getHeaderFields();
+        List<String> cookies = headers.get("Set-Cookie");
+        if (cookies != null) {
+            for (String cookie : cookies) {
+                cookieManager.getCookieStore().add(null, HttpCookie.parse(cookie).get(0));
+            }
+        }
+    }
+
+    private static String getCurrentCookies() {
+        String result = "";
+        for (HttpCookie cookie : cookieManager.getCookieStore().getCookies()) {
+            result = result.concat(cookie.toString() + ";");
+        }
+        return result;
+    }
+
+    private static String convertToDataString(Map<String, String> data) throws UnsupportedEncodingException {
+        StringBuilder builder = new StringBuilder();
+        for (Map.Entry entry : data.entrySet()) {
+            builder.append(URLEncoder.encode(entry.getKey().toString(), "UTF-8")).append("=").append(URLEncoder.encode(entry.getValue().toString(), "UTF-8")).append("&");
+        }
+        String result = builder.toString();
+        return result.length() > 0 ? result.substring(0, result.length() - 1) : "";
     }
 }
