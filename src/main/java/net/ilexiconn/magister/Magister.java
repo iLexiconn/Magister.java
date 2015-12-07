@@ -27,7 +27,8 @@ package net.ilexiconn.magister;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.ilexiconn.magister.adapter.*;
+import net.ilexiconn.magister.adapter.ProfileAdapter;
+import net.ilexiconn.magister.adapter.StudyAdapter;
 import net.ilexiconn.magister.container.*;
 import net.ilexiconn.magister.container.sub.Privilege;
 import net.ilexiconn.magister.exeption.PrivilegeException;
@@ -35,12 +36,7 @@ import net.ilexiconn.magister.handler.*;
 import net.ilexiconn.magister.util.AndroidUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
-import org.apache.http.auth.InvalidCredentialsException;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.text.DateFormat;
@@ -106,7 +102,7 @@ public class Magister {
         nameValuePairMap.put("Wachtwoord", password);
         magister.session = magister.gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairMap), Session.class);
         if (!magister.session.state.equals("active")) {
-            LogUtil.printError("Invalid credentials", new InvalidCredentialsException());
+            LogUtil.printError("Invalid credentials", new InvalidParameterException());
             return null;
         }
         magister.profile = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/account"), Profile.class);
@@ -142,9 +138,9 @@ public class Magister {
      * @return the current profile picture in the default size.
      * @throws IOException if there is no active internet connection.
      */
-    public BufferedImage getImage() throws IOException {
+    /*public BufferedImage getImage() throws IOException {
         return getImage(42, 64, false);
-    }
+    }*/
 
     /**
      * Get the current profile picture.
@@ -155,11 +151,11 @@ public class Magister {
      * @return the current profile picture.
      * @throws IOException if there is no active internet connection.
      */
-    public BufferedImage getImage(int width, int height, boolean crop) throws IOException {
+    /*public BufferedImage getImage(int width, int height, boolean crop) throws IOException {
         HttpGet get = new HttpGet(school.url + "/api/personen/" + profile.id + "/foto" + (width != 42 || height != 64 || crop ? "?width=" + width + "&height=" + height + "&crop=" + crop : ""));
         CloseableHttpResponse responseGet = HttpUtil.getHttpClient().execute(get);
         return ImageIO.read(responseGet.getEntity().getContent());
-    }
+    }*/
 
     /**
      * Change the password of the current profile.
