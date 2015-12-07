@@ -26,6 +26,11 @@
 package net.ilexiconn.magister.handler;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.stream.JsonReader;
+import com.sun.xml.internal.bind.v2.TODO;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.adapter.AppointmentAdapter;
 import net.ilexiconn.magister.container.Appointment;
@@ -34,15 +39,25 @@ import net.ilexiconn.magister.exeption.PrivilegeException;
 import net.ilexiconn.magister.util.GsonUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class AppointmentHandler implements IHandler {
     private Gson gson = GsonUtil.getGsonWithAdapter(Appointment[].class, new AppointmentAdapter());
     private Magister magister;
+
+    /*
+    TODO:
+    - Add PrivilegeCheck.
+     */
 
     public AppointmentHandler(Magister magister) {
         this.magister = magister;
@@ -54,7 +69,7 @@ public class AppointmentHandler implements IHandler {
      *
      * @param period the {@link PresencePeriod} of the {@link Appointment}s.
      * @return an array with the {@link Appointment}s of this period.
-     * @throws IOException if there is no active internet connection.
+     * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
     public Appointment[] getAppointments(PresencePeriod period) throws IOException {
@@ -65,10 +80,10 @@ public class AppointmentHandler implements IHandler {
      * Get an array with all the {@link Appointment}s. If no appointments can be found, an empty array will be returned
      * instead.
      *
-     * @param from the start date.
+     * @param from  the start date.
      * @param until the end date.
      * @return an array with the {@link Appointment}s of this date period.
-     * @throws IOException if there is no active internet connection.
+     * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
     public Appointment[] getAppointments(Date from, Date until) throws IOException {
@@ -84,12 +99,64 @@ public class AppointmentHandler implements IHandler {
      * instead.
      *
      * @return an array with the {@link Appointment}s of this date period.
-     * @throws IOException if there is no active internet connection.
+     * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
     public Appointment[] getAppointmentsOfToday() throws IOException {
         Date now = new Date();
         return getAppointments(now, now);
+    }
+
+    /*
+     * Adds an appointment to magister. It wil return the Url of this Appointment, if it fails null will be
+     * returned
+     *
+     * @return an string with the url of the added appointment.
+     * @throws IOException if there is no active internet connection.
+     * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
+     */
+    public String addAppointment(Appointment appointment) throws IOException {
+        String data = gson.toJson(appointment);
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("", data);
+        InputStreamReader respose = HttpUtil.httpPost(magister.school.url + "/api/personen/" + magister.profile.id + "/afspraken", map);
+        BufferedReader reader = new BufferedReader(respose);
+        String s;
+        StringBuilder sb = new StringBuilder();
+        while ((s = reader.readLine()) != null) {
+            sb.append(s);
+        }
+        return new JsonParser().parse(sb.toString()).getAsJsonObject().get("Url").getAsString();
+    }
+
+    /*
+    * Deletes an appointment from magister.
+    *
+    * @throws IOException if there is no active internet connection.
+    * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
+    */
+    public void deleteAppointment(Appointment appointment) throws IOException {
+        deleteAppointment(appointment.id);
+    }
+
+    /*
+    * Deletes an appointment from magister using the url.
+    *
+    * @throws IOException if there is no active internet connection.
+    * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
+    */
+    public void deleteAppointment(String url) throws IOException {
+        HttpUtil.httpDelete(url);
+    }
+
+    /*
+* Deletes an appointment from magister.
+*
+* @throws IOException if there is no active internet connection.
+* @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
+*/
+    public void deleteAppointment(int id) throws IOException {
+        HttpUtil.httpDelete(magister.school.url + "/api/personen/" + magister.profile.id + "/afspraken/" + id);
     }
 
     /**

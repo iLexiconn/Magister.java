@@ -37,11 +37,11 @@ import java.util.Arrays;
 public class ArrayAdapter<T> extends TypeAdapter<T[]> {
     public Gson gson = GsonUtil.getGson();
     public Class<T> cls;
-    public Class<? extends T[]> cls2;
+    public Class<? extends T[]> clsArray;
 
-    public ArrayAdapter(Class<T> cls, Class<? extends T[]> cls2) {
+    public ArrayAdapter(Class<T> cls, Class<? extends T[]> clsArray) {
         this.cls = cls;
-        this.cls2 = cls2;
+        this.clsArray = clsArray;
     }
 
     @Override
@@ -58,7 +58,7 @@ public class ArrayAdapter<T> extends TypeAdapter<T[]> {
             for (JsonElement element : array) {
                 list.add(gson.fromJson(element, cls));
             }
-            return Arrays.copyOf(list.toArray(), list.size(), cls2);
+            return Arrays.copyOf(list.toArray(), list.size(), clsArray);
         } else {
             T t = gson.fromJson(object, cls);
             return (T[]) new Object[] {t};
