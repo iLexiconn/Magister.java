@@ -61,6 +61,7 @@ public class Magister {
             .create();
 
     public School school;
+    public User user;
 
     public Version version;
     public Session session;
@@ -98,12 +99,11 @@ public class Magister {
         AndroidUtil.checkAndroid();
         magister.school = school;
         magister.version = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/versie"), Version.class);
-        User user = new User(username, password, true);
-        System.out.println(magister.gson.toJson(user));
+        user = new User(username, password, true);
+
         HttpUtil.httpDelete(school.url + "/api/sessies/huidige");
 
-        Type stringStringMap = new TypeToken<Map<String, String>>(){}.getType();
-        Map<String,String> nameValuePairMap = magister.gson.fromJson(magister.gson.toJson(user), stringStringMap);
+        Map<String,String> nameValuePairMap = magister.gson.fromJson(magister.gson.toJson(user), new TypeToken<Map<String, String>>(){}.getType());
 
         magister.session = magister.gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairMap), Session.class);
         if (!magister.session.state.equals("active")) {
