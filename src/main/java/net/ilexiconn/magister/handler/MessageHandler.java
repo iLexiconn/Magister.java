@@ -58,7 +58,7 @@ public class MessageHandler implements IHandler {
      * Get an array with all the {@link MessageFolder}s of this profile.
      *
      * @return an array with all the {@link MessageFolder}s of this profile.
-     * @throws IOException if there is no active internet connection.
+     * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
     public MessageFolder[] getMessageFolders() throws IOException {
@@ -70,7 +70,7 @@ public class MessageHandler implements IHandler {
      *
      * @param folder the {@link MessageFolder} instance.
      * @return an array of {@link Message}s.
-     * @throws IOException if there is no active internet connection.
+     * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
     public Message[] getMessagesPerFolder(MessageFolder folder) throws IOException {
@@ -82,7 +82,7 @@ public class MessageHandler implements IHandler {
      *
      * @param folderID the {@link MessageFolder} ID.
      * @return an array of {@link Message}s.
-     * @throws IOException if there is no active internet connection.
+     * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
     public Message[] getMessagesPerFolder(int folderID) throws IOException {
@@ -94,7 +94,7 @@ public class MessageHandler implements IHandler {
      *
      * @param message the {@link Message} instance.
      * @return an array of {@link SingleMessage}s.
-     * @throws IOException if there is no active internet connection.
+     * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
     public SingleMessage[] getSingleMessage(Message message) throws IOException {
@@ -106,7 +106,7 @@ public class MessageHandler implements IHandler {
      *
      * @param messageID the {@link Message} ID.
      * @return an array of {@link SingleMessage}s.
-     * @throws IOException if there is no active internet connection.
+     * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
     public SingleMessage[] getSingleMessage(int messageID) throws IOException {

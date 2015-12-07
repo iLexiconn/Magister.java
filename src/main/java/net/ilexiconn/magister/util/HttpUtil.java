@@ -46,7 +46,7 @@ public class HttpUtil {
         conn.setDoOutput(true);
         StringBuilder parameters = new StringBuilder();
         for (String key : nameValuePairMap.keySet()) {
-            if(key.equals("")){
+            if (key.equals("")) {
                 parameters.append(nameValuePairMap.get(key)).append("&");
                 break;
             }

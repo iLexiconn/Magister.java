@@ -47,8 +47,8 @@ import java.util.*;
 /**
  * The main API class. You can get a new instance by running {@link Magister#login(School, String, String)}.
  *
- * @since 0.1.0
  * @author iLexiconn
+ * @since 0.1.0
  */
 public class Magister {
     public static final String VERSION = "0.1.0-SNAPSHOT";
@@ -80,12 +80,12 @@ public class Magister {
     /**
      * Create a new {@link Magister} instance by logging in. Will return null if login fails.
      *
-     * @param school the {@link School} instance. Can't be null.
+     * @param school   the {@link School} instance. Can't be null.
      * @param username the username of the profile. Can't be null.
      * @param password the password of the profile. Can't be null.
      * @return the new {@link Magister} instance, null if login fails.
-     * @throws IOException if there is no active internet connection.
-     * @throws ParseException if parsing the date fails.
+     * @throws IOException               if there is no active internet connection.
+     * @throws ParseException            if parsing the date fails.
      * @throws InvalidParameterException if one of the arguments is null.
      */
     public static Magister login(School school, String username, String password) throws IOException, ParseException, InvalidParameterException {
@@ -160,14 +160,14 @@ public class Magister {
     /**
      * Change the password of the current profile.
      *
-     * @param oldPassword the current password.
-     * @param newPassword the new password.
+     * @param oldPassword  the current password.
+     * @param newPassword  the new password.
      * @param newPassword2 the new password.
      * @return a String with the response. 'Successful' if the password changed successfully.
-     * @throws IOException if there is no active internet connection.
+     * @throws IOException               if there is no active internet connection.
      * @throws InvalidParameterException if one of the parameters is null or empty, or when the two new passwords aren't
-     * the same.
-     * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
+     *                                   the same.
+     * @throws PrivilegeException        if the profile doesn't have the privilege to perform this action.
      */
     public String changePassword(String oldPassword, String newPassword, String newPassword2) throws IOException, InvalidParameterException, PrivilegeException {
         if (!hasPrivilege("WachtwoordWijzigen")) {

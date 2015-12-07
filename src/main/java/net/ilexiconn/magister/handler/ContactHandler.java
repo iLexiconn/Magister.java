@@ -49,7 +49,7 @@ public class ContactHandler implements IHandler {
      *
      * @param name the name of the pupil.
      * @return an array of {@link Contact}s with the contact information.
-     * @throws IOException if there is no active internet connection.
+     * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
     public Contact[] getPupilInfo(String name) throws IOException, PrivilegeException {
@@ -62,7 +62,7 @@ public class ContactHandler implements IHandler {
      *
      * @param name the name of the teacher.
      * @return an array of {@link Contact} with the contact information.
-     * @throws IOException if there is no active internet connection.
+     * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
     public Contact[] getTeacherInfo(String name) throws IOException, PrivilegeException {
@@ -75,7 +75,7 @@ public class ContactHandler implements IHandler {
      *
      * @param name the name.
      * @return an array of {@link Contact} with the contact information.
-     * @throws IOException if there is no active internet connection.
+     * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
     public Contact[] getContactInfo(String name, String type) throws IOException, PrivilegeException {

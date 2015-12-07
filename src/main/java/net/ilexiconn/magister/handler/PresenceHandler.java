@@ -57,7 +57,7 @@ public class PresenceHandler implements IHandler {
      * be returned instead.
      *
      * @return an array with all the {@link Presence} data.
-     * @throws IOException if there is no active internet connection.
+     * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
     public Presence[] getPresence() throws IOException, PrivilegeException {
@@ -70,7 +70,7 @@ public class PresenceHandler implements IHandler {
      *
      * @param period the {@link PresencePeriod}.
      * @return an array with all the {@link Presence} data.
-     * @throws IOException if there is no active internet connection.
+     * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
     public Presence[] getPresence(PresencePeriod period) throws IOException, PrivilegeException {
@@ -82,7 +82,7 @@ public class PresenceHandler implements IHandler {
      * be returned instead.
      *
      * @return an array with all the {@link PresencePeriod}s.
-     * @throws IOException if there is no active internet connection.
+     * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
     public PresencePeriod[] getPresencePeriods() throws IOException, PrivilegeException {

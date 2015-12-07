@@ -28,8 +28,8 @@ package net.ilexiconn.magister.handler;
 /**
  * Interface for all {@link net.ilexiconn.magister.Magister} action handlers.
  *
- * @since 0.1.0
  * @author iLexiconn
+ * @since 0.1.0
  */
 public interface IHandler {
     /**

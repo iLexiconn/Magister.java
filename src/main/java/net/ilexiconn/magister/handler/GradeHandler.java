@@ -46,8 +46,8 @@ public class GradeHandler implements IHandler {
      * Get an array of {@link Grade}s. If no grades can be found, an empty array
      * will be returned instead.
      *
-     * @param onlyAverage only count the average grades.
-     * @param onlyPTA only count the PTA grades.
+     * @param onlyAverage     only count the average grades.
+     * @param onlyPTA         only count the PTA grades.
      * @param onlyActiveStudy only check the current study.
      * @return an array of {@link Grade}s.
      * @throws IOException if there is no active internet connection.
