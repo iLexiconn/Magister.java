@@ -25,14 +25,18 @@
 
 package net.ilexiconn.magister.util;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Map;
 
 public class HttpUtil {
+    private Gson gson = new Gson();
+
     public static InputStreamReader httpDelete(String url) throws IOException {
         HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
         conn.setRequestMethod("DELETE");
@@ -44,16 +48,17 @@ public class HttpUtil {
         HttpURLConnection conn = (HttpURLConnection) new URL(url).openConnection();
         conn.setRequestMethod("POST");
         conn.setDoOutput(true);
-        StringBuilder parameters = new StringBuilder();
-        for (String key : nameValuePairMap.keySet()) {
-            if(key.equals("")){
-                parameters.append(nameValuePairMap.get(key)).append("&");
-                break;
-            }
-            parameters.append(key).append("=").append(nameValuePairMap.get(key)).append("&");
+        conn.setDoInput(true);
+        JsonObject json = new JsonObject();
+        for (Map.Entry<String, String> entry : nameValuePairMap.entrySet()) {
+            json.addProperty(entry.getKey(), entry.getValue());
         }
+        conn.setRequestProperty("Content-Type", "application/json;charset=utf-8");
+        conn.setRequestProperty("Content-Length", Integer.toString(json.toString().getBytes().length));
+        conn.setRequestProperty("Connection", "Keep-Alive");
         DataOutputStream dataOut = new DataOutputStream(conn.getOutputStream());
-        dataOut.write(parameters.substring(0, parameters.length() - 1).getBytes());
+        dataOut.writeBytes(URLEncoder.encode(json.toString(),"UTF-8"));
+        dataOut.flush();
         return new InputStreamReader(conn.getInputStream());
     }
 

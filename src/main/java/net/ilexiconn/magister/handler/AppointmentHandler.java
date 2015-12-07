@@ -115,6 +115,7 @@ public class AppointmentHandler implements IHandler {
      * @throws IOException if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
+    /*Update to new http post method
     public String addAppointment(Appointment appointment) throws IOException {
         String data = gson.toJson(appointment);
         Map<String, String> map = new HashMap<String, String>();
@@ -127,7 +128,7 @@ public class AppointmentHandler implements IHandler {
             sb.append(s);
         }
         return new JsonParser().parse(sb.toString()).getAsJsonObject().get("Url").getAsString();
-    }
+    }*/
 
     /*
     * Deletes an appointment from magister.
