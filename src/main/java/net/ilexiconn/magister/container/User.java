@@ -31,32 +31,32 @@ public class User {
     private String Wachtwoord;
     private boolean IngelogdBlijven;
 
-    public User(String Gebruikersnaam, String Wachtwoord, boolean IngelogdBlijven) {
-        this.Gebruikersnaam = Gebruikersnaam;
-        this.Wachtwoord = Wachtwoord;
-        this.IngelogdBlijven = IngelogdBlijven;
+    public User(String username, String password, boolean stayLoggedIn) {
+        this.Gebruikersnaam = username;
+        this.Wachtwoord = password;
+        this.IngelogdBlijven = stayLoggedIn;
     }
-    public String getWachtwoord() {
+    public String getPassword() {
         return Wachtwoord;
     }
 
-    public void setWachtwoord(String wachtwoord) {
-        Wachtwoord = wachtwoord;
+    public void setPassword(String password) {
+        Wachtwoord = password;
     }
 
-    public String getGebruikersnaam() {
+    public String getUsername() {
         return Gebruikersnaam;
     }
 
-    public void setGebruikersnaam(String gebruikersnaam) {
-        Gebruikersnaam = gebruikersnaam;
+    public void setUsername(String username) {
+        Gebruikersnaam = username;
     }
 
-    public boolean isIngelogdBlijven() {
+    public boolean isStayLoggedIn() {
         return IngelogdBlijven;
     }
 
-    public void setIngelogdBlijven(boolean ingelogdBlijven) {
-        IngelogdBlijven = ingelogdBlijven;
+    public void setStayLoggedIn(boolean stayLoggedIn) {
+        IngelogdBlijven = stayLoggedIn;
     }
 }
