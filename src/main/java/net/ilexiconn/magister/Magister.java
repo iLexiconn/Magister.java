@@ -96,6 +96,8 @@ public class Magister {
         AndroidUtil.checkAndroid();
         magister.school = school;
         magister.version = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/versie"), Version.class);
+        User user = new User("lol", "lol", true);
+        System.out.println(magister.gson.toJson(user));
         HttpUtil.httpDelete(school.url + "/api/sessies/huidige");
         Map<String, String> nameValuePairMap = new HashMap<String, String>();
         nameValuePairMap.put("Gebruikersnaam", username);

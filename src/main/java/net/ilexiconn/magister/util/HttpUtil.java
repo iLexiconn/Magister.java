@@ -25,6 +25,8 @@
 
 package net.ilexiconn.magister.util;
 
+import com.google.gson.JsonObject;
+
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
