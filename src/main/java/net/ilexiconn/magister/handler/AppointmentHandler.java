@@ -26,7 +26,6 @@
 package net.ilexiconn.magister.handler;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonParser;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.adapter.AppointmentAdapter;
 import net.ilexiconn.magister.container.Appointment;
@@ -35,15 +34,11 @@ import net.ilexiconn.magister.exeption.PrivilegeException;
 import net.ilexiconn.magister.util.GsonUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Locale;
-import java.util.Map;
 
 public class AppointmentHandler implements IHandler {
     private Gson gson = GsonUtil.getGsonWithAdapter(Appointment[].class, new AppointmentAdapter());
@@ -146,11 +141,11 @@ public class AppointmentHandler implements IHandler {
     }
 
     /*
-* Deletes an appointment from magister.
-*
-* @throws IOException if there is no active internet connection.
-* @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
-*/
+    * Deletes an appointment from magister.
+    *
+    * @throws IOException if there is no active internet connection.
+    * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
+    */
     public void deleteAppointment(int id) throws IOException {
         HttpUtil.httpDelete(magister.school.url + "/api/personen/" + magister.profile.id + "/afspraken/" + id);
     }
