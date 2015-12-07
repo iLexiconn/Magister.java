@@ -27,6 +27,7 @@ package net.ilexiconn.magister;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import net.ilexiconn.magister.adapter.ProfileAdapter;
 import net.ilexiconn.magister.adapter.StudyAdapter;
 import net.ilexiconn.magister.container.*;
@@ -38,6 +39,7 @@ import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.security.InvalidParameterException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -59,6 +61,7 @@ public class Magister {
             .create();
 
     public School school;
+    public User user;
 
     public Version version;
     public Session session;
@@ -96,10 +99,12 @@ public class Magister {
         AndroidUtil.checkAndroid();
         magister.school = school;
         magister.version = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/versie"), Version.class);
+        magister.user = new User(username, password, true);
+
         HttpUtil.httpDelete(school.url + "/api/sessies/huidige");
-        Map<String, String> nameValuePairMap = new HashMap<String, String>();
-        nameValuePairMap.put("Gebruikersnaam", username);
-        nameValuePairMap.put("Wachtwoord", password);
+
+        Map<String,String> nameValuePairMap = magister.gson.fromJson(magister.gson.toJson(magister.user), new TypeToken<Map<String, String>>(){}.getType());
+
         magister.session = magister.gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairMap), Session.class);
         if (!magister.session.state.equals("active")) {
             LogUtil.printError("Invalid credentials", new InvalidParameterException());
