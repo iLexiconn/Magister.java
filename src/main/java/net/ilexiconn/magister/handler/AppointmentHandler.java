@@ -26,19 +26,24 @@
 package net.ilexiconn.magister.handler;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.adapter.AppointmentAdapter;
 import net.ilexiconn.magister.container.Appointment;
+import net.ilexiconn.magister.container.PersonalAppointment;
 import net.ilexiconn.magister.container.PresencePeriod;
 import net.ilexiconn.magister.exeption.PrivilegeException;
 import net.ilexiconn.magister.util.GsonUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+import java.util.*;
 
 public class AppointmentHandler implements IHandler {
     private Gson gson = GsonUtil.getGsonWithAdapter(Appointment[].class, new AppointmentAdapter());
@@ -105,12 +110,19 @@ public class AppointmentHandler implements IHandler {
      * @throws IOException if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
-    /*Update to new http post method
-    public String addAppointment(Appointment appointment) throws IOException {
+    public String addAppointment(PersonalAppointment appointment) throws IOException {
         String data = gson.toJson(appointment);
-        Map<String, String> map = new HashMap<String, String>();
-        map.put("", data);
-        InputStreamReader respose = HttpUtil.httpPost(magister.school.url + "/api/personen/" + magister.profile.id + "/afspraken", map);
+        JsonObject obj = new JsonParser().parse(data).getAsJsonObject();
+        System.out.println(data);
+        Map<String, String> postData = new HashMap<String, String>();
+        for (Map.Entry<String, JsonElement> map : obj.entrySet()){
+            try{
+                postData.put(map.getKey(), Integer.toString(map.getValue().getAsInt()));
+            }catch (Exception e){
+                postData.put(map.getKey(), "\"" + map.getValue().getAsString() + "\"");
+            }
+        }
+        InputStreamReader respose = HttpUtil.rawHttpPost(magister.school.url + "/api/personen/" + magister.profile.id + "/afspraken", data);
         BufferedReader reader = new BufferedReader(respose);
         String s;
         StringBuilder sb = new StringBuilder();
@@ -118,7 +130,7 @@ public class AppointmentHandler implements IHandler {
             sb.append(s);
         }
         return new JsonParser().parse(sb.toString()).getAsJsonObject().get("Url").getAsString();
-    }*/
+    }
 
     /*
     * Deletes an appointment from magister.

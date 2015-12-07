@@ -30,8 +30,13 @@ import net.ilexiconn.magister.container.sub.*;
 import net.ilexiconn.magister.container.type.AppointmentType;
 import net.ilexiconn.magister.container.type.DisplayType;
 import net.ilexiconn.magister.container.type.InfoType;
+import net.ilexiconn.magister.util.DateUtil;
+
+import java.text.ParseException;
+import java.util.Date;
 
 public class Appointment {
+
     @SerializedName("Id")
     public int id;
 

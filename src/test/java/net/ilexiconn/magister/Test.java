@@ -31,8 +31,10 @@ import net.ilexiconn.magister.container.elo.Source;
 import net.ilexiconn.magister.container.elo.StudyGuide;
 import net.ilexiconn.magister.container.elo.StudyGuideItem;
 import net.ilexiconn.magister.container.sub.Privilege;
+import net.ilexiconn.magister.container.type.AppointmentType;
 import net.ilexiconn.magister.handler.*;
 
+import java.util.Date;
 import java.util.Scanner;
 
 public class Test {
@@ -86,11 +88,15 @@ public class Test {
                     }
                 }
             }
+            PersonalAppointment add = new PersonalAppointment("An Appointment", "A Location", AppointmentType.PERSONAL, new Date(), new Date());
+            String appointmenturl = magister.getHandler(AppointmentHandler.class).addAppointment(add);
 
             System.out.println("======== Appointments ========");
             for (Appointment appointment : magister.getHandler(AppointmentHandler.class).getAppointmentsOfToday()) {
                 System.out.println(appointment.description);
             }
+
+            magister.getHandler(AppointmentHandler.class).deleteAppointment(appointmenturl);
 
             System.out.println("====== Presence Periods ======");
             PresenceHandler presenceHandler = magister.getHandler(PresenceHandler.class);
@@ -132,7 +138,6 @@ public class Test {
                     System.out.println("=> " + item.title);
                 }
             }
-
             if (args.length > 3) {
                 System.out.println("========== Contact ==========");
                 for (Contact contact : magister.getHandler(ContactHandler.class).getPupilInfo(args[3])) {

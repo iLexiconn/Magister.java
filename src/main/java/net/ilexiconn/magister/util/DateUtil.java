@@ -39,4 +39,13 @@ public class DateUtil {
         format.setTimeZone(TimeZone.getTimeZone("GMT-0"));
         return format.parse(date);
     }
+
+    public static String dateToString(Date date) throws ParseException{
+        if (date == null) {
+            throw new ParseException("Date parameter was null", 0);
+        }
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS");
+        format.setTimeZone(TimeZone.getTimeZone("GMT-0"));
+        return format.format(date) + "Z";
+    }
 }
