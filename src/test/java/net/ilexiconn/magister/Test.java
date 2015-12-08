@@ -90,21 +90,22 @@ public class Test {
                 }
             }
 
-            System.out.println("==== Adding A Appointment ====");
+            System.out.println("==== Creating Appointment ====");
+            AppointmentHandler appointmentHandler = magister.getHandler(AppointmentHandler.class);
             Date end = new Date();
-            end.setHours(end.getHours()+1);
-            PersonalAppointment add = new PersonalAppointment("An Appointment", "An HTML Body", "A Location", AppointmentType.PERSONAL, new Date(), end);
-            String appointmenturl = magister.getHandler(AppointmentHandler.class).addAppointment(add);
-            System.out.println("=> URL: " + appointmenturl);
+            end.setHours(end.getHours() + 1);
+            PersonalAppointment add = new PersonalAppointment("AppointmentName", "AppointmentBody", "AppointmentLocation", AppointmentType.PERSONAL, new Date(), end);
+            String appointmentUrl = appointmentHandler.createAppointment(add);
+            System.out.println(appointmentUrl);
 
             System.out.println("======== Appointments ========");
-            for (Appointment appointment : magister.getHandler(AppointmentHandler.class).getAppointmentsOfToday()) {
+            for (Appointment appointment : appointmentHandler.getAppointmentsOfToday()) {
                 System.out.println(appointment.description);
             }
 
-            System.out.println("=== Remove The Appointment ===");
-            magister.getHandler(AppointmentHandler.class).deleteAppointment(appointmenturl);
-            System.out.println("=> Removed: " + appointmenturl);
+            System.out.println("=== Removing Appointments ===");
+            appointmentHandler.removeAppointment(appointmentUrl);
+            System.out.println(appointmentUrl);
 
             System.out.println("====== Presence Periods ======");
             PresenceHandler presenceHandler = magister.getHandler(PresenceHandler.class);

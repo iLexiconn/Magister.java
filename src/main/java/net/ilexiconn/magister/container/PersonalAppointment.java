@@ -75,7 +75,7 @@ public class PersonalAppointment {
     public PersonalAppointment(String title, String content, String location, AppointmentType type, Date start, Date end) throws ParseException {
         this.location = location;
         this.content = content;
-        if ( title == null|| "".equals(title)) {
+        if (title == null || "".equals(title)) {
             throw new InvalidParameterException("The appointment's title must be set!");
         }
         description = title;

@@ -104,9 +104,9 @@ public class AppointmentHandler implements IHandler {
      * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
-    public String addAppointment(PersonalAppointment appointment) throws IOException {
+    public String createAppointment(PersonalAppointment appointment) throws IOException {
         String data = gson.toJson(appointment);
-        InputStreamReader respose = HttpUtil.rawHttpPost(magister.school.url + "/api/personen/" + magister.profile.id + "/afspraken", data);
+        InputStreamReader respose = HttpUtil.httpPostRaw(magister.school.url + "/api/personen/" + magister.profile.id + "/afspraken", data);
         BufferedReader reader = new BufferedReader(respose);
         String s;
         StringBuilder sb = new StringBuilder();
@@ -122,8 +122,8 @@ public class AppointmentHandler implements IHandler {
      * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
-    public void deleteAppointment(Appointment appointment) throws IOException {
-        deleteAppointment(appointment.id);
+    public void removeAppointment(Appointment appointment) throws IOException {
+        removeAppointment(appointment.id);
     }
 
     /**
@@ -132,7 +132,7 @@ public class AppointmentHandler implements IHandler {
      * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
-    public void deleteAppointment(String url) throws IOException {
+    public void removeAppointment(String url) throws IOException {
         HttpUtil.httpDelete(url);
     }
 
@@ -142,7 +142,7 @@ public class AppointmentHandler implements IHandler {
      * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
-    public void deleteAppointment(int id) throws IOException {
+    public void removeAppointment(int id) throws IOException {
         HttpUtil.httpDelete(magister.school.url + "/api/personen/" + magister.profile.id + "/afspraken/" + id);
     }
 
