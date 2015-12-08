@@ -106,16 +106,6 @@ public class AppointmentHandler implements IHandler {
      */
     public String addAppointment(PersonalAppointment appointment) throws IOException {
         String data = gson.toJson(appointment);
-        /*JsonObject obj = new JsonParser().parse(data).getAsJsonObject(); huh?
-        System.out.println(data);
-        Map<String, String> postData = new HashMap<String, String>();
-        for (Map.Entry<String, JsonElement> map : obj.entrySet()) {
-            try {
-                postData.put(map.getKey(), Integer.toString(map.getValue().getAsInt()));
-            } catch (Exception e) {
-                postData.put(map.getKey(), "\"" + map.getValue().getAsString() + "\"");
-            }
-        }*/
         InputStreamReader respose = HttpUtil.rawHttpPost(magister.school.url + "/api/personen/" + magister.profile.id + "/afspraken", data);
         BufferedReader reader = new BufferedReader(respose);
         String s;
@@ -123,7 +113,7 @@ public class AppointmentHandler implements IHandler {
         while ((s = reader.readLine()) != null) {
             sb.append(s);
         }
-        return new JsonParser().parse(sb.toString()).getAsJsonObject().get("Url").getAsString();
+        return magister.school.url + (new JsonParser().parse(sb.toString()).getAsJsonObject().get("Url").getAsString());
     }
 
     /**

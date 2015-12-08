@@ -26,10 +26,7 @@
 package net.ilexiconn.magister.util;
 
 import javax.net.ssl.HttpsURLConnection;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.*;
 import java.util.List;
 import java.util.Map;
@@ -61,15 +58,15 @@ public class HttpUtil {
     }
 
     public static InputStreamReader rawHttpPost(String url, String json) throws IOException {
-        HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
+        HttpURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
         connection.setDoOutput(true);
         connection.setRequestMethod("POST");
         connection.setRequestProperty("Cookie", getCurrentCookies());
         connection.setRequestProperty("Content-Type", "application/json");
-        connection.setRequestProperty("Content-Length", Integer.toString(json.getBytes("UTF-8").length));
-        byte[] data_url = json.getBytes("UTF-8");
-        DataOutputStream dos = new DataOutputStream(connection.getOutputStream());
-        dos.write(data_url);
+        OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
+        wr.write(json);
+        wr.flush();
+        wr.close();
         storeCookies(connection);
         return new InputStreamReader(connection.getInputStream());
     }

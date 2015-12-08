@@ -38,6 +38,7 @@ import java.util.Date;
 import java.util.Scanner;
 
 public class Test {
+    @SuppressWarnings( "deprecation" )
     public static void main(String[] args) throws Exception {
         School school = null;
         if (args.length == 2) {
@@ -88,15 +89,22 @@ public class Test {
                     }
                 }
             }
-            PersonalAppointment add = new PersonalAppointment("An Appointment", "A Location", AppointmentType.PERSONAL, new Date(), new Date());
+
+            System.out.println("==== Adding A Appointment ====");
+            Date end = new Date();
+            end.setHours(end.getHours()+1);
+            PersonalAppointment add = new PersonalAppointment("An Appointment", "An HTML Body", "A Location", AppointmentType.PERSONAL, new Date(), end);
             String appointmenturl = magister.getHandler(AppointmentHandler.class).addAppointment(add);
+            System.out.println("=> URL: " + appointmenturl);
 
             System.out.println("======== Appointments ========");
             for (Appointment appointment : magister.getHandler(AppointmentHandler.class).getAppointmentsOfToday()) {
                 System.out.println(appointment.description);
             }
 
+            System.out.println("=== Remove The Appointment ===");
             magister.getHandler(AppointmentHandler.class).deleteAppointment(appointmenturl);
+            System.out.println("=> Removed: " + appointmenturl);
 
             System.out.println("====== Presence Periods ======");
             PresenceHandler presenceHandler = magister.getHandler(PresenceHandler.class);
