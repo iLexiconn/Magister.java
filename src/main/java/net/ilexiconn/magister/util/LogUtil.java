@@ -25,6 +25,8 @@
 
 package net.ilexiconn.magister.util;
 
+import net.ilexiconn.magister.util.android.AndroidUtil;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -37,7 +39,7 @@ public class LogUtil {
         String report = "---- Error Report ----\n" + description + "\n\n-- Crash Log --\n" + getStackTrace(throwable) + "\n-- System Details --\n" + details;
         if (AndroidUtil.getRunningOnAndroid()) {
             try {
-                Class logClass = Class.forName("android.util.Log");
+                Class<?> logClass = Class.forName("android.util.Log");
                 logClass.getMethod("e", String.class, String.class, Throwable.class).invoke(null, TAG, description, throwable);
                 return;
             } catch (Exception e) {

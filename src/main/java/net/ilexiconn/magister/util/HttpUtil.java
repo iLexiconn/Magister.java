@@ -25,6 +25,8 @@
 
 package net.ilexiconn.magister.util;
 
+import net.ilexiconn.magister.util.android.AndroidUtil;
+
 import javax.net.ssl.HttpsURLConnection;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -99,7 +101,7 @@ public class HttpUtil {
         }
     }
 
-    private static String getCurrentCookies() {
+    public static String getCurrentCookies() {
         String result = "";
         for (HttpCookie cookie : cookieManager.getCookieStore().getCookies()) {
             result = result.concat(cookie.toString() + ";");

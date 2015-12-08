@@ -33,12 +33,14 @@ import net.ilexiconn.magister.container.elo.StudyGuideItem;
 import net.ilexiconn.magister.container.sub.Privilege;
 import net.ilexiconn.magister.container.type.AppointmentType;
 import net.ilexiconn.magister.handler.*;
+import net.ilexiconn.magister.util.android.ImageContainer;
 
+import java.awt.image.BufferedImage;
 import java.util.Date;
 import java.util.Scanner;
 
 public class Test {
-    @SuppressWarnings( "deprecation" )
+    @SuppressWarnings("deprecation")
     public static void main(String[] args) throws Exception {
         School school = null;
         if (args.length == 2) {
@@ -147,6 +149,15 @@ public class Test {
                     System.out.println("=> " + item.title);
                 }
             }
+
+            System.out.println("== Profile Image ==");
+            ImageContainer ic = magister.getImage();
+            if (ic.isBufferImage()) {
+                BufferedImage image = (BufferedImage) ic.getImage();
+                System.out.println("Height: " + image.getHeight());
+                System.out.println("Width: " + image.getWidth());
+            }
+
             if (args.length > 3) {
                 System.out.println("========== Contact ==========");
                 for (Contact contact : magister.getHandler(ContactHandler.class).getPupilInfo(args[3])) {

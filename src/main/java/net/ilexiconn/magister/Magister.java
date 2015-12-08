@@ -34,11 +34,15 @@ import net.ilexiconn.magister.container.*;
 import net.ilexiconn.magister.container.sub.Privilege;
 import net.ilexiconn.magister.exeption.PrivilegeException;
 import net.ilexiconn.magister.handler.*;
-import net.ilexiconn.magister.util.AndroidUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
+import net.ilexiconn.magister.util.android.AndroidUtil;
+import net.ilexiconn.magister.util.android.ImageContainer;
+import net.ilexiconn.magister.util.android.ImageWrapper;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
+import java.net.URL;
 import java.security.InvalidParameterException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -140,9 +144,9 @@ public class Magister {
      * @return the current profile picture in the default size.
      * @throws IOException if there is no active internet connection.
      */
-    /*public BufferedImage getImage() throws IOException {
+    public ImageContainer getImage() throws IOException, ClassNotFoundException {
         return getImage(42, 64, false);
-    }*/
+    }
 
     /**
      * Get the current profile picture.
@@ -153,18 +157,22 @@ public class Magister {
      * @return the current profile picture.
      * @throws IOException if there is no active internet connection.
      */
-    /*public BufferedImage getImage(int width, int height, boolean crop) throws IOException {
-        HttpGet get = new HttpGet(school.url + "/api/personen/" + profile.id + "/foto" + (width != 42 || height != 64 || crop ? "?width=" + width + "&height=" + height + "&crop=" + crop : ""));
-        CloseableHttpResponse responseGet = HttpUtil.getHttpClient().execute(get);
-        return ImageIO.read(responseGet.getEntity().getContent());
-    }*/
+    public ImageContainer getImage(int width, int height, boolean crop) throws IOException, ClassNotFoundException {
+        String url = school.url + "/api/personen/" + profile.id + "/foto" + (width != 42 || height != 64 || crop ? "?width=" + width + "&height=" + height + "&crop=" + crop : "");
+        HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Cookie", HttpUtil.getCurrentCookies());
+        connection.connect();
+        return new ImageWrapper(connection.getInputStream()).getImageContainer();
+    }
+
     public <T extends IHandler> T getHandler(Class<T> type) throws PrivilegeException {
         for (IHandler handler : handlerList) {
             if (handler.getClass() == type) {
                 if (!hasPrivilege(handler.getPrivilege())) {
                     throw new PrivilegeException();
                 }
-                return (T) handler;
+                return type.cast(handler);
             }
         }
         return null;

@@ -23,7 +23,9 @@
  *  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.ilexiconn.magister.util;
+package net.ilexiconn.magister.util.android;
+
+import net.ilexiconn.magister.util.LogUtil;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -43,7 +45,7 @@ public class AndroidUtil {
 
     public static boolean isCacheAvailableOnAndroid() {
         try {
-            Class cache = Class.forName("android.net.http.HttpResponseCache");
+            Class<?> cache = Class.forName("android.net.http.HttpResponseCache");
             cache.getMethod("getInstalled").invoke(null);
             androidSupportCache = true;
         } catch (ClassNotFoundException e) {
