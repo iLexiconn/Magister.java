@@ -25,8 +25,6 @@
 
 package net.ilexiconn.magister.util;
 
-import net.ilexiconn.magister.util.android.AndroidUtil;
-
 import javax.net.ssl.HttpsURLConnection;
 import java.io.DataOutputStream;
 import java.io.IOException;

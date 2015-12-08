@@ -25,8 +25,6 @@
 
 package net.ilexiconn.magister.util;
 
-import net.ilexiconn.magister.util.android.AndroidUtil;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;

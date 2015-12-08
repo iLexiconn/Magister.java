@@ -36,7 +36,7 @@ import net.ilexiconn.magister.exeption.PrivilegeException;
 import net.ilexiconn.magister.handler.*;
 import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
-import net.ilexiconn.magister.util.android.AndroidUtil;
+import net.ilexiconn.magister.util.AndroidUtil;
 import net.ilexiconn.magister.util.android.ImageContainer;
 import net.ilexiconn.magister.util.android.ImageWrapper;
 
