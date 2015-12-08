@@ -98,9 +98,10 @@ public class Magister {
         AndroidUtil.checkAndroid();
         magister.school = school;
         magister.version = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/versie"), Version.class);
-        magister.user = new User(username, password, true);
+        magister.user = new User(magister, username, password, true);
         HttpUtil.httpDelete(school.url + "/api/sessies/huidige");
-        Map<String, String> nameValuePairMap = magister.gson.fromJson(magister.gson.toJson(magister.user), new TypeToken<Map<String, String>>() {}.getType());
+        Map<String, String> nameValuePairMap = magister.gson.fromJson(magister.gson.toJson(magister.user), new TypeToken<Map<String, String>>() {
+        }.getType());
         magister.session = magister.gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairMap), Session.class);
         if (!magister.session.state.equals("active")) {
             LogUtil.printError("Invalid credentials", new InvalidParameterException());
@@ -146,9 +147,9 @@ public class Magister {
     /**
      * Get the current profile picture.
      *
-     * @param width the width.
+     * @param width  the width.
      * @param height the height.
-     * @param crop true if not in default ratio.
+     * @param crop   true if not in default ratio.
      * @return the current profile picture.
      * @throws IOException if there is no active internet connection.
      */
@@ -157,7 +158,6 @@ public class Magister {
         CloseableHttpResponse responseGet = HttpUtil.getHttpClient().execute(get);
         return ImageIO.read(responseGet.getEntity().getContent());
     }*/
-
     public <T extends IHandler> T getHandler(Class<T> type) throws PrivilegeException {
         for (IHandler handler : handlerList) {
             if (handler.getClass() == type) {

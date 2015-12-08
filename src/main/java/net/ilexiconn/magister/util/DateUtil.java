@@ -40,7 +40,7 @@ public class DateUtil {
         return format.parse(date);
     }
 
-    public static String dateToString(Date date) throws ParseException{
+    public static String dateToString(Date date) throws ParseException {
         if (date == null) {
             throw new ParseException("Date parameter was null", 0);
         }

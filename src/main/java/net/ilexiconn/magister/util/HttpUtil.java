@@ -60,7 +60,7 @@ public class HttpUtil {
         return new InputStreamReader(connection.getInputStream());
     }
 
-    public static InputStreamReader rawHttpPost(String url, String json)  throws IOException{
+    public static InputStreamReader rawHttpPost(String url, String json) throws IOException {
         HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
         connection.setDoOutput(true);
         connection.setRequestMethod("POST");
@@ -70,7 +70,6 @@ public class HttpUtil {
         byte[] data_url = json.getBytes("UTF-8");
         DataOutputStream dos = new DataOutputStream(connection.getOutputStream());
         dos.write(data_url);
-        System.out.println(data_url);
         storeCookies(connection);
         return new InputStreamReader(connection.getInputStream());
     }
