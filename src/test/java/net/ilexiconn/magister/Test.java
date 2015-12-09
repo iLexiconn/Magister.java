@@ -132,8 +132,8 @@ public class Test {
 
             System.out.println("========== Password ==========");
             String current = args[args.length == 2 ? 1 : 2];
-            System.out.println(magister.user.changePassword(current, current + "-test", current + "-test"));
-            System.out.println(magister.user.changePassword(current + "-test", current, current));
+            System.out.println(magister.changePassword(current, current + "-test", current + "-test"));
+            System.out.println(magister.changePassword(current + "-test", current, current));
 
             System.out.println("============= ELO =============");
             ELOHandler eloHandler = magister.getHandler(ELOHandler.class);
