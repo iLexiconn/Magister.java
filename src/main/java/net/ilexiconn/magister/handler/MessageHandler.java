@@ -46,16 +46,14 @@ import java.util.Map;
 public class MessageHandler implements IHandler {
     private Gson gson;
     private Magister magister;
-    private ContactHandler contactHandler;
 
-    public MessageHandler(Magister magister, ContactHandler handler) {
+    public MessageHandler(Magister magister) {
         this.magister = magister;
         Map<Class<?>, TypeAdapter<?>> map = new HashMap<Class<?>, TypeAdapter<?>>();
         map.put(MessageFolder[].class, new ArrayAdapter<MessageFolder>(MessageFolder.class, MessageFolder[].class));
         map.put(Message[].class, new ArrayAdapter<Message>(Message.class, Message[].class));
         map.put(SingleMessage[].class, new SingleMessageAdapter());
         gson = GsonUtil.getGsonWithAdapters(map);
-        contactHandler = handler;
     }
 
     /**

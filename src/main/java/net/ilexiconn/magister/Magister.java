@@ -74,11 +74,10 @@ public class Magister {
     private List<IHandler> handlerList = new ArrayList<IHandler>();
 
     protected Magister() {
-        ContactHandler handler = new ContactHandler(this);
         handlerList.add(new GradeHandler(this));
         handlerList.add(new PresenceHandler(this));
-        handlerList.add(handler);
-        handlerList.add(new MessageHandler(this, handler));
+        handlerList.add(new ContactHandler(this));
+        handlerList.add(new MessageHandler(this));
         handlerList.add(new AppointmentHandler(this));
         handlerList.add(new ELOHandler(this));
     }
