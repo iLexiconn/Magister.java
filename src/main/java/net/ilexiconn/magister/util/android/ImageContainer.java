@@ -25,6 +25,7 @@
 
 package net.ilexiconn.magister.util.android;
 
+import net.ilexiconn.magister.util.AndroidUtil;
 import net.ilexiconn.magister.util.LogUtil;
 
 import java.io.InputStream;
@@ -36,11 +37,17 @@ public class ImageContainer {
     private Class classBitmap;
     private Object image;
 
-    public ImageContainer(Class classT, InputStream stream) throws ClassNotFoundException {
-        if (classT == null) {
+    public ImageContainer(InputStream stream) throws ClassNotFoundException {
+        Class c;
+        if (AndroidUtil.getRunningOnAndroid()) {
+            c = Class.forName("android.graphics.Bitmap");
+        } else {
+            c = Class.forName("java.awt.image.BufferedImage");
+        }
+        if (c == null) {
             throw new NullPointerException();
         }
-        this.classT = classT;
+        this.classT = c;
         try {
             classBitmap = Class.forName("android.graphics.Bitmap");
             if (!classT.equals(classBitmap)) {
@@ -82,7 +89,7 @@ public class ImageContainer {
         return getImageClass().equals(classBitmap);
     }
 
-    public boolean isBufferImage() {
+    public boolean isBufferedImage() {
         return getImageClass().equals(classImage);
     }
 }

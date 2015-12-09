@@ -152,7 +152,7 @@ public class Test {
 
             System.out.println("== Profile Image ==");
             ImageContainer ic = magister.getImage();
-            if (ic.isBufferImage()) {
+            if (ic.isBufferedImage()) {
                 BufferedImage image = (BufferedImage) ic.getImage();
                 System.out.println("Height: " + image.getHeight());
                 System.out.println("Width: " + image.getWidth());

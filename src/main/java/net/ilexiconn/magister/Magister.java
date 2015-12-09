@@ -38,7 +38,6 @@ import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
 import net.ilexiconn.magister.util.AndroidUtil;
 import net.ilexiconn.magister.util.android.ImageContainer;
-import net.ilexiconn.magister.util.android.ImageWrapper;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
@@ -144,7 +143,7 @@ public class Magister {
      * @return the current profile picture in the default size.
      * @throws IOException if there is no active internet connection.
      */
-    public ImageContainer getImage() throws IOException, ClassNotFoundException {
+    public ImageContainer getImage() throws IOException {
         return getImage(42, 64, false);
     }
 
@@ -157,13 +156,18 @@ public class Magister {
      * @return the current profile picture.
      * @throws IOException if there is no active internet connection.
      */
-    public ImageContainer getImage(int width, int height, boolean crop) throws IOException, ClassNotFoundException {
+    public ImageContainer getImage(int width, int height, boolean crop) throws IOException {
         String url = school.url + "/api/personen/" + profile.id + "/foto" + (width != 42 || height != 64 || crop ? "?width=" + width + "&height=" + height + "&crop=" + crop : "");
         HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
         connection.setRequestMethod("GET");
         connection.setRequestProperty("Cookie", HttpUtil.getCurrentCookies());
         connection.connect();
-        return new ImageWrapper(connection.getInputStream()).getImageContainer();
+        try {
+            return new ImageContainer(connection.getInputStream());
+        } catch (ClassNotFoundException e) {
+            LogUtil.printError("Unable to load image class.", e);
+            return null;
+        }
     }
 
     public <T extends IHandler> T getHandler(Class<T> type) throws PrivilegeException {
