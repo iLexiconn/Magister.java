@@ -127,6 +127,10 @@ public class Magister {
         session = gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairMap), Session.class);
     }
 
+    public Session getCurrentSession() throws IOException {
+        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/sessies/huidige"), Session.class);
+    }
+
     /**
      * Check if this user has the following privilege.
      *
