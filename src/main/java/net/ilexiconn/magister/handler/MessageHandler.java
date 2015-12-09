@@ -100,7 +100,7 @@ public class MessageHandler implements IHandler {
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
     public SingleMessage[] getSingleMessage(Message message) throws IOException {
-        return getSingleMessage(message.id);
+        return getSingleMessage(message.id, message.type);
     }
 
     /**
@@ -111,8 +111,8 @@ public class MessageHandler implements IHandler {
      * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
-    public SingleMessage[] getSingleMessage(int messageID) throws IOException {
-        return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/personen/" + magister.profile.id + "/berichten/" + messageID + "?berichtSoort=Bericht"), SingleMessage[].class);
+    public SingleMessage[] getSingleMessage(int messageID, int messageType) throws IOException {
+        return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/personen/" + magister.profile.id + "/berichten/" + messageID + "?berichtSoort=" + (messageType == 1 ? "Bericht" : "Mededeling")), SingleMessage[].class);
     }
 
     /**
