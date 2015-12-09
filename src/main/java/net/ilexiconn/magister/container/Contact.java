@@ -32,23 +32,23 @@ import java.io.Serializable;
 
 public class Contact implements Serializable {
     @SerializedName("Id")
-    public int id;
+    public int id = 0;
 
     @SerializedName("Links")
-    public Link[] links;
+    public Link[] links = new Link[]{};
 
     @SerializedName("Achternaam")
-    public String surname;
+    public String surname = "";
 
     @SerializedName("Voornaam")
-    public String firstName;
+    public String firstName = "";
 
     @SerializedName("Tussenvoegsel")
-    public String surnamePrefix;
+    public String surnamePrefix = "";
 
     @SerializedName("Naam")
-    public String name;
+    public String name = "";
 
     @SerializedName("Type")
-    public int type; //???
+    public int type = 0; //???
 }

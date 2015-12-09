@@ -27,8 +27,12 @@ package net.ilexiconn.magister.container;
 
 import com.google.gson.annotations.SerializedName;
 import net.ilexiconn.magister.container.sub.Link;
+import net.ilexiconn.magister.util.DateUtil;
 
 import java.io.Serializable;
+import java.security.InvalidParameterException;
+import java.text.ParseException;
+import java.util.Date;
 
 public class SingleMessage implements Serializable {
     @SerializedName("Inhoud")
@@ -39,13 +43,13 @@ public class SingleMessage implements Serializable {
     /* TODO: Bijlagen */
 
     @SerializedName("Id")
-    public int id;
+    public int id = 0;
 
     @SerializedName("MapId")
-    public int mapId;
+    public int mapId = 0;
 
     @SerializedName("MapTitel")
-    public String mapTitle;
+    public String mapTitle = "";
 
     @SerializedName("Links")
     public Link[] links;
@@ -53,28 +57,56 @@ public class SingleMessage implements Serializable {
     @SerializedName("Onderwerp")
     public String topic;
 
-    /* TODO: Afzender */
+    @SerializedName("Afzender")
+    public Contact sender = new Contact();
 
     @SerializedName("IngekortBericht")
-    public String shortMessage;
+    public String shortMessage = "";
 
-    /* TODO: Ontvangers */
+    @SerializedName("Ontvangers")
+    public Contact[] recipients;
 
     @SerializedName("VerstuurdOp")
     public String sentOn;
 
     @SerializedName("IsGelezen")
-    public boolean isRead;
+    public boolean isRead = false;
 
     @SerializedName("Status")
-    public int status;
+    public int status = 0;
 
     @SerializedName("HeeftPrioriteit")
-    public boolean hasPriority;
+    public boolean hasPriority = false;
 
     @SerializedName("HeeftBijlagen")
-    public boolean hasAttachments;
+    public boolean hasAttachments = false;
 
     @SerializedName("Soort")
-    public int type;
+    public int type = 1;
+
+    public SingleMessage(String topic, String content, Contact[] recipients) throws ParseException {
+        this(topic, content, recipients, null);
+    }
+
+    public SingleMessage(String topic, String content, Contact recipient) throws ParseException {
+        this(topic, content, new Contact[]{recipient}, null);
+    }
+
+    public SingleMessage(String topic, String content, Contact recipient, Object[] attachments) throws ParseException {
+        this(topic, content, new Contact[]{recipient}, attachments);
+    }
+
+    public SingleMessage(String topic, String content, Contact[] recipients, Object[] attachments) throws ParseException {
+        if (!(attachments == null || attachments.length <= 0)) {
+            this.hasAttachments = true;
+        }
+        if (recipients == null || recipients.length <= 0) {
+            throw new InvalidParameterException("Recipients must not be null and have a length higher than 0");
+        }
+        this.topic = topic;
+        this.content = content;
+        this.recipients = recipients;
+        //this.attachments = attachments;
+        sentOn = DateUtil.dateToString(new Date());
+    }
 }

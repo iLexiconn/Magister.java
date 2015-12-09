@@ -34,9 +34,9 @@ import net.ilexiconn.magister.container.*;
 import net.ilexiconn.magister.container.sub.Privilege;
 import net.ilexiconn.magister.exeption.PrivilegeException;
 import net.ilexiconn.magister.handler.*;
+import net.ilexiconn.magister.util.AndroidUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
-import net.ilexiconn.magister.util.AndroidUtil;
 import net.ilexiconn.magister.util.android.ImageContainer;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -74,10 +74,11 @@ public class Magister {
     private List<IHandler> handlerList = new ArrayList<IHandler>();
 
     protected Magister() {
+        ContactHandler handler = new ContactHandler(this);
         handlerList.add(new GradeHandler(this));
         handlerList.add(new PresenceHandler(this));
-        handlerList.add(new ContactHandler(this));
-        handlerList.add(new MessageHandler(this));
+        handlerList.add(handler);
+        handlerList.add(new MessageHandler(this, handler));
         handlerList.add(new AppointmentHandler(this));
         handlerList.add(new ELOHandler(this));
     }

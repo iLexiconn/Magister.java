@@ -36,22 +36,26 @@ import net.ilexiconn.magister.container.SingleMessage;
 import net.ilexiconn.magister.exeption.PrivilegeException;
 import net.ilexiconn.magister.util.GsonUtil;
 import net.ilexiconn.magister.util.HttpUtil;
+import net.ilexiconn.magister.util.LogUtil;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MessageHandler implements IHandler {
     private Gson gson;
     private Magister magister;
+    private ContactHandler contactHandler;
 
-    public MessageHandler(Magister magister) {
+    public MessageHandler(Magister magister, ContactHandler handler) {
         this.magister = magister;
         Map<Class<?>, TypeAdapter<?>> map = new HashMap<Class<?>, TypeAdapter<?>>();
         map.put(MessageFolder[].class, new ArrayAdapter<MessageFolder>(MessageFolder.class, MessageFolder[].class));
         map.put(Message[].class, new ArrayAdapter<Message>(Message.class, Message[].class));
         map.put(SingleMessage[].class, new SingleMessageAdapter());
         gson = GsonUtil.getGsonWithAdapters(map);
+        contactHandler = handler;
     }
 
     /**
@@ -116,8 +120,15 @@ public class MessageHandler implements IHandler {
     /**
      * TODO: Implement post
      */
-    public void postMessage(SingleMessage message) throws IOException {
-
+    public boolean postMessage(SingleMessage message) {
+        try {
+            String data = gson.toJson(message);
+            InputStreamReader respose = HttpUtil.httpPostRaw(magister.school.url + "/api/personen/" + magister.profile.id + "/berichten", data);
+            return true;
+        } catch (IOException e) {
+            LogUtil.printError(e.getMessage(), e.getCause());
+            return false;
+        }
     }
 
     /**

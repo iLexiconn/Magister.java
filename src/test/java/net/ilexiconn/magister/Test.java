@@ -72,17 +72,25 @@ public class Test {
         Magister magister = Magister.login(school, args[args.length == 2 ? 0 : 1], args[args.length == 2 ? 1 : 2]);
 
         if (magister != null) {
-            System.out.println("Hey, " + magister.profile.nickname + "!");
+            System.out.println("Hey, " + magister.profile.surname + "!");
             System.out.println("ID: " + magister.profile.id);
 
-            System.out.println("======= MessageFolders =======");
+            System.out.println("====== Sending Message ======");
             MessageHandler messageHandler = magister.getHandler(MessageHandler.class);
+            Contact[] You = magister.getHandler(ContactHandler.class).getPupilInfo(magister.profile.nickname + "%20" + magister.profile.surname);
+            messageHandler.postMessage(new SingleMessage("MessageTopic", "MessageContent", You[0]));
+
+            System.out.println("======= MessageFolders =======");
             for (MessageFolder messageFolder : messageHandler.getMessageFolders()) {
                 System.out.println(messageFolder.naam);
                 for (Message message : messageHandler.getMessagesPerFolder(messageFolder)) {
                     System.out.println("=> " + message.topic);
+                    try {
                     for (SingleMessage singleMessage : messageHandler.getSingleMessage(message)) {
+                        System.out.println("===>Send By: " + singleMessage.sender.name);
                         System.out.println("==> " + singleMessage.content);
+                    }
+                    } catch (Exception e) {
                     }
                 }
             }
