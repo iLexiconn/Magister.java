@@ -27,6 +27,7 @@ package net.ilexiconn.magister.container;
 
 import com.google.gson.annotations.SerializedName;
 import net.ilexiconn.magister.container.sub.Link;
+import net.ilexiconn.magister.container.type.MessageType;
 
 import java.io.Serializable;
 
@@ -68,6 +69,5 @@ public class Message implements Serializable {
     @SerializedName("HeeftBijlagen")
     public boolean hasAttachments;
 
-    @SerializedName("Soort")
-    public int type;
+    public MessageType type;
 }

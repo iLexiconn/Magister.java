@@ -29,10 +29,12 @@ import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.adapter.ArrayAdapter;
+import net.ilexiconn.magister.adapter.MessageAdapter;
 import net.ilexiconn.magister.adapter.SingleMessageAdapter;
 import net.ilexiconn.magister.container.Message;
 import net.ilexiconn.magister.container.MessageFolder;
 import net.ilexiconn.magister.container.SingleMessage;
+import net.ilexiconn.magister.container.type.MessageType;
 import net.ilexiconn.magister.exeption.PrivilegeException;
 import net.ilexiconn.magister.util.GsonUtil;
 import net.ilexiconn.magister.util.HttpUtil;
@@ -51,7 +53,7 @@ public class MessageHandler implements IHandler {
         this.magister = magister;
         Map<Class<?>, TypeAdapter<?>> map = new HashMap<Class<?>, TypeAdapter<?>>();
         map.put(MessageFolder[].class, new ArrayAdapter<MessageFolder>(MessageFolder.class, MessageFolder[].class));
-        map.put(Message[].class, new ArrayAdapter<Message>(Message.class, Message[].class));
+        map.put(Message[].class, new MessageAdapter());
         map.put(SingleMessage[].class, new SingleMessageAdapter());
         gson = GsonUtil.getGsonWithAdapters(map);
     }
@@ -111,8 +113,8 @@ public class MessageHandler implements IHandler {
      * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
-    public SingleMessage[] getSingleMessage(int messageID, int messageType) throws IOException {
-        return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/personen/" + magister.profile.id + "/berichten/" + messageID + "?berichtSoort=" + (messageType == 1 ? "Bericht" : "Mededeling")), SingleMessage[].class);
+    public SingleMessage[] getSingleMessage(int messageID, MessageType messageType) throws IOException {
+        return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/personen/" + magister.profile.id + "/berichten/" + messageID + "?berichtSoort=" + messageType.getName()), SingleMessage[].class);
     }
 
     /**
