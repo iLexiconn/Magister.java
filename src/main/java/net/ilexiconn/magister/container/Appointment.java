@@ -32,6 +32,7 @@ import net.ilexiconn.magister.container.type.DisplayType;
 import net.ilexiconn.magister.container.type.InfoType;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Appointment implements Serializable {
     @SerializedName("Id")
@@ -41,10 +42,14 @@ public class Appointment implements Serializable {
     public Link[] links;
 
     @SerializedName("Start")
-    public String startDate;
+    public String startDateString;
+
+    public Date startDate;
 
     @SerializedName("Einde")
-    public String endDate;
+    public String endDateString;
+
+    public Date endDate;
 
     @SerializedName("LesuurVan")
     public int periodFrom;
