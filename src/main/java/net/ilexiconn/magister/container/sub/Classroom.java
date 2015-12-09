@@ -27,7 +27,9 @@ package net.ilexiconn.magister.container.sub;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Classroom {
+import java.io.Serializable;
+
+public class Classroom implements Serializable {
     @SerializedName("Naam")
     public String name;
 }

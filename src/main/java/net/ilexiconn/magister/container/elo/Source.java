@@ -28,7 +28,9 @@ package net.ilexiconn.magister.container.elo;
 import com.google.gson.annotations.SerializedName;
 import net.ilexiconn.magister.container.sub.Link;
 
-public class Source {
+import java.io.Serializable;
+
+public class Source implements Serializable {
     @SerializedName("Id")
     public int id;
 

@@ -30,9 +30,10 @@ import net.ilexiconn.magister.container.sub.Course;
 import net.ilexiconn.magister.container.sub.GradePeriod;
 import net.ilexiconn.magister.container.sub.GradeRow;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Grade {
+public class Grade implements Serializable {
     @SerializedName("CijferId")
     public int id;
 
@@ -48,7 +49,7 @@ public class Grade {
     @SerializedName("DatumIngevoerd")
     public String filledInDateString;
 
-    public transient Date filledInDate;
+    public Date filledInDate;
 
     @SerializedName("CijferPeriode")
     public GradePeriod gradePeriod;

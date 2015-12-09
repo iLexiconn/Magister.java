@@ -28,7 +28,9 @@ package net.ilexiconn.magister.container.sub;
 import com.google.gson.annotations.SerializedName;
 import net.ilexiconn.magister.container.type.RowType;
 
-public class GradeRow {
+import java.io.Serializable;
+
+public class GradeRow implements Serializable {
     @SerializedName("Id")
     public int id;
 

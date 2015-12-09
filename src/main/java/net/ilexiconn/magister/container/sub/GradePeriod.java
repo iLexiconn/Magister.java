@@ -27,7 +27,9 @@ package net.ilexiconn.magister.container.sub;
 
 import com.google.gson.annotations.SerializedName;
 
-public class GradePeriod {
+import java.io.Serializable;
+
+public class GradePeriod implements Serializable {
     @SerializedName("Id")
     public int id;
 

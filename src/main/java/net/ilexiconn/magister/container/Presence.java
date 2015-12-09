@@ -27,7 +27,9 @@ package net.ilexiconn.magister.container;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Presence {
+import java.io.Serializable;
+
+public class Presence implements Serializable {
     @SerializedName("Id")
     public int id;
 
@@ -55,5 +57,5 @@ public class Presence {
     @SerializedName("Code")
     public String code;
 
-    public transient Appointment appointment;
+    public Appointment appointment;
 }

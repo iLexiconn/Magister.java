@@ -31,7 +31,9 @@ import net.ilexiconn.magister.container.type.AppointmentType;
 import net.ilexiconn.magister.container.type.DisplayType;
 import net.ilexiconn.magister.container.type.InfoType;
 
-public class Appointment {
+import java.io.Serializable;
+
+public class Appointment implements Serializable {
     @SerializedName("Id")
     public int id;
 
@@ -59,11 +61,11 @@ public class Appointment {
     @SerializedName("Status")
     public int classState;
 
-    public transient AppointmentType type;
+    public AppointmentType type;
 
-    public transient DisplayType displayType;
+    public DisplayType displayType;
 
-    public transient InfoType infoType;
+    public InfoType infoType;
 
     @SerializedName("Afgerond")
     public boolean finished;

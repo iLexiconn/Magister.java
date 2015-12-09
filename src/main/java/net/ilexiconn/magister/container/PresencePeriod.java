@@ -27,18 +27,19 @@ package net.ilexiconn.magister.container;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class PresencePeriod {
+public class PresencePeriod implements Serializable {
     @SerializedName("Start")
     public String start;
 
-    public transient Date startDate;
+    public Date startDate;
 
     @SerializedName("Eind")
     public String end;
 
-    public transient Date endDate;
+    public Date endDate;
 
     @SerializedName("Omschrijving")
     public String description;

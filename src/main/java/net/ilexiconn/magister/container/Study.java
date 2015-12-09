@@ -29,7 +29,9 @@ import com.google.gson.annotations.SerializedName;
 import net.ilexiconn.magister.container.sub.Group;
 import net.ilexiconn.magister.container.sub.Link;
 
-public class Study {
+import java.io.Serializable;
+
+public class Study implements Serializable {
     @SerializedName("Id")
     public int id;
 
@@ -51,7 +53,7 @@ public class Study {
     @SerializedName("Groep")
     public Group group;
 
-    public transient int studyId;
+    public int studyId;
 
-    public transient String description;
+    public String description;
 }

@@ -28,11 +28,12 @@ import com.google.gson.annotations.SerializedName;
 import net.ilexiconn.magister.container.type.AppointmentType;
 import net.ilexiconn.magister.util.DateUtil;
 
+import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.text.ParseException;
 import java.util.Date;
 
-public class PersonalAppointment {
+public class PersonalAppointment implements Serializable {
     @SerializedName("Id")
     public int id = 0;
 

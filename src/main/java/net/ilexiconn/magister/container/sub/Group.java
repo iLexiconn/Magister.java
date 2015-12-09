@@ -27,7 +27,9 @@ package net.ilexiconn.magister.container.sub;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Group {
+import java.io.Serializable;
+
+public class Group implements Serializable {
     @SerializedName("Id")
     public int id;
 

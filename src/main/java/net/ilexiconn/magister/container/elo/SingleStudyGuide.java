@@ -28,7 +28,9 @@ package net.ilexiconn.magister.container.elo;
 import com.google.gson.annotations.SerializedName;
 import net.ilexiconn.magister.container.sub.Link;
 
-public class SingleStudyGuide {
+import java.io.Serializable;
+
+public class SingleStudyGuide implements Serializable {
     @SerializedName("Id")
     public int id;
 
@@ -53,5 +55,5 @@ public class SingleStudyGuide {
     @SerializedName("VakCodes")
     public String[] courses;
 
-    public transient StudyGuideItem[] items;
+    public StudyGuideItem[] items;
 }

@@ -28,7 +28,9 @@ package net.ilexiconn.magister.container;
 import com.google.gson.annotations.SerializedName;
 import net.ilexiconn.magister.container.sub.Link;
 
-public class Session {
+import java.io.Serializable;
+
+public class Session implements Serializable {
     @SerializedName("id")
     public String id;
 

@@ -27,7 +27,9 @@ package net.ilexiconn.magister.container.sub;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Link {
+import java.io.Serializable;
+
+public class Link implements Serializable {
     @SerializedName(value = "href", alternate = "Href")
     public String href;
 

@@ -31,8 +31,9 @@ import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
 
 import java.io.IOException;
+import java.io.Serializable;
 
-public class School {
+public class School implements Serializable {
     @SerializedName("Id")
     public String id;
 

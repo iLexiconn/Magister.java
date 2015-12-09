@@ -25,7 +25,9 @@
 
 package net.ilexiconn.magister.container.type;
 
-public enum RowType {
+import java.io.Serializable;
+
+public enum RowType implements Serializable {
     NULL(0),
     UNKNOWN(1),
     AVERAGE(2),

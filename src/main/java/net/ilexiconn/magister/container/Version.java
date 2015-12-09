@@ -27,7 +27,9 @@ package net.ilexiconn.magister.container;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Version {
+import java.io.Serializable;
+
+public class Version implements Serializable {
     @SerializedName("ApiVersie")
     public String apiVersion;
 

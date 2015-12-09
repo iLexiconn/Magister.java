@@ -28,7 +28,9 @@ package net.ilexiconn.magister.container;
 import com.google.gson.annotations.SerializedName;
 import net.ilexiconn.magister.container.sub.Privilege;
 
-public class Profile {
+import java.io.Serializable;
+
+public class Profile implements Serializable {
     @SerializedName("Id")
     public int id;
 
@@ -65,5 +67,5 @@ public class Profile {
     @SerializedName("GebruikGeboortenaam")
     public boolean useBirthName;
 
-    public transient Privilege[] privileges;
+    public Privilege[] privileges;
 }

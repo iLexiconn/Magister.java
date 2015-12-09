@@ -27,12 +27,14 @@ package net.ilexiconn.magister.container.sub;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Privilege {
+import java.io.Serializable;
+
+public class Privilege implements Serializable {
     @SerializedName("Naam")
     public String name;
 
     @SerializedName("AccessType")
     public String[] accessTypes;
 
-    public transient String group;
+    public String group;
 }

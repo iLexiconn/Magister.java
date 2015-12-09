@@ -25,7 +25,9 @@
 
 package net.ilexiconn.magister.container.type;
 
-public enum InfoType {
+import java.io.Serializable;
+
+public enum InfoType implements Serializable {
     NONE(0),
     HOMEWORK(1),
     TEST(2),

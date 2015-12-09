@@ -32,12 +32,13 @@ import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class User {
-    private transient Magister magister;
+public class User implements Serializable {
+    private Magister magister;
 
     @SerializedName("Gebruikersnaam")
     private String username;

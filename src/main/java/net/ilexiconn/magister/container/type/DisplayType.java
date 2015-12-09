@@ -25,7 +25,9 @@
 
 package net.ilexiconn.magister.container.type;
 
-public enum DisplayType {
+import java.io.Serializable;
+
+public enum DisplayType implements Serializable {
     AVAILABLE(1),
     PROVISIONALLY_SCHEDULED(2),
     SCHEDULED(3),

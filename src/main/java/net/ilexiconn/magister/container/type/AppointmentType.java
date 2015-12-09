@@ -25,7 +25,9 @@
 
 package net.ilexiconn.magister.container.type;
 
-public enum AppointmentType {
+import java.io.Serializable;
+
+public enum AppointmentType implements Serializable {
     PERSONAL(1),
     GENERAL(2),
     SCHOOLWIDE(3),
