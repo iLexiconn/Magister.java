@@ -36,7 +36,4 @@ public class Session implements Serializable {
 
     @SerializedName("state")
     public String state;
-
-    @SerializedName("links")
-    public Link[] links;
 }
