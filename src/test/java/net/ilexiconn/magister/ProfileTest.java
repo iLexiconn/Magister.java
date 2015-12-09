@@ -38,7 +38,7 @@ public class ProfileTest {
     @Test
     public void login() {
         try {
-            MagisterTest.magister = Magister.login(School.findSchool(System.getProperty("school"))[0], System.getProperty("username"), System.getProperty("password"));
+            MagisterTest.magister = Magister.login(School.findSchool("helpdesk")[0], "10989", "mgstr");
         } catch (Exception e) {
             e.printStackTrace();
         }
