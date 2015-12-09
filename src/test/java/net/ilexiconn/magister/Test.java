@@ -40,7 +40,6 @@ import java.util.Date;
 import java.util.Scanner;
 
 public class Test {
-    @SuppressWarnings("deprecation")
     public static void main(String[] args) throws Exception {
         School school = null;
         if (args.length == 2) {
@@ -94,9 +93,8 @@ public class Test {
 
             System.out.println("==== Creating Appointment ====");
             AppointmentHandler appointmentHandler = magister.getHandler(AppointmentHandler.class);
-            Date end = new Date();
-            end.setHours(end.getHours() + 1);
-            PersonalAppointment add = new PersonalAppointment("AppointmentName", "AppointmentBody", "AppointmentLocation", AppointmentType.PERSONAL, new Date(), end);
+            Date date = new Date();
+            PersonalAppointment add = new PersonalAppointment("AppointmentName", "AppointmentBody", "AppointmentLocation", AppointmentType.PERSONAL, date, date);
             String appointmentUrl = appointmentHandler.createAppointment(add);
             System.out.println(appointmentUrl);
 
