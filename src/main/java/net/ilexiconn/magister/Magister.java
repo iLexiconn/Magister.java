@@ -121,10 +121,11 @@ public class Magister {
         return magister;
     }
 
-    public void login() throws IOException {
+    public Session login() throws IOException {
         HttpUtil.httpDelete(school.url + "/api/sessies/huidige");
         Map<String, String> nameValuePairMap = gson.fromJson(gson.toJson(user), new TypeToken<Map<String, String>>() {}.getType());
         session = gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairMap), Session.class);
+        return session;
     }
 
     public Session getCurrentSession() throws IOException {
