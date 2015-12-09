@@ -36,7 +36,6 @@ import net.ilexiconn.magister.handler.*;
 import net.ilexiconn.magister.util.android.ImageContainer;
 
 import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -87,7 +86,8 @@ public class Test {
                 System.out.println(messageFolder.naam);
                 for (Message message : messageHandler.getMessagesPerFolder(messageFolder)) {
                     System.out.println("=> " + message.topic);
-                    for (SingleMessage singleMessage : messageHandler.getSingleMessage(message)) {System.out.println("==> " + singleMessage.content);
+                    for (SingleMessage singleMessage : messageHandler.getSingleMessage(message)) {
+                        System.out.println("==> " + singleMessage.content);
                     }
                 }
             }
