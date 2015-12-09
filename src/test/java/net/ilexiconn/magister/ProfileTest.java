@@ -26,8 +26,13 @@
 package net.ilexiconn.magister;
 
 import net.ilexiconn.magister.container.School;
-import org.junit.Assert;
+import net.ilexiconn.magister.util.android.ImageContainer;
 import org.junit.Test;
+
+import java.io.IOException;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class ProfileTest {
     @Test
@@ -38,6 +43,34 @@ public class ProfileTest {
             e.printStackTrace();
         }
 
-        Assert.assertEquals("active", MagisterTest.magister.session.state);
+        assertEquals("active", MagisterTest.magister.session.state);
+    }
+
+    @Test
+    public void changePassword() {
+        String current = MagisterTest.magister.user.password;
+        String response1 = null;
+        String response2 = null;
+        try {
+            response1 = MagisterTest.magister.changePassword(current, current + "-test", current + "-test");
+            response2 = MagisterTest.magister.changePassword(current + "-test", current, current);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        assertEquals(response1, "Successful");
+        assertEquals(response2, "Successful");
+    }
+
+    @Test
+    public void profileImage() {
+        ImageContainer ic = null;
+        try {
+            ic = MagisterTest.magister.getImage();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        assertNotNull(ic);
     }
 }

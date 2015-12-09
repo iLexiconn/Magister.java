@@ -26,7 +26,6 @@
 package net.ilexiconn.magister.handler;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonParser;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.adapter.AppointmentAdapter;
 import net.ilexiconn.magister.container.Appointment;
@@ -36,9 +35,7 @@ import net.ilexiconn.magister.exeption.PrivilegeException;
 import net.ilexiconn.magister.util.GsonUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -100,20 +97,12 @@ public class AppointmentHandler implements IHandler {
      * Adds an appointment to magister. It wil return the Url of this Appointment, if it fails null will be
      * returned
      *
-     * @return an string with the url of the added appointment.
      * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
-    public String createAppointment(PersonalAppointment appointment) throws IOException {
+    public void createAppointment(PersonalAppointment appointment) throws IOException {
         String data = gson.toJson(appointment);
-        InputStreamReader respose = HttpUtil.httpPostRaw(magister.school.url + "/api/personen/" + magister.profile.id + "/afspraken", data);
-        BufferedReader reader = new BufferedReader(respose);
-        String s;
-        StringBuilder sb = new StringBuilder();
-        while ((s = reader.readLine()) != null) {
-            sb.append(s);
-        }
-        return magister.school.url + (new JsonParser().parse(sb.toString()).getAsJsonObject().get("Url").getAsString());
+        HttpUtil.httpPostRaw(magister.school.url + "/api/personen/" + magister.profile.id + "/afspraken", data);
     }
 
     /**
@@ -124,16 +113,6 @@ public class AppointmentHandler implements IHandler {
      */
     public void removeAppointment(Appointment appointment) throws IOException {
         removeAppointment(appointment.id);
-    }
-
-    /**
-     * Deletes an appointment from magister using the url.
-     *
-     * @throws IOException        if there is no active internet connection.
-     * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
-     */
-    public void removeAppointment(String url) throws IOException {
-        HttpUtil.httpDelete(url);
     }
 
     /**

@@ -207,6 +207,7 @@ public class Magister {
         nameValuePairMap.put("WachtwoordBevestigen", newPassword2);
         Response response = gson.fromJson(HttpUtil.httpPost(school.url + "/api/personen/account/wachtwoordwijzigen?persoonId=" + profile.id, nameValuePairMap), Response.class);
         if (response == null) {
+            user.password = newPassword;
             return "Successful";
         } else {
             LogUtil.printError(response.message, new InvalidParameterException());

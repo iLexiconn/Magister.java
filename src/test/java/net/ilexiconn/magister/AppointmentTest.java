@@ -25,11 +25,31 @@
 
 package net.ilexiconn.magister;
 
-import org.junit.runner.RunWith;
-import org.junit.runners.Suite;
+import net.ilexiconn.magister.container.PersonalAppointment;
+import net.ilexiconn.magister.container.type.AppointmentType;
+import net.ilexiconn.magister.handler.AppointmentHandler;
+import org.junit.Test;
 
-@RunWith(Suite.class)
-@Suite.SuiteClasses({ProfileTest.class, AppointmentTest.class})
-public class MagisterTest {
-    public static Magister magister;
+import java.util.Date;
+
+import static org.junit.Assert.assertNotNull;
+
+public class AppointmentTest {
+    @Test
+    public void appointment() {
+        AppointmentHandler appointmentHandler = MagisterTest.magister.getHandler(AppointmentHandler.class);
+        Date date = new Date();
+        Date end = new Date();
+        end.setTime(date.getTime() + 1000);
+        PersonalAppointment appointment = null;
+        try {
+            appointment = new PersonalAppointment("AppointmentName", "AppointmentBody", "AppointmentLocation", AppointmentType.PERSONAL, date, end);
+            appointmentHandler.createAppointment(appointment);
+            appointmentHandler.removeAppointment(appointment.id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        assertNotNull(appointment);
+    }
 }

@@ -31,29 +31,17 @@ import java.io.Serializable;
 
 public class User implements Serializable {
     @SerializedName("Gebruikersnaam")
-    private String username;
+    public String username;
 
     @SerializedName("Wachtwoord")
-    private String password;
+    public String password;
 
     @SerializedName("IngelogdBlijven")
-    private boolean stayLoggedIn;
+    public boolean stayLoggedIn;
 
     public User(String username, String password, boolean stayLoggedIn) {
         this.username = username;
         this.password = password;
         this.stayLoggedIn = stayLoggedIn;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public boolean stayLoggedIn() {
-        return stayLoggedIn;
     }
 }

@@ -31,12 +31,8 @@ import net.ilexiconn.magister.container.elo.Source;
 import net.ilexiconn.magister.container.elo.StudyGuide;
 import net.ilexiconn.magister.container.elo.StudyGuideItem;
 import net.ilexiconn.magister.container.sub.Privilege;
-import net.ilexiconn.magister.container.type.AppointmentType;
 import net.ilexiconn.magister.handler.*;
-import net.ilexiconn.magister.util.android.ImageContainer;
 
-import java.awt.image.BufferedImage;
-import java.util.Date;
 import java.util.Scanner;
 
 public class Test {
@@ -91,22 +87,6 @@ public class Test {
                 }
             }
 
-            System.out.println("==== Creating Appointment ====");
-            AppointmentHandler appointmentHandler = magister.getHandler(AppointmentHandler.class);
-            Date date = new Date();
-            PersonalAppointment add = new PersonalAppointment("AppointmentName", "AppointmentBody", "AppointmentLocation", AppointmentType.PERSONAL, date, date);
-            String appointmentUrl = appointmentHandler.createAppointment(add);
-            System.out.println(appointmentUrl);
-
-            System.out.println("======== Appointments ========");
-            for (Appointment appointment : appointmentHandler.getAppointmentsOfToday()) {
-                System.out.println(appointment.description);
-            }
-
-            System.out.println("=== Removing Appointments ===");
-            appointmentHandler.removeAppointment(appointmentUrl);
-            System.out.println(appointmentUrl);
-
             System.out.println("====== Presence Periods ======");
             PresenceHandler presenceHandler = magister.getHandler(PresenceHandler.class);
             for (PresencePeriod presencePeriod : presenceHandler.getPresencePeriods()) {
@@ -128,11 +108,6 @@ public class Test {
                 System.out.println(privilege.name);
             }
 
-            System.out.println("========== Password ==========");
-            String current = args[args.length == 2 ? 1 : 2];
-            System.out.println(magister.changePassword(current, current + "-test", current + "-test"));
-            System.out.println(magister.changePassword(current + "-test", current, current));
-
             System.out.println("============= ELO =============");
             ELOHandler eloHandler = magister.getHandler(ELOHandler.class);
             System.out.println("==== Sources ====");
@@ -146,14 +121,6 @@ public class Test {
                 for (StudyGuideItem item : singleStudyGuide.items) {
                     System.out.println("=> " + item.title);
                 }
-            }
-
-            System.out.println("== Profile Image ==");
-            ImageContainer ic = magister.getImage();
-            if (ic.isBufferedImage()) {
-                BufferedImage image = (BufferedImage) ic.getImage();
-                System.out.println("Height: " + image.getHeight());
-                System.out.println("Width: " + image.getWidth());
             }
 
             if (args.length > 3) {
