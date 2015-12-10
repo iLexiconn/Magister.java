@@ -26,13 +26,19 @@
 package net.ilexiconn.magister.container;
 
 import com.google.gson.annotations.SerializedName;
+import net.ilexiconn.magister.Magister;
+import net.ilexiconn.magister.container.sub.Attachment;
 import net.ilexiconn.magister.container.sub.Link;
 import net.ilexiconn.magister.util.DateUtil;
 
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.security.InvalidParameterException;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class SingleMessage implements Serializable {
     @SerializedName("Inhoud")
@@ -81,6 +87,9 @@ public class SingleMessage implements Serializable {
     @SerializedName("HeeftBijlagen")
     public boolean hasAttachments = false;
 
+    @SerializedName("Bijlagen")
+    public Attachment[] attachments;
+
     @SerializedName("Soort")
     public int type = 1;
 
@@ -98,7 +107,7 @@ public class SingleMessage implements Serializable {
 
     public SingleMessage(String topic, String content, Contact[] recipients, Object[] attachments) throws ParseException {
         if (!(attachments == null || attachments.length <= 0)) {
-            this.hasAttachments = true;
+            //this.hasAttachments = true;
         }
         if (recipients == null || recipients.length <= 0) {
             throw new InvalidParameterException("Recipients must not be null and have a length higher than 0");
@@ -108,5 +117,17 @@ public class SingleMessage implements Serializable {
         this.recipients = recipients;
         //this.attachments = attachments;
         sentOn = DateUtil.dateToString(new Date());
+    }
+
+    public URL[] getAttachments(Magister magister) throws MalformedURLException {
+        List<URL> urls = new ArrayList<URL>();
+        for (Attachment attachment : attachments) {
+            for (Link link : attachment.links) {
+                if ("Self".equalsIgnoreCase(link.rel)) {
+                    urls.add(new URL(magister.school.url + link.href));
+                }
+            }
+        }
+        return urls.toArray(new URL[urls.size()]);
     }
 }
