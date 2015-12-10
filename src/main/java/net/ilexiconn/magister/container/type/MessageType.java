@@ -35,10 +35,6 @@ public enum MessageType {
         this.name = name;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public static MessageType getTypeById(int i) {
         for (MessageType type : values()) {
             if (type.ordinal() == i) {
@@ -46,5 +42,9 @@ public enum MessageType {
             }
         }
         return null;
+    }
+
+    public String getName() {
+        return name;
     }
 }

@@ -26,7 +26,6 @@
 package net.ilexiconn.magister.container;
 
 import com.google.gson.annotations.SerializedName;
-import net.ilexiconn.magister.container.sub.Link;
 
 import java.io.Serializable;
 

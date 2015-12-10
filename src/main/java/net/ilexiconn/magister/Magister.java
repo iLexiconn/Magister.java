@@ -103,7 +103,8 @@ public class Magister {
         magister.version = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/versie"), Version.class);
         magister.user = new User(username, password, true);
         HttpUtil.httpDelete(school.url + "/api/sessies/huidige");
-        Map<String, String> nameValuePairMap = magister.gson.fromJson(magister.gson.toJson(magister.user), new TypeToken<Map<String, String>>() {}.getType());
+        Map<String, String> nameValuePairMap = magister.gson.fromJson(magister.gson.toJson(magister.user), new TypeToken<Map<String, String>>() {
+        }.getType());
         magister.session = magister.gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairMap), Session.class);
         if (!magister.session.state.equals("active")) {
             LogUtil.printError("Invalid credentials", new InvalidParameterException());
@@ -123,7 +124,8 @@ public class Magister {
 
     public Session login() throws IOException {
         HttpUtil.httpDelete(school.url + "/api/sessies/huidige");
-        Map<String, String> nameValuePairMap = gson.fromJson(gson.toJson(user), new TypeToken<Map<String, String>>() {}.getType());
+        Map<String, String> nameValuePairMap = gson.fromJson(gson.toJson(user), new TypeToken<Map<String, String>>() {
+        }.getType());
         session = gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairMap), Session.class);
         return session;
     }
