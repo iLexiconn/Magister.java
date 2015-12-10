@@ -41,10 +41,6 @@ public enum MessageType {
         return name;
     }
 
-    public int getNum() {
-        return num;
-    }
-
     public static MessageType getTypeById(int i) {
         for (MessageType type : values()) {
             if (type.getNum() == i) {
@@ -52,5 +48,9 @@ public enum MessageType {
             }
         }
         return null;
+    }
+
+    public int getNum() {
+        return num;
     }
 }
