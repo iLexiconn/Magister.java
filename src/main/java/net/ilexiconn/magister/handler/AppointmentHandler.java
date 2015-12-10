@@ -26,6 +26,7 @@
 package net.ilexiconn.magister.handler;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonParser;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.adapter.AppointmentAdapter;
 import net.ilexiconn.magister.container.Appointment;
@@ -35,8 +36,11 @@ import net.ilexiconn.magister.exeption.PrivilegeException;
 import net.ilexiconn.magister.util.GsonUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.security.InvalidParameterException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -100,10 +104,18 @@ public class AppointmentHandler implements IHandler {
      * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
-    public void createAppointment(PersonalAppointment appointment) throws IOException {
-        String data = gson.toJson(appointment);
-        HttpUtil.httpPostRaw(magister.school.url + "/api/personen/" + magister.profile.id + "/afspraken", data);
+    public Appointment createAppointment(PersonalAppointment personalAppointment) throws IOException, ParseException {
+        String data = gson.toJson(personalAppointment);
+        BufferedReader reader = new BufferedReader(HttpUtil.httpPostRaw(magister.school.url + "/api/personen/" + magister.profile.id + "/afspraken", data));
+        StringBuilder responseBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            responseBuilder.append(line);
+        }
+        String url = new JsonParser().parse(responseBuilder.toString()).getAsJsonObject().get("Url").getAsString();
+        return gson.fromJson(HttpUtil.httpGet(magister.school.url + url), Appointment.class);
     }
+
 
     /**
      * Deletes an appointment from magister.
@@ -122,6 +134,9 @@ public class AppointmentHandler implements IHandler {
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
     public void removeAppointment(int id) throws IOException {
+        if (id <= 0) {
+            throw new InvalidParameterException("Id can't be 0 or lower!");
+        }
         HttpUtil.httpDelete(magister.school.url + "/api/personen/" + magister.profile.id + "/afspraken/" + id);
     }
 
