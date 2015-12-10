@@ -40,10 +40,11 @@ public enum AppointmentType implements Serializable {
     MISCELLANEOUS(9),
     LOCAL_BLOCK(10),
     CLASS_BLOCK(11),
-    LESSON(12),
-    STUDIEHUIS(13),//This is a Lesson at my school?
+    //12?
+    LESSON(13),
     SHEDULE_FREE_STUDY(14),
-    PLANNING(16),//Planning is 16 in my school?
+    //15?
+    PLANNING(16),
     ACTIONS(101),
     PRESENCES(102),
     EXAM_SHUDULE(103);
