@@ -26,22 +26,28 @@
 package net.ilexiconn.magister.container.type;
 
 public enum MessageType {
-    MESSAGE("Bericht"),
-    ANNOUNCEMENT("Mededeling");
+    MESSAGE("Bericht", 1),
+    ANNOUNCEMENT("Mededeling", 2);
 
     private String name;
+    private int num;
 
-    MessageType(String name) {
+    MessageType(String name, int num) {
         this.name = name;
+        this.num = num;
     }
 
     public String getName() {
         return name;
     }
 
+    public int getNum() {
+        return num;
+    }
+
     public static MessageType getTypeById(int i) {
         for (MessageType type : values()) {
-            if (type.ordinal() == i) {
+            if (type.getNum() == i) {
                 return type;
             }
         }

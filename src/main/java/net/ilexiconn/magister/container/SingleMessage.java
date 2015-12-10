@@ -120,6 +120,9 @@ public class SingleMessage implements Serializable {
     }
 
     public URL[] getAttachments(Magister magister) throws MalformedURLException {
+        if (!hasAttachments) {
+            return null;
+        }
         List<URL> urls = new ArrayList<URL>();
         for (Attachment attachment : attachments) {
             for (Link link : attachment.links) {
@@ -127,6 +130,9 @@ public class SingleMessage implements Serializable {
                     urls.add(new URL(magister.school.url + link.href));
                 }
             }
+        }
+        if (urls.size() == 0) {
+            return null;
         }
         return urls.toArray(new URL[urls.size()]);
     }
