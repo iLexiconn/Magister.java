@@ -29,10 +29,13 @@ import com.google.gson.Gson;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.adapter.GradeAdapter;
 import net.ilexiconn.magister.container.Grade;
+import net.ilexiconn.magister.container.sub.Course;
 import net.ilexiconn.magister.util.GsonUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GradeHandler implements IHandler {
     private Gson gson = GsonUtil.getGsonWithAdapter(Grade[].class, new GradeAdapter());
@@ -68,6 +71,26 @@ public class GradeHandler implements IHandler {
 
     public Grade[] getRecentGrades() throws IOException {
         return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/personen/" + magister.profile.id + "/aanmeldingen/" + magister.currentStudy.id + "/cijfers"), Grade[].class);
+    }
+
+    public Grade[] getGradesFromCourse(Course course, boolean onlyAverage, boolean onlyPTA, boolean onlyActiveStudy) throws IOException {
+        List<Grade> gradeList = new ArrayList<Grade>();
+        for (Grade grade : getGrades(onlyAverage, onlyPTA, onlyActiveStudy)) {
+            if (grade.course == course) {
+                gradeList.add(grade);
+            }
+        }
+        return gradeList.toArray(new Grade[gradeList.size()]);
+    }
+
+    public Grade[] getAllGradesFromCourse(Course course) throws IOException {
+        List<Grade> gradeList = new ArrayList<Grade>();
+        for (Grade grade : getAllGrades()) {
+            if (grade.course == course) {
+                gradeList.add(grade);
+            }
+        }
+        return gradeList.toArray(new Grade[gradeList.size()]);
     }
 
     /**
