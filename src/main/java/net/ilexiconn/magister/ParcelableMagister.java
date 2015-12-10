@@ -19,6 +19,18 @@ import java.util.Locale;
 import java.util.Map;
 
 public class ParcelableMagister extends Magister implements Parcelable {
+    public static final Creator<ParcelableMagister> CREATOR = new Creator<ParcelableMagister>() {
+        @Override
+        public ParcelableMagister createFromParcel(Parcel in) {
+            return new ParcelableMagister(in);
+        }
+
+        @Override
+        public ParcelableMagister[] newArray(int size) {
+            return new ParcelableMagister[size];
+        }
+    };
+
     protected ParcelableMagister() {
         super();
     }
@@ -32,42 +44,11 @@ public class ParcelableMagister extends Magister implements Parcelable {
         profile = (Profile) in.readSerializable();
         currentStudy = (Study) in.readSerializable();
         int n = in.readInt();
-        ArrayList<Study> list = new ArrayList<Study>();
+        ArrayList<Study> studyList = new ArrayList<Study>();
         for (int i = 0; i != n; i++) {
-            list.add((Study) in.readSerializable());
+            studyList.add((Study) in.readSerializable());
         }
-        list.toArray(studies);
-    }
-
-    public static final Creator<ParcelableMagister> CREATOR = new Creator<ParcelableMagister>() {
-        @Override
-        public ParcelableMagister createFromParcel(Parcel in) {
-            return new ParcelableMagister(in);
-        }
-
-        @Override
-        public ParcelableMagister[] newArray(int size) {
-            return new ParcelableMagister[size];
-        }
-    };
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeSerializable(school);
-        dest.writeSerializable(user);
-        dest.writeSerializable(version);
-        dest.writeSerializable(session);
-        dest.writeSerializable(profile);
-        dest.writeSerializable(currentStudy);
-        dest.writeInt(studies.length);
-        for (Study s : studies) {
-            dest.writeSerializable(s);
-        }
+        studies = studyList.toArray(new Study[studyList.size()]);
     }
 
     /**
@@ -91,7 +72,8 @@ public class ParcelableMagister extends Magister implements Parcelable {
         magister.version = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/versie"), Version.class);
         magister.user = new User(username, password, true);
         HttpUtil.httpDelete(school.url + "/api/sessies/huidige");
-        Map<String, String> nameValuePairMap = magister.gson.fromJson(magister.gson.toJson(magister.user), new TypeToken<Map<String, String>>() {}.getType());
+        Map<String, String> nameValuePairMap = magister.gson.fromJson(magister.gson.toJson(magister.user), new TypeToken<Map<String, String>>() {
+        }.getType());
         magister.session = magister.gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairMap), Session.class);
         if (!magister.session.state.equals("active")) {
             LogUtil.printError("Invalid credentials", new InvalidParameterException());
@@ -107,5 +89,24 @@ public class ParcelableMagister extends Magister implements Parcelable {
             }
         }
         return magister;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeSerializable(school);
+        dest.writeSerializable(user);
+        dest.writeSerializable(version);
+        dest.writeSerializable(session);
+        dest.writeSerializable(profile);
+        dest.writeSerializable(currentStudy);
+        dest.writeInt(studies.length);
+        for (Study s : studies) {
+            dest.writeSerializable(s);
+        }
     }
 }

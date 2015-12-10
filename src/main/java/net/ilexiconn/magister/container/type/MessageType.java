@@ -37,10 +37,6 @@ public enum MessageType {
         this.num = num;
     }
 
-    public String getName() {
-        return name;
-    }
-
     public static MessageType getTypeById(int i) {
         for (MessageType type : values()) {
             if (type.getNum() == i) {
@@ -48,6 +44,10 @@ public enum MessageType {
             }
         }
         return null;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public int getNum() {
