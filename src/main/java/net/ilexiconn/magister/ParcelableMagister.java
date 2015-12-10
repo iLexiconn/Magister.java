@@ -13,6 +13,7 @@ import java.security.InvalidParameterException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
@@ -29,8 +30,13 @@ public class ParcelableMagister extends Magister implements Parcelable {
         version = (Version) in.readSerializable();
         session = (Session) in.readSerializable();
         profile = (Profile) in.readSerializable();
-        studies = (Study[]) in.readArray(getClass().getClassLoader());
         currentStudy = (Study) in.readSerializable();
+        int n = in.readInt();
+        ArrayList<Study> list = new ArrayList<Study>();
+        for (int i = 0; i != n; i++) {
+            list.add((Study) in.readSerializable());
+        }
+        list.toArray(studies);
     }
 
     public static final Creator<ParcelableMagister> CREATOR = new Creator<ParcelableMagister>() {
@@ -57,8 +63,11 @@ public class ParcelableMagister extends Magister implements Parcelable {
         dest.writeSerializable(version);
         dest.writeSerializable(session);
         dest.writeSerializable(profile);
-        dest.writeArray(studies);
         dest.writeSerializable(currentStudy);
+        dest.writeInt(studies.length);
+        for (Study s : studies) {
+            dest.writeSerializable(s);
+        }
     }
 
     /**
