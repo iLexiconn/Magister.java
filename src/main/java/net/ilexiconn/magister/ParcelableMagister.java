@@ -29,7 +29,7 @@ public class ParcelableMagister extends Magister implements Parcelable {
         version = (Version) in.readSerializable();
         session = (Session) in.readSerializable();
         profile = (Profile) in.readSerializable();
-        //studies
+        studies = (Study[]) in.readArray(getClass().getClassLoader());
         currentStudy = (Study) in.readSerializable();
     }
 
@@ -57,7 +57,7 @@ public class ParcelableMagister extends Magister implements Parcelable {
         dest.writeSerializable(version);
         dest.writeSerializable(session);
         dest.writeSerializable(profile);
-        //studies
+        dest.writeArray(studies);
         dest.writeSerializable(currentStudy);
     }
 
