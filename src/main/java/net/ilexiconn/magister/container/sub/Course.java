@@ -34,5 +34,8 @@ public class Course implements Serializable {
     public int id;
 
     @SerializedName(value = "Naam", alternate = "Afkorting")
+    public String abbreviation;
+
+    @SerializedName("Omschrijving")
     public String name;
 }
