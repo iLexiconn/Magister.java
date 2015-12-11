@@ -30,16 +30,16 @@ public enum MessageType {
     ANNOUNCEMENT("Mededeling", 2);
 
     private String name;
-    private int num;
+    private int id;
 
-    MessageType(String name, int num) {
+    MessageType(String name, int id) {
         this.name = name;
-        this.num = num;
+        this.id = id;
     }
 
     public static MessageType getTypeById(int i) {
         for (MessageType type : values()) {
-            if (type.getNum() == i) {
+            if (type.getID() == i) {
                 return type;
             }
         }
@@ -50,7 +50,7 @@ public enum MessageType {
         return name;
     }
 
-    public int getNum() {
-        return num;
+    public int getID() {
+        return id;
     }
 }

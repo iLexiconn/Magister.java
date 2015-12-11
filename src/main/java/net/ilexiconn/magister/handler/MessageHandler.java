@@ -117,9 +117,6 @@ public class MessageHandler implements IHandler {
         return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/personen/" + magister.profile.id + "/berichten/" + messageID + "?berichtSoort=" + messageType.getName()), SingleMessage[].class);
     }
 
-    /**
-     * TODO: Implement post
-     */
     public boolean postMessage(SingleMessage message) {
         try {
             String data = gson.toJson(message);
