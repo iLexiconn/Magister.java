@@ -130,6 +130,10 @@ public class Magister {
         return session;
     }
 
+    public void logout() throws IOException {
+        HttpUtil.httpDelete(school.url + "/api/sessies/huidige");
+    }
+
     public Session getCurrentSession() throws IOException {
         return gson.fromJson(HttpUtil.httpGet(school.url + "/api/sessies/huidige"), Session.class);
     }
