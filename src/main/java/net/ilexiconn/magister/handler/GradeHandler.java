@@ -62,17 +62,33 @@ public class GradeHandler implements IHandler {
     /**
      * Get an array of all the {@link Grade}s this profile hs ever got.
      *
-     * @return an array of all the {@link Grade}s this profile hs ever got.
+     * @return an array of all the {@link Grade}s this profile has ever got.
      * @throws IOException if there is no active internet connection.
      */
     public Grade[] getAllGrades() throws IOException {
         return getGrades(false, false, false);
     }
 
+    /**
+     * Get all grades from a period of 5 days.
+     *
+     * @return all grades from a period of 5 days.
+     * @throws IOException if there is no active internet connection.
+     */
     public Grade[] getRecentGrades() throws IOException {
         return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/personen/" + magister.profile.id + "/aanmeldingen/" + magister.currentStudy.id + "/cijfers"), Grade[].class);
     }
 
+    /**
+     * Get all grades from a specific course.
+     *
+     * @param course          the course.
+     * @param onlyAverage     only count the average grades.
+     * @param onlyPTA         only count the PTA grades.
+     * @param onlyActiveStudy only check the current study.
+     * @return all the grades from the specific course.
+     * @throws IOException if there is no active internet connection.
+     */
     public Grade[] getGradesFromCourse(Course course, boolean onlyAverage, boolean onlyPTA, boolean onlyActiveStudy) throws IOException {
         List<Grade> gradeList = new ArrayList<Grade>();
         for (Grade grade : getGrades(onlyAverage, onlyPTA, onlyActiveStudy)) {
@@ -83,6 +99,13 @@ public class GradeHandler implements IHandler {
         return gradeList.toArray(new Grade[gradeList.size()]);
     }
 
+    /**
+     * Get all grades from a specific course.
+     *
+     * @param course          the course.
+     * @return all the grades from the specific course.
+     * @throws IOException if there is no active internet connection.
+     */
     public Grade[] getAllGradesFromCourse(Course course) throws IOException {
         List<Grade> gradeList = new ArrayList<Grade>();
         for (Grade grade : getAllGrades()) {

@@ -77,10 +77,21 @@ public class ImageContainer {
         throw new ClassNotFoundException("Neither the BufferedImage class nor the Bitmap class were found!");
     }
 
+    /**
+     * Get the image object. You can check its type bu using {@link ImageContainer#isBitmap()} and
+     * {@link ImageContainer#isBufferedImage()}.
+     *
+     * @return the image object.
+     */
     public Object getImage() {
         return image;
     }
 
+    /**
+     * Get the class of the image object.
+     *
+     * @return the class of the image object.
+     */
     public Class getImageClass() {
         return classT;
     }

@@ -102,7 +102,7 @@ public class Magister {
         magister.school = school;
         magister.version = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/versie"), Version.class);
         magister.user = new User(username, password, true);
-        HttpUtil.httpDelete(school.url + "/api/sessies/huidige");
+        magister.logout();
         Map<String, String> nameValuePairMap = magister.gson.fromJson(magister.gson.toJson(magister.user), new TypeToken<Map<String, String>>() {
         }.getType());
         magister.session = magister.gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairMap), Session.class);
@@ -122,18 +122,35 @@ public class Magister {
         return magister;
     }
 
+    /**
+     * Refresh the session of this magister instance by logging in again.
+     *
+     * @return the current session.
+     * @throws IOException if there is no active internet connection.
+     */
     public Session login() throws IOException {
-        HttpUtil.httpDelete(school.url + "/api/sessies/huidige");
+        logout();
         Map<String, String> nameValuePairMap = gson.fromJson(gson.toJson(user), new TypeToken<Map<String, String>>() {
         }.getType());
         session = gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairMap), Session.class);
         return session;
     }
 
+    /**
+     * Logout the current session. You have to wait a few seconds before logging in again.
+     *
+     * @throws IOException if there is no active internet connection.
+     */
     public void logout() throws IOException {
         HttpUtil.httpDelete(school.url + "/api/sessies/huidige");
     }
 
+    /**
+     * Get the current session of this magister instance. Use this to check if the user is still logged in.
+     *
+     * @return the current session.
+     * @throws IOException if there is no active internet connection.
+     */
     public Session getCurrentSession() throws IOException {
         return gson.fromJson(HttpUtil.httpGet(school.url + "/api/sessies/huidige"), Session.class);
     }
@@ -222,6 +239,13 @@ public class Magister {
         }
     }
 
+    /**
+     * Get a handler instance from this magister instance.
+     *
+     * @param type the class of the handler.
+     * @return the {@link IHandler} instance, null if it can't be found.
+     * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
+     */
     public <T extends IHandler> T getHandler(Class<T> type) throws PrivilegeException {
         for (IHandler handler : handlerList) {
             if (handler.getClass() == type) {

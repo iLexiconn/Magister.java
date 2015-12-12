@@ -32,6 +32,12 @@ import java.io.StringWriter;
 public class LogUtil {
     private static String TAG = "MAGISTER.JAVA";
 
+    /**
+     * Print an error to the system error stream. Will use the Log class if running on Android.
+     *
+     * @param description the error's description.
+     * @param throwable the throwable.
+     */
     public static void printError(String description, Throwable throwable) {
         String details = toPrettyString("Operating System", System.getProperty("os.name") + " (" + System.getProperty("os.arch") + ")") + toPrettyString("Java Version", System.getProperty("java.version"));
         String report = "---- Error Report ----\n" + description + "\n\n-- Crash Log --\n" + getStackTrace(throwable) + "\n-- System Details --\n" + details;
@@ -68,7 +74,12 @@ public class LogUtil {
         return s;
     }
 
-    public static void setAndroidTag(String s) {
-        TAG = s;
+    /**
+     * Set a custom Android logging tag.
+     *
+     * @param tag the new tag.
+     */
+    public static void setAndroidTag(String tag) {
+        TAG = tag;
     }
 }

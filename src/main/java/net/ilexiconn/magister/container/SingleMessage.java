@@ -93,11 +93,11 @@ public class SingleMessage implements Serializable {
     @SerializedName("HeeftBijlagen")
     public boolean hasAttachments = false;
 
-    @SerializedName("Bijlagen")
-    private Attachment[] attachments;
-
     @SerializedName("Soort")
     public int type = 1;
+
+    @SerializedName("Bijlagen")
+    private Attachment[] attachments;
 
     public SingleMessage(String topic, String content, Contact[] recipients) throws ParseException, IOException {
         this(null, topic, content, recipients, new File[]{});
