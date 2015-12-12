@@ -25,18 +25,21 @@
 
 package net.ilexiconn.magister.util;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
+import com.google.gson.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class GsonUtil {
     private static Gson gson = new Gson();
+    private static JsonParser parser = new JsonParser();
 
     public static Gson getGson() {
         return gson;
+    }
+
+    public static JsonElement getFromJson(String json, String key) {
+        return parser.parse(json).getAsJsonObject().get(key);
     }
 
     public static Gson getGsonWithAdapter(Class<?> type, TypeAdapter<?> adapter) {

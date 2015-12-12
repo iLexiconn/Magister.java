@@ -40,9 +40,13 @@ import net.ilexiconn.magister.util.GsonUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class MessageHandler implements IHandler {
@@ -126,6 +130,21 @@ public class MessageHandler implements IHandler {
             LogUtil.printError(e.getMessage(), e.getCause());
             return false;
         }
+    }
+
+    public File[] getAttachmentsOfMessage(SingleMessage message, File downloadDir) throws IOException {
+        URL[] urls = message.getAttachmentsUrls(magister);
+        if (urls == null || urls.length == 0) {
+            return null;
+        }
+        List<File> files = new ArrayList<File>();
+        for (URL url : urls) {
+            files.add(HttpUtil.httpGetFile(url.toString(), downloadDir));
+        }
+        if (files.size() == 0) {
+            return null;
+        }
+        return null;
     }
 
     /**

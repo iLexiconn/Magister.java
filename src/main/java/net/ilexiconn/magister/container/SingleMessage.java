@@ -30,10 +30,16 @@ import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.container.sub.Attachment;
 import net.ilexiconn.magister.container.sub.Link;
 import net.ilexiconn.magister.util.DateUtil;
+import net.ilexiconn.magister.util.GsonUtil;
+import net.ilexiconn.magister.util.HttpUtil;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.security.InvalidParameterException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -88,26 +94,28 @@ public class SingleMessage implements Serializable {
     public boolean hasAttachments = false;
 
     @SerializedName("Bijlagen")
-    public Attachment[] attachments;
+    private Attachment[] attachments;
 
     @SerializedName("Soort")
     public int type = 1;
 
-    public SingleMessage(String topic, String content, Contact[] recipients) throws ParseException {
-        this(topic, content, recipients, null);
+    public SingleMessage(String topic, String content, Contact[] recipients) throws ParseException, IOException {
+        this(null, topic, content, recipients, new File[]{});
     }
 
-    public SingleMessage(String topic, String content, Contact recipient) throws ParseException {
-        this(topic, content, new Contact[]{recipient}, null);
+    public SingleMessage(Magister m, String topic, String content, Contact[] recipients, File attachment) throws ParseException, IOException {
+        this(m, topic, content, recipients, new File[]{attachment});
     }
 
-    public SingleMessage(String topic, String content, Contact recipient, Object[] attachments) throws ParseException {
-        this(topic, content, new Contact[]{recipient}, attachments);
-    }
-
-    public SingleMessage(String topic, String content, Contact[] recipients, Object[] attachments) throws ParseException {
+    public SingleMessage(Magister m, String topic, String content, Contact[] recipients, File[] attachments) throws ParseException, IOException {
         if (!(attachments == null || attachments.length <= 0)) {
-            //this.hasAttachments = true;
+            this.hasAttachments = true;
+            List<Attachment> list = new ArrayList<Attachment>();
+            for (File f : attachments) {
+                list.add(getAttachmentFromFile(m, f));
+            }
+            this.attachments = new Attachment[list.size()];
+            this.attachments = list.toArray(this.attachments);
         }
         if (recipients == null || recipients.length <= 0) {
             throw new InvalidParameterException("Recipients must not be null and have a length higher than 0");
@@ -115,11 +123,26 @@ public class SingleMessage implements Serializable {
         this.topic = topic;
         this.content = content;
         this.recipients = recipients;
-        //this.attachments = attachments;
         sentOn = DateUtil.dateToString(new Date());
     }
 
-    public URL[] getAttachments(Magister magister) throws MalformedURLException {
+    private static Attachment getAttachmentFromFile(Magister m, File f) throws IOException, ParseException {
+        if (f.isDirectory()) {
+            throw new NoSuchFileException("File must not be an Directory");
+        }
+        Attachment a = new Attachment();
+        a.fileName = f.getName();
+        a.contentType = Files.probeContentType(f.toPath());
+        a.id = 0;
+        a.sourceType = 0;
+        a.uploadDate = DateUtil.dateToString(new Date());
+        a.fileSizeInBytes = f.length();
+        String response = HttpUtil.convertInputStreamReaderToString(HttpUtil.httpPostFile(m, f));
+        a.uniqueId = GsonUtil.getFromJson(response, "Value").getAsString();
+        return a;
+    }
+
+    public URL[] getAttachmentsUrls(Magister magister) throws MalformedURLException {
         if (!hasAttachments) {
             return null;
         }

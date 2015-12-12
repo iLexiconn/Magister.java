@@ -25,12 +25,13 @@
 
 package net.ilexiconn.magister.util;
 
+import net.ilexiconn.magister.Magister;
+
 import javax.net.ssl.HttpsURLConnection;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.net.*;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
 
@@ -77,6 +78,49 @@ public class HttpUtil {
         return new InputStreamReader(connection.getInputStream());
     }
 
+    public static InputStreamReader httpPostFile(Magister m, File file) throws IOException {
+        HttpsURLConnection connection = (HttpsURLConnection) new URL(m.school.url + "/api/file").openConnection();
+
+        String boundary = Long.toHexString(System.currentTimeMillis());
+        String lineEnd = "\r\n";
+        String twoHyphens = "--";
+
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Cookie", HttpUtil.getCurrentCookies());
+        connection.setRequestProperty("Connection", "Keep-Alive");
+        connection.setRequestProperty("Cache-Control", "no-cache");
+        connection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+        connection.setDoOutput(true);
+        connection.setUseCaches(false);
+
+        DataOutputStream dos = new DataOutputStream(connection.getOutputStream());
+        FileInputStream fis = new FileInputStream(file);
+
+        dos.writeBytes(twoHyphens + boundary + lineEnd);
+        dos.writeBytes("Content-Disposition: form-data; name=\"file\";" + " filename=\"" + file.getName() + "\"" + lineEnd);
+        dos.writeBytes(lineEnd);
+
+        int bytesAvailable = fis.available();
+        int bufferSize = Math.min(bytesAvailable, 1024);
+        byte[] buffer = new byte[bufferSize];
+        int bytesRead = fis.read(buffer, 0, bufferSize);
+
+        while (bytesRead > 0) {
+            dos.write(buffer, 0, bufferSize);
+            bytesAvailable = fis.available();
+            bufferSize = Math.min(bytesAvailable, 1024);
+            bytesRead = fis.read(buffer, 0, bufferSize);
+        }
+
+        dos.writeBytes(lineEnd);
+        dos.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+
+        fis.close();
+        dos.flush();
+        dos.close();
+        return new InputStreamReader(connection.getInputStream());
+    }
+
     public static InputStreamReader httpGet(String url) throws IOException {
         HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
         connection.setRequestMethod("GET");
@@ -87,6 +131,23 @@ public class HttpUtil {
         connection.connect();
         storeCookies(connection);
         return new InputStreamReader(connection.getInputStream());
+    }
+
+    public static File httpGetFile(String url, File downloadDir) throws IOException {
+        HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
+        connection.setRequestMethod("GET");
+        connection.setRequestProperty("Cookie", getCurrentCookies());
+        if (AndroidUtil.getAndroidSupportCache()) {
+            connection.setUseCaches(true);
+        }
+        String disposition = connection.getHeaderField("Content-Disposition");
+        String fileName = disposition.substring(disposition.indexOf("filename=") + 10, disposition.length() - 1);
+        File target = new File(downloadDir.getPath() + "\\" + fileName);
+        System.out.println(target.getAbsolutePath());
+        Files.copy(connection.getInputStream(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        connection.connect();
+        storeCookies(connection);
+        return target.getAbsoluteFile();
     }
 
     private static void storeCookies(HttpURLConnection connection) {
@@ -114,5 +175,15 @@ public class HttpUtil {
         }
         String result = builder.toString();
         return result.length() > 0 ? result.substring(0, result.length() - 1) : "";
+    }
+
+    public static String convertInputStreamReaderToString(InputStreamReader r) throws IOException {
+        BufferedReader reader = new BufferedReader(r);
+        StringBuilder responseBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            responseBuilder.append(line);
+        }
+        return responseBuilder.toString();
     }
 }

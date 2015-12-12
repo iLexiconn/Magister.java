@@ -26,7 +26,6 @@
 package net.ilexiconn.magister.handler;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonParser;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.adapter.AppointmentAdapter;
 import net.ilexiconn.magister.container.Appointment;
@@ -112,7 +111,7 @@ public class AppointmentHandler implements IHandler {
         while ((line = reader.readLine()) != null) {
             responseBuilder.append(line);
         }
-        String url = new JsonParser().parse(responseBuilder.toString()).getAsJsonObject().get("Url").getAsString();
+        String url = GsonUtil.getFromJson(responseBuilder.toString(), "Url").getAsString();
         return gson.fromJson(HttpUtil.httpGet(magister.school.url + url), Appointment.class);
     }
 
