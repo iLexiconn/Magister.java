@@ -9,6 +9,44 @@
 
 A Java implementation of the [Magister 6](http://magister6.nl/) API.
 
+Quickstart
+==========
+NOTE: The maven artifacts are not yet available, as we haven't released 0.1.0 yet.
+
+To use this API is your project, you just have to add this snippet if you're using Grade:
+```gradle
+repositories {
+    maven {
+        name = "ilexiconn"
+        url = "http://maven.ilexiconn.net/"
+    }
+}
+
+dependencies {
+    compile "net.ilexiconn:magister:0.1.0"
+}
+```
+
+or Maven:
+
+```xml
+<repositories>
+    <repository>
+      <id>ilexiconn</id>
+      <name>ilexiconn</name>
+      <url>http://maven.ilexiconn.net/</url>
+    </repository>
+</repositories>
+
+<dependencies>
+    <dependency>
+      <groupId>net.ilexiconn</groupId>
+      <artifactId>magister</artifactId>
+      <version>0.1.0</version>
+    </dependency>
+</dependencies>
+```
+
 How to compile from source
 ==========
 1. Make sure you have a JDK (minimal version 6) installed.
@@ -25,7 +63,6 @@ When creating an issue
 1. Post output of https://school.magister.net/api/versie where `school` is the used school.
 2. Post as much of the error logs you get.
 3. Keep it English. :)
-
 
 Credits
 ==========

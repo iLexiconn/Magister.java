@@ -122,6 +122,12 @@ public class MessageHandler implements IHandler {
         return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/personen/" + magister.profile.id + "/berichten/" + messageID + "?berichtSoort=" + messageType.getName()), SingleMessage[].class);
     }
 
+    /**
+     * Post a single message to Magister.
+     *
+     * @param message the message.
+     * @return true if the message got sent.
+     */
     public boolean postMessage(SingleMessage message) {
         try {
             String data = gson.toJson(message);
@@ -154,6 +160,15 @@ public class MessageHandler implements IHandler {
         HttpUtil.httpDelete(magister.school.url + "api/personen/" + magister.profile.id + "/berichten/map/" + messageFolder.id);
     }
 
+    /**
+     * Get the attachments from a message and download them to a directory.
+     *
+     * @param message     the message.
+     * @param downloadDir the directory to download the files to.
+     * @return a list of files with the attachments. Will return null if there aren't any attachments bound with the
+     * message.
+     * @throws IOException if there is no active internet connection.
+     */
     public File[] getAttachmentsOfMessage(SingleMessage message, File downloadDir) throws IOException {
         URL[] urls = message.getAttachmentsUrls(magister);
         if (urls == null || urls.length == 0) {

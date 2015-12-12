@@ -31,6 +31,9 @@ public class AndroidUtil {
     private static boolean runningOnAndroid = false;
     private static boolean androidSupportCache = false;
 
+    /**
+     * Check if the API is running on Android.
+     */
     public static void checkAndroid() {
         try {
             Class.forName("android.view.View");
@@ -41,6 +44,11 @@ public class AndroidUtil {
         }
     }
 
+    /**
+     * Check if the API is running on Android, and if it can use the Android caching utilities.
+     *
+     * @return true if the API is running on Android and can use the Android caching utilities.
+     */
     public static boolean isCacheAvailableOnAndroid() {
         try {
             Class<?> cache = Class.forName("android.net.http.HttpResponseCache");

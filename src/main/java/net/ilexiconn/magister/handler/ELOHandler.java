@@ -53,18 +53,44 @@ public class ELOHandler implements IHandler {
         gson = GsonUtil.getGsonWithAdapters(map);
     }
 
+    /**
+     * Get all the ELO sources for this profile.
+     *
+     * @return all the ELO sources for this profile.
+     * @throws IOException if there is no active internet connection.
+     */
     public Source[] getSources() throws IOException {
         return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/personen/" + magister.profile.id + "/bronnen?soort=0"), Source[].class);
     }
 
+    /**
+     * Get all study guides for this profile.
+     *
+     * @return all study guides for this profile.
+     * @throws IOException if there is no active internet connection.
+     */
     public StudyGuide[] getStudyGuides() throws IOException {
         return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/leerlingen/" + magister.profile.id + "/studiewijzers"), StudyGuide[].class);
     }
 
+    /**
+     * Get more data about a specific study guide.
+     *
+     * @param studyGuide the study guide.
+     * @return an object with more data about the study guide.
+     * @throws IOException if there is no active internet connection.
+     */
     public SingleStudyGuide getStudyGuide(StudyGuide studyGuide) throws IOException {
         return getStudyGuide(studyGuide.id);
     }
 
+    /**
+     * Get more data about a specific study guide.
+     *
+     * @param studyGuideID the study guide id.
+     * @return an object with more data about the study guide.
+     * @throws IOException if there is no active internet connection.
+     */
     public SingleStudyGuide getStudyGuide(int studyGuideID) throws IOException {
         return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/leerlingen/" + magister.profile.id + "/studiewijzers/" + studyGuideID), SingleStudyGuide.class);
     }

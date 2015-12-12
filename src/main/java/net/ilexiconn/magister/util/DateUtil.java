@@ -31,6 +31,13 @@ import java.util.Date;
 import java.util.TimeZone;
 
 public class DateUtil {
+    /**
+     * Parse a String date into a Date object.
+     *
+     * @param date the String date.
+     * @return the new Date instance.
+     * @throws ParseException if the date String can't be parsed.
+     */
     public static Date stringToDate(String date) throws ParseException {
         if (date == null) {
             throw new ParseException("String parameter was null", 0);
@@ -40,6 +47,13 @@ public class DateUtil {
         return format.parse(date);
     }
 
+    /**
+     * Parse a Date object into a String.
+     *
+     * @param date the Date instance.
+     * @return the date as String.
+     * @throws ParseException if the Date object can't be parsed.
+     */
     public static String dateToString(Date date) throws ParseException {
         if (date == null) {
             throw new ParseException("Date parameter was null", 0);
