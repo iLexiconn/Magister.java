@@ -48,6 +48,21 @@ public class HttpUtil {
         return new InputStreamReader(connection.getInputStream());
     }
 
+    public static InputStreamReader httpPut(String url, String json) throws IOException {
+        HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
+        connection.setDoOutput(true);
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Cookie", getCurrentCookies());
+        connection.setRequestProperty("Content-Type", "application/json");
+        byte[] data_url = json.getBytes("UTF-8");
+        DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+        outputStream.write(data_url);
+        outputStream.flush();
+        outputStream.close();
+        storeCookies(connection);
+        return new InputStreamReader(connection.getInputStream());
+    }
+
     public static InputStreamReader httpPost(String url, Map<String, String> data) throws IOException {
         HttpsURLConnection connection = (HttpsURLConnection) new URL(url).openConnection();
         connection.setDoOutput(true);
