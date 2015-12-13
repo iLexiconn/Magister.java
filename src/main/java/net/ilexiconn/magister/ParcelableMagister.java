@@ -39,7 +39,6 @@ import java.security.InvalidParameterException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
@@ -74,12 +73,10 @@ public class ParcelableMagister extends Magister implements Parcelable {
         session = (Session) in.readSerializable();
         profile = (Profile) in.readSerializable();
         currentStudy = (Study) in.readSerializable();
-        int n = in.readInt();
-        ArrayList<Study> studyList = new ArrayList<Study>();
-        for (int i = 0; i != n; i++) {
-            studyList.add((Study) in.readSerializable());
+        studies = new Study[in.readInt()];
+        for (int i = 0; i < studies.length; i++) {
+            studies[i] = (Study) in.readSerializable();
         }
-        studies = studyList.toArray(new Study[studyList.size()]);
     }
 
     /**
