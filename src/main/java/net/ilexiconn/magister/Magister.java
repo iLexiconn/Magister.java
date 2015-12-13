@@ -57,6 +57,8 @@ import java.util.*;
 public class Magister {
     public static final String VERSION = "0.1.0-SNAPSHOT";
 
+    public static final int SESSION_TIMEOUT = 1200000;
+
     public Gson gson = new GsonBuilder()
             .registerTypeAdapter(Profile.class, new ProfileAdapter())
             .registerTypeAdapter(Study[].class, new StudyAdapter())
@@ -70,6 +72,8 @@ public class Magister {
     public Profile profile;
     public Study[] studies;
     public Study currentStudy;
+
+    private long loginTime = 0L;
 
     private List<IHandler> handlerList = new ArrayList<IHandler>();
 
@@ -110,6 +114,7 @@ public class Magister {
             LogUtil.printError("Invalid credentials", new InvalidParameterException());
             return null;
         }
+        magister.loginTime = System.currentTimeMillis();
         magister.profile = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/account"), Profile.class);
         magister.studies = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + magister.profile.id + "/aanmeldingen"), Study[].class);
         DateFormat format = new SimpleDateFormat("y-m-d", Locale.ENGLISH);
@@ -133,6 +138,7 @@ public class Magister {
         Map<String, String> nameValuePairMap = gson.fromJson(gson.toJson(user), new TypeToken<Map<String, String>>() {
         }.getType());
         session = gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairMap), Session.class);
+        loginTime = System.currentTimeMillis();
         return session;
     }
 
@@ -143,16 +149,16 @@ public class Magister {
      */
     public void logout() throws IOException {
         HttpUtil.httpDelete(school.url + "/api/sessies/huidige");
+        loginTime = 0L;
     }
 
     /**
-     * Get the current session of this magister instance. Use this to check if the user is still logged in.
+     * Check if the current session is still active.
      *
-     * @return the current session.
-     * @throws IOException if there is no active internet connection.
+     * @return true if the current session is still active.
      */
-    public Session getCurrentSession() throws IOException {
-        return gson.fromJson(HttpUtil.httpGet(school.url + "/api/sessies/huidige"), Session.class);
+    public boolean isExpired() {
+        return loginTime + (SESSION_TIMEOUT - 1000) < System.currentTimeMillis();
     }
 
     /**
