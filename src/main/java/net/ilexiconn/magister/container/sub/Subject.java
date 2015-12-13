@@ -29,7 +29,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Course implements Serializable {
+public class Subject implements Serializable {
     @SerializedName("Id")
     public int id;
 

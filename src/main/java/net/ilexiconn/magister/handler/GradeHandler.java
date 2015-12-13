@@ -29,7 +29,7 @@ import com.google.gson.Gson;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.adapter.GradeAdapter;
 import net.ilexiconn.magister.container.Grade;
-import net.ilexiconn.magister.container.sub.Course;
+import net.ilexiconn.magister.container.sub.Subject;
 import net.ilexiconn.magister.util.GsonUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 
@@ -80,19 +80,19 @@ public class GradeHandler implements IHandler {
     }
 
     /**
-     * Get all grades from a specific course.
+     * Get all grades from a specific subject.
      *
-     * @param course          the course.
+     * @param subject          the subject.
      * @param onlyAverage     only count the average grades.
      * @param onlyPTA         only count the PTA grades.
      * @param onlyActiveStudy only check the current study.
-     * @return all the grades from the specific course.
+     * @return all the grades from the specific subject.
      * @throws IOException if there is no active internet connection.
      */
-    public Grade[] getGradesFromCourse(Course course, boolean onlyAverage, boolean onlyPTA, boolean onlyActiveStudy) throws IOException {
+    public Grade[] getGradesFromSubject(Subject subject, boolean onlyAverage, boolean onlyPTA, boolean onlyActiveStudy) throws IOException {
         List<Grade> gradeList = new ArrayList<Grade>();
         for (Grade grade : getGrades(onlyAverage, onlyPTA, onlyActiveStudy)) {
-            if (grade.course == course) {
+            if (grade.subject == subject) {
                 gradeList.add(grade);
             }
         }
@@ -100,16 +100,16 @@ public class GradeHandler implements IHandler {
     }
 
     /**
-     * Get all grades from a specific course.
+     * Get all grades from a specific subject.
      *
-     * @param course          the course.
-     * @return all the grades from the specific course.
+     * @param subject          the subject.
+     * @return all the grades from the specific subject.
      * @throws IOException if there is no active internet connection.
      */
-    public Grade[] getAllGradesFromCourse(Course course) throws IOException {
+    public Grade[] getAllGradesFromSubject(Subject subject) throws IOException {
         List<Grade> gradeList = new ArrayList<Grade>();
         for (Grade grade : getAllGrades()) {
-            if (grade.course == course) {
+            if (grade.subject == subject) {
                 gradeList.add(grade);
             }
         }
