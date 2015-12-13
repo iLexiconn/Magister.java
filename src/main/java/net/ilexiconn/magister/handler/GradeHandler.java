@@ -70,9 +70,9 @@ public class GradeHandler implements IHandler {
     }
 
     /**
-     * Get all grades from a period of 5 days.
+     * Get all grades from a period of 7 days.
      *
-     * @return all grades from a period of 5 days.
+     * @return all grades from a period of 7 days.
      * @throws IOException if there is no active internet connection.
      */
     public Grade[] getRecentGrades() throws IOException {
