@@ -32,6 +32,7 @@ import net.ilexiconn.magister.container.*;
 import net.ilexiconn.magister.util.AndroidUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
+import net.ilexiconn.magister.util.SchoolUrl;
 
 import java.io.IOException;
 import java.security.InvalidParameterException;
@@ -67,6 +68,7 @@ public class ParcelableMagister extends Magister implements Parcelable {
     protected ParcelableMagister(Parcel in) {
         super();
         school = (School) in.readSerializable();
+        schoolUrl = (SchoolUrl) in.readSerializable();
         user = (User) in.readSerializable();
         version = (Version) in.readSerializable();
         session = (Session) in.readSerializable();
@@ -98,18 +100,20 @@ public class ParcelableMagister extends Magister implements Parcelable {
         ParcelableMagister magister = new ParcelableMagister();
         AndroidUtil.checkAndroid();
         magister.school = school;
-        magister.version = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/versie"), Version.class);
+        SchoolUrl url = magister.schoolUrl = new SchoolUrl(school);
+        magister.version = magister.gson.fromJson(HttpUtil.httpGet(url.getVersionUrl()), Version.class);
         magister.user = new User(username, password, true);
-        HttpUtil.httpDelete(school.url + "/api/sessies/huidige");
+        magister.logout();
         Map<String, String> nameValuePairMap = magister.gson.fromJson(magister.gson.toJson(magister.user), new TypeToken<Map<String, String>>() {
         }.getType());
-        magister.session = magister.gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairMap), Session.class);
+        magister.session = magister.gson.fromJson(HttpUtil.httpPost(url.getSessionUrl(), nameValuePairMap), Session.class);
         if (!magister.session.state.equals("active")) {
             LogUtil.printError("Invalid credentials", new InvalidParameterException());
             return null;
         }
-        magister.profile = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/account"), Profile.class);
-        magister.studies = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + magister.profile.id + "/aanmeldingen"), Study[].class);
+        magister.loginTime = System.currentTimeMillis();
+        magister.profile = magister.gson.fromJson(HttpUtil.httpGet(url.getAccountUrl()), Profile.class);
+        magister.studies = magister.gson.fromJson(HttpUtil.httpGet(url.getStudiesUrl(magister.profile.id)), Study[].class);
         DateFormat format = new SimpleDateFormat("y-m-d", Locale.ENGLISH);
         Date now = new Date();
         for (Study study : magister.studies) {
@@ -128,6 +132,7 @@ public class ParcelableMagister extends Magister implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeSerializable(school);
+        dest.writeSerializable(schoolUrl);
         dest.writeSerializable(user);
         dest.writeSerializable(version);
         dest.writeSerializable(session);

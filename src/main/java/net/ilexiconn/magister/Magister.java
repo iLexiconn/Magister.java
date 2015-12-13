@@ -37,6 +37,7 @@ import net.ilexiconn.magister.handler.*;
 import net.ilexiconn.magister.util.AndroidUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 import net.ilexiconn.magister.util.LogUtil;
+import net.ilexiconn.magister.util.SchoolUrl;
 import net.ilexiconn.magister.util.android.ImageContainer;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -65,6 +66,7 @@ public class Magister {
             .create();
 
     public School school;
+    public SchoolUrl schoolUrl;
     public User user;
 
     public Version version;
@@ -73,7 +75,7 @@ public class Magister {
     public Study[] studies;
     public Study currentStudy;
 
-    private long loginTime = 0L;
+    protected long loginTime = 0L;
 
     private List<IHandler> handlerList = new ArrayList<IHandler>();
 
@@ -104,19 +106,20 @@ public class Magister {
         Magister magister = new Magister();
         AndroidUtil.checkAndroid();
         magister.school = school;
-        magister.version = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/versie"), Version.class);
+        SchoolUrl url = magister.schoolUrl = new SchoolUrl(school);
+        magister.version = magister.gson.fromJson(HttpUtil.httpGet(url.getVersionUrl()), Version.class);
         magister.user = new User(username, password, true);
         magister.logout();
         Map<String, String> nameValuePairMap = magister.gson.fromJson(magister.gson.toJson(magister.user), new TypeToken<Map<String, String>>() {
         }.getType());
-        magister.session = magister.gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairMap), Session.class);
+        magister.session = magister.gson.fromJson(HttpUtil.httpPost(url.getSessionUrl(), nameValuePairMap), Session.class);
         if (!magister.session.state.equals("active")) {
             LogUtil.printError("Invalid credentials", new InvalidParameterException());
             return null;
         }
         magister.loginTime = System.currentTimeMillis();
-        magister.profile = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/account"), Profile.class);
-        magister.studies = magister.gson.fromJson(HttpUtil.httpGet(school.url + "/api/personen/" + magister.profile.id + "/aanmeldingen"), Study[].class);
+        magister.profile = magister.gson.fromJson(HttpUtil.httpGet(url.getAccountUrl()), Profile.class);
+        magister.studies = magister.gson.fromJson(HttpUtil.httpGet(url.getStudiesUrl(magister.profile.id)), Study[].class);
         DateFormat format = new SimpleDateFormat("y-m-d", Locale.ENGLISH);
         Date now = new Date();
         for (Study study : magister.studies) {
@@ -137,7 +140,7 @@ public class Magister {
         logout();
         Map<String, String> nameValuePairMap = gson.fromJson(gson.toJson(user), new TypeToken<Map<String, String>>() {
         }.getType());
-        session = gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairMap), Session.class);
+        session = gson.fromJson(HttpUtil.httpPost(schoolUrl.getSessionUrl(), nameValuePairMap), Session.class);
         loginTime = System.currentTimeMillis();
         return session;
     }
@@ -148,7 +151,7 @@ public class Magister {
      * @throws IOException if there is no active internet connection.
      */
     public void logout() throws IOException {
-        HttpUtil.httpDelete(school.url + "/api/sessies/huidige");
+        HttpUtil.httpDelete(schoolUrl.getCurrentSessionUrl());
         loginTime = 0L;
     }
 
