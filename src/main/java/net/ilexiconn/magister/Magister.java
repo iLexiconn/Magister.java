@@ -132,7 +132,7 @@ public class Magister {
         logout();
         Map<String, String> nameValuePairMap = gson.fromJson(gson.toJson(user), new TypeToken<Map<String, String>>() {
         }.getType());
-        session = gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies", nameValuePairMap), Session.class);
+        session = gson.fromJson(HttpUtil.httpPost(school.url + "/api/sessies/huidige", nameValuePairMap), Session.class);
         return session;
     }
 
