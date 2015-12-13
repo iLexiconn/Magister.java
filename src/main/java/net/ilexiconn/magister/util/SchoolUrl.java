@@ -27,9 +27,7 @@ package net.ilexiconn.magister.util;
 
 import net.ilexiconn.magister.container.School;
 
-import java.io.Serializable;
-
-public class SchoolUrl implements Serializable {
+public class SchoolUrl {
     private School school;
 
     public SchoolUrl(School school) {

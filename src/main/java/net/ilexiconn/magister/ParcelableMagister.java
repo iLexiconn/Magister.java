@@ -67,7 +67,7 @@ public class ParcelableMagister extends Magister implements Parcelable {
     protected ParcelableMagister(Parcel in) {
         super();
         school = (School) in.readSerializable();
-        schoolUrl = (SchoolUrl) in.readSerializable();
+        schoolUrl = new SchoolUrl(school);
         user = (User) in.readSerializable();
         version = (Version) in.readSerializable();
         session = (Session) in.readSerializable();
@@ -129,7 +129,6 @@ public class ParcelableMagister extends Magister implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeSerializable(school);
-        dest.writeSerializable(schoolUrl);
         dest.writeSerializable(user);
         dest.writeSerializable(version);
         dest.writeSerializable(session);
