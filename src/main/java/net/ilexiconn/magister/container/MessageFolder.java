@@ -32,7 +32,7 @@ import java.io.Serializable;
 
 public class MessageFolder implements Serializable {
     @SerializedName("Naam")
-    public String naam;
+    public String title;
 
     @SerializedName("OngelezenBerichten")
     public int unreadMessages;

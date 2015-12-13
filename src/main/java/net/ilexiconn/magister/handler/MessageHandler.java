@@ -27,6 +27,7 @@ package net.ilexiconn.magister.handler;
 
 import com.google.gson.Gson;
 import com.google.gson.TypeAdapter;
+import com.google.gson.stream.JsonReader;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.adapter.ArrayAdapter;
 import net.ilexiconn.magister.adapter.MessageAdapter;
@@ -136,6 +137,27 @@ public class MessageHandler implements IHandler {
             LogUtil.printError(e.getMessage(), e.getCause());
             return false;
         }
+    }
+
+    public Message updateMessage(SingleMessage message) throws IOException {
+        String data = gson.toJson(message);
+        return gson.fromJson(new JsonReader(HttpUtil.httpPut(magister.school.url + "/api/personen/" + magister.profile.id + "/berichten/" + message.id, data)), SingleMessage.class);
+    }
+
+    public Message markMessageRead(SingleMessage message, boolean isRead) throws IOException {
+        message.isRead = isRead;
+        String data = gson.toJson(message);
+        return updateMessage(message);
+    }
+
+    public Message moveMessageTo(SingleMessage message, MessageFolder messageFolder) throws IOException {
+        message.mapId = messageFolder.id;
+        message.mapTitle = messageFolder.title;
+        return updateMessage(message);
+    }
+
+    public void emptyMessageFolder(MessageFolder messageFolder) throws IOException {
+        HttpUtil.httpDelete(magister.school.url + "api/personen/" + magister.profile.id + "/berichten/map/" + messageFolder.id);
     }
 
     /**
