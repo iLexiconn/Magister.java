@@ -45,7 +45,7 @@ public class SchoolUrl implements Serializable {
     }
 
     public String getVersionUrl() {
-        return getApiUrl() + "version/";
+        return getApiUrl() + "versie/";
     }
 
     public String getSessionUrl() {
