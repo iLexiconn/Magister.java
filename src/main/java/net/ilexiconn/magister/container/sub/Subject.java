@@ -33,9 +33,9 @@ public class Subject implements Serializable {
     @SerializedName("Id")
     public int id;
 
-    @SerializedName(value = "Naam", alternate = "Afkorting")
-    public String abbreviation;
-
-    @SerializedName("Omschrijving")
+    @SerializedName(value = "Naam", alternate = "Omschrijving")
     public String name;
+
+    @SerializedName("Afkorting")
+    public String abbreviation;
 }
