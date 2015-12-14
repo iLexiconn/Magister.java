@@ -34,12 +34,11 @@ import net.ilexiconn.magister.util.GsonUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.NoSuchFileException;
 import java.security.InvalidParameterException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -128,11 +127,11 @@ public class SingleMessage implements Serializable {
 
     private static Attachment getAttachmentFromFile(Magister m, File f) throws IOException, ParseException {
         if (f.isDirectory()) {
-            throw new NoSuchFileException("File must not be an Directory");
+            throw new FileNotFoundException("File must not be an Directory");
         }
         Attachment a = new Attachment();
         a.fileName = f.getName();
-        a.contentType = Files.probeContentType(f.toPath());
+        a.contentType = /*Files.probeContentType(f.toPath());*/"";
         a.id = 0;
         a.sourceType = 0;
         a.uploadDate = DateUtil.dateToString(new Date());

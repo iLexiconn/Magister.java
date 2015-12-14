@@ -30,8 +30,6 @@ import net.ilexiconn.magister.Magister;
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.net.*;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
 
@@ -159,10 +157,25 @@ public class HttpUtil {
         String fileName = disposition.substring(disposition.indexOf("filename=") + 10, disposition.length() - 1);
         File target = new File(downloadDir.getPath() + "\\" + fileName);
         System.out.println(target.getAbsolutePath());
-        Files.copy(connection.getInputStream(), target.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        copyFileUsingStream(connection.getInputStream(), target);
         connection.connect();
         storeCookies(connection);
         return target.getAbsoluteFile();
+    }
+
+    private static void copyFileUsingStream(InputStream is, File dest) throws IOException {
+        OutputStream os = null;
+        try {
+            os = new FileOutputStream(dest);
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = is.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+        } finally {
+            is.close();
+            os.close();
+        }
     }
 
     private static void storeCookies(HttpURLConnection connection) {
