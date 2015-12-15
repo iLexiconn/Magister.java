@@ -26,7 +26,7 @@
 package net.ilexiconn.magister.container;
 
 import com.google.gson.annotations.SerializedName;
-import net.ilexiconn.magister.container.sub.Subject;
+import net.ilexiconn.magister.container.sub.SubSubject;
 import net.ilexiconn.magister.container.sub.GradePeriod;
 import net.ilexiconn.magister.container.sub.GradeRow;
 
@@ -73,7 +73,7 @@ public class Grade implements Serializable {
     public String gradeRowIdOfElo;
 
     @SerializedName("Vak")
-    public Subject subject;
+    public SubSubject subject;
 
     @SerializedName("VakDispensatie")
     public String dispensationForCourse;

@@ -30,6 +30,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import net.ilexiconn.magister.adapter.ProfileAdapter;
 import net.ilexiconn.magister.adapter.StudyAdapter;
+import net.ilexiconn.magister.adapter.SubjectAdapter;
 import net.ilexiconn.magister.container.*;
 import net.ilexiconn.magister.container.sub.Privilege;
 import net.ilexiconn.magister.exeption.PrivilegeException;
@@ -63,6 +64,7 @@ public class Magister {
     public Gson gson = new GsonBuilder()
             .registerTypeAdapter(Profile.class, new ProfileAdapter())
             .registerTypeAdapter(Study[].class, new StudyAdapter())
+            .registerTypeAdapter(Subject[].class, new SubjectAdapter())
             .create();
 
     public School school;
@@ -72,6 +74,7 @@ public class Magister {
     public Version version;
     public Session session;
     public Profile profile;
+    public Subject[] subjects;
     public Study[] studies;
     public Study currentStudy;
 
@@ -126,6 +129,9 @@ public class Magister {
             if (format.parse(study.endDate.substring(0, 10)).after(now)) {
                 magister.currentStudy = study;
             }
+        }
+        if (magister.currentStudy != null) {
+            magister.subjects = magister.gson.fromJson(HttpUtil.httpGet(url.getApiUrl() + "personen/" + magister.profile.id + "/aanmeldingen/" + magister.currentStudy.id + "/vakken"), Subject[].class);
         }
         return magister;
     }
@@ -246,6 +252,10 @@ public class Magister {
             LogUtil.printError(response.message, new InvalidParameterException());
             return response.message;
         }
+    }
+
+    public Subject[] getSubjectsOfStudy(Study study) throws IOException {
+        return gson.fromJson(HttpUtil.httpGet(schoolUrl.getApiUrl() + "personen/" + profile.id + "/aanmeldingen/" + study.id + "/vakken"), Subject[].class);
     }
 
     /**

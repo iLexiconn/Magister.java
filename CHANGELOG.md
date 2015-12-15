@@ -27,6 +27,8 @@
   - Attachments
 - Precence
   - Period
+- Subject
+  - Subjects from study
 - Profile
   - User image
   - Change password

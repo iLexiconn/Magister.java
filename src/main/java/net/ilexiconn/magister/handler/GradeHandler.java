@@ -30,7 +30,7 @@ import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.adapter.GradeAdapter;
 import net.ilexiconn.magister.container.Grade;
 import net.ilexiconn.magister.container.SingleGrade;
-import net.ilexiconn.magister.container.sub.Subject;
+import net.ilexiconn.magister.container.sub.SubSubject;
 import net.ilexiconn.magister.util.GsonUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 
@@ -90,7 +90,7 @@ public class GradeHandler implements IHandler {
      * @return all the grades from the specific subject.
      * @throws IOException if there is no active internet connection.
      */
-    public Grade[] getGradesFromSubject(Subject subject, boolean onlyAverage, boolean onlyPTA, boolean onlyActiveStudy) throws IOException {
+    public Grade[] getGradesFromSubject(SubSubject subject, boolean onlyAverage, boolean onlyPTA, boolean onlyActiveStudy) throws IOException {
         List<Grade> gradeList = new ArrayList<Grade>();
         for (Grade grade : getGrades(onlyAverage, onlyPTA, onlyActiveStudy)) {
             if (grade.subject == subject) {
@@ -107,7 +107,7 @@ public class GradeHandler implements IHandler {
      * @return all the grades from the specific subject.
      * @throws IOException if there is no active internet connection.
      */
-    public Grade[] getAllGradesFromSubject(Subject subject) throws IOException {
+    public Grade[] getAllGradesFromSubject(SubSubject subject) throws IOException {
         List<Grade> gradeList = new ArrayList<Grade>();
         for (Grade grade : getAllGrades()) {
             if (grade.subject == subject) {

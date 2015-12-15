@@ -40,7 +40,7 @@ public class DateUtil {
      */
     public static Date stringToDate(String date) throws ParseException {
         if (date == null) {
-            throw new ParseException("String parameter was null", 0);
+            return null;
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         format.setTimeZone(TimeZone.getTimeZone("GMT-0"));
@@ -56,7 +56,7 @@ public class DateUtil {
      */
     public static String dateToString(Date date) throws ParseException {
         if (date == null) {
-            throw new ParseException("Date parameter was null", 0);
+            return null;
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSS");
         format.setTimeZone(TimeZone.getTimeZone("GMT-0"));

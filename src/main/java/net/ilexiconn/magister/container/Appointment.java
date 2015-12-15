@@ -76,7 +76,7 @@ public class Appointment implements Serializable {
     public boolean finished;
 
     @SerializedName("Vakken")
-    public Subject[] subjects;
+    public SubSubject[] subjects;
 
     @SerializedName("Lokalen")
     public Classroom[] classrooms;
