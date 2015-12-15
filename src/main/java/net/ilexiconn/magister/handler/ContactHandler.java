@@ -79,7 +79,7 @@ public class ContactHandler implements IHandler {
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
     public Contact[] getContactInfo(String name, String type) throws IOException, PrivilegeException {
-        return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/personen/" + magister.profile.id + "/contactpersonen?contactPersoonType=" + type + "&q=" + name), Contact[].class);
+        return gson.fromJson(HttpUtil.httpGet(magister.schoolUrl.getApiUrl() + "personen/" + magister.profile.id + "/contactpersonen?contactPersoonType=" + type + "&q=" + name), Contact[].class);
     }
 
     /**

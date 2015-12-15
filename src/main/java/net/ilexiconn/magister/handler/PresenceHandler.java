@@ -74,7 +74,7 @@ public class PresenceHandler implements IHandler {
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
     public Presence[] getPresence(PresencePeriod period) throws IOException, PrivilegeException {
-        return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/personen/" + magister.profile.id + "/absenties?tot=" + (period == null ? magister.currentStudy.startDate : period.start) + "&van=" + (period == null ? magister.currentStudy.endDate : period.end)), Presence[].class);
+        return gson.fromJson(HttpUtil.httpGet(magister.schoolUrl.getApiUrl() + "personen/" + magister.profile.id + "/absenties?tot=" + (period == null ? magister.currentStudy.startDate : period.start) + "&van=" + (period == null ? magister.currentStudy.endDate : period.end)), Presence[].class);
     }
 
     /**
@@ -86,7 +86,7 @@ public class PresenceHandler implements IHandler {
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
     public PresencePeriod[] getPresencePeriods() throws IOException, PrivilegeException {
-        return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/personen/" + magister.profile.id + "/absentieperioden"), PresencePeriod[].class);
+        return gson.fromJson(HttpUtil.httpGet(magister.schoolUrl.getApiUrl() + "personen/" + magister.profile.id + "/absentieperioden"), PresencePeriod[].class);
     }
 
     /**

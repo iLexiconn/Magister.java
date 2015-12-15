@@ -16,6 +16,7 @@
   - Recent grades
   - Grades from subject
   - Average grades
+  - Single grades
 - Message
   - Message folders
   - Single messages

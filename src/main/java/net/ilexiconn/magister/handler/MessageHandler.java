@@ -71,7 +71,7 @@ public class MessageHandler implements IHandler {
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
     public MessageFolder[] getMessageFolders() throws IOException {
-        return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/personen/" + magister.profile.id + "/berichten/mappen"), MessageFolder[].class);
+        return gson.fromJson(HttpUtil.httpGet(magister.schoolUrl.getApiUrl() + "personen/" + magister.profile.id + "/berichten/mappen"), MessageFolder[].class);
     }
 
     /**
@@ -95,7 +95,7 @@ public class MessageHandler implements IHandler {
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
     public Message[] getMessagesPerFolder(int folderID) throws IOException {
-        return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/personen/" + magister.profile.id + "/berichten?mapId=" + folderID + "&orderby=soort+DESC&skip=0&top=25"), Message[].class);
+        return gson.fromJson(HttpUtil.httpGet(magister.schoolUrl.getApiUrl() + "personen/" + magister.profile.id + "/berichten?mapId=" + folderID + "&orderby=soort+DESC&skip=0&top=25"), Message[].class);
     }
 
     /**
@@ -119,7 +119,7 @@ public class MessageHandler implements IHandler {
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
     public SingleMessage[] getSingleMessage(int messageID, MessageType messageType) throws IOException {
-        return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/personen/" + magister.profile.id + "/berichten/" + messageID + "?berichtSoort=" + messageType.getName()), SingleMessage[].class);
+        return gson.fromJson(HttpUtil.httpGet(magister.schoolUrl.getApiUrl() + "personen/" + magister.profile.id + "/berichten/" + messageID + "?berichtSoort=" + messageType.getName()), SingleMessage[].class);
     }
 
     /**
@@ -131,7 +131,7 @@ public class MessageHandler implements IHandler {
     public boolean postMessage(SingleMessage message) {
         try {
             String data = gson.toJson(message);
-            InputStreamReader respose = HttpUtil.httpPostRaw(magister.school.url + "/api/personen/" + magister.profile.id + "/berichten", data);
+            InputStreamReader respose = HttpUtil.httpPostRaw(magister.schoolUrl.getApiUrl() + "personen/" + magister.profile.id + "/berichten", data);
             return true;
         } catch (IOException e) {
             LogUtil.printError(e.getMessage(), e.getCause());
@@ -141,7 +141,7 @@ public class MessageHandler implements IHandler {
 
     public Message updateMessage(SingleMessage message) throws IOException {
         String data = gson.toJson(message);
-        return gson.fromJson(new JsonReader(HttpUtil.httpPut(magister.school.url + "/api/personen/" + magister.profile.id + "/berichten/" + message.id, data)), SingleMessage.class);
+        return gson.fromJson(new JsonReader(HttpUtil.httpPut(magister.schoolUrl.getApiUrl() + "personen/" + magister.profile.id + "/berichten/" + message.id, data)), SingleMessage.class);
     }
 
     public Message markMessageRead(SingleMessage message, boolean isRead) throws IOException {
@@ -157,7 +157,7 @@ public class MessageHandler implements IHandler {
     }
 
     public void emptyMessageFolder(MessageFolder messageFolder) throws IOException {
-        HttpUtil.httpDelete(magister.school.url + "api/personen/" + magister.profile.id + "/berichten/map/" + messageFolder.id);
+        HttpUtil.httpDelete(magister.schoolUrl.getApiUrl() + "personen/" + magister.profile.id + "/berichten/map/" + messageFolder.id);
     }
 
     /**

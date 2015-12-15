@@ -60,7 +60,7 @@ public class ELOHandler implements IHandler {
      * @throws IOException if there is no active internet connection.
      */
     public Source[] getSources() throws IOException {
-        return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/personen/" + magister.profile.id + "/bronnen?soort=0"), Source[].class);
+        return gson.fromJson(HttpUtil.httpGet(magister.schoolUrl.getApiUrl() + "personen/" + magister.profile.id + "/bronnen?soort=0"), Source[].class);
     }
 
     /**
@@ -70,7 +70,7 @@ public class ELOHandler implements IHandler {
      * @throws IOException if there is no active internet connection.
      */
     public StudyGuide[] getStudyGuides() throws IOException {
-        return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/leerlingen/" + magister.profile.id + "/studiewijzers"), StudyGuide[].class);
+        return gson.fromJson(HttpUtil.httpGet(magister.schoolUrl.getApiUrl() + "leerlingen/" + magister.profile.id + "/studiewijzers"), StudyGuide[].class);
     }
 
     /**
@@ -92,7 +92,7 @@ public class ELOHandler implements IHandler {
      * @throws IOException if there is no active internet connection.
      */
     public SingleStudyGuide getStudyGuide(int studyGuideID) throws IOException {
-        return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/leerlingen/" + magister.profile.id + "/studiewijzers/" + studyGuideID), SingleStudyGuide.class);
+        return gson.fromJson(HttpUtil.httpGet(magister.schoolUrl.getApiUrl() + "leerlingen/" + magister.profile.id + "/studiewijzers/" + studyGuideID), SingleStudyGuide.class);
     }
 
     /**

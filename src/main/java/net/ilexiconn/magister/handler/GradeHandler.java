@@ -29,6 +29,7 @@ import com.google.gson.Gson;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.adapter.GradeAdapter;
 import net.ilexiconn.magister.container.Grade;
+import net.ilexiconn.magister.container.SingleGrade;
 import net.ilexiconn.magister.container.sub.Subject;
 import net.ilexiconn.magister.util.GsonUtil;
 import net.ilexiconn.magister.util.HttpUtil;
@@ -56,7 +57,7 @@ public class GradeHandler implements IHandler {
      * @throws IOException if there is no active internet connection.
      */
     public Grade[] getGrades(boolean onlyAverage, boolean onlyPTA, boolean onlyActiveStudy) throws IOException {
-        return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/personen/" + magister.profile.id + "/aanmeldingen/" + magister.currentStudy.id + "/cijfers/cijferoverzichtvooraanmelding?alleenBerekendeKolommen=" + onlyAverage + "&alleenPTAKolommen=" + onlyPTA + "&actievePerioden=" + onlyActiveStudy), Grade[].class);
+        return gson.fromJson(HttpUtil.httpGet(magister.schoolUrl.getApiUrl() + "personen/" + magister.profile.id + "/aanmeldingen/" + magister.currentStudy.id + "/cijfers/cijferoverzichtvooraanmelding?alleenBerekendeKolommen=" + onlyAverage + "&alleenPTAKolommen=" + onlyPTA + "&actievePerioden=" + onlyActiveStudy), Grade[].class);
     }
 
     /**
@@ -76,7 +77,7 @@ public class GradeHandler implements IHandler {
      * @throws IOException if there is no active internet connection.
      */
     public Grade[] getRecentGrades() throws IOException {
-        return gson.fromJson(HttpUtil.httpGet(magister.school.url + "/api/personen/" + magister.profile.id + "/aanmeldingen/" + magister.currentStudy.id + "/cijfers"), Grade[].class);
+        return gson.fromJson(HttpUtil.httpGet(magister.schoolUrl.getApiUrl() + "personen/" + magister.profile.id + "/aanmeldingen/" + magister.currentStudy.id + "/cijfers"), Grade[].class);
     }
 
     /**
@@ -114,6 +115,17 @@ public class GradeHandler implements IHandler {
             }
         }
         return gradeList.toArray(new Grade[gradeList.size()]);
+    }
+
+    /**
+     * Get more info about a specific grade.
+     *
+     * @param grade the grade to get more info about.
+     * @return a SingleGrade instance.
+     * @throws IOException if there is no active internet connection.
+     */
+    public SingleGrade getSingleGrade(Grade grade) throws IOException {
+        return gson.fromJson(HttpUtil.httpGet(magister.schoolUrl.getApiUrl() + "personen/" + magister.profile.id + "/aanmeldingen/" + magister.currentStudy.id + "/cijfers/extracijferkolominfo/" + grade.id), SingleGrade.class);
     }
 
     /**
