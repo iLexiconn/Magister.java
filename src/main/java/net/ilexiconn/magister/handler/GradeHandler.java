@@ -30,6 +30,7 @@ import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.adapter.GradeAdapter;
 import net.ilexiconn.magister.container.Grade;
 import net.ilexiconn.magister.container.SingleGrade;
+import net.ilexiconn.magister.container.Subject;
 import net.ilexiconn.magister.container.sub.SubSubject;
 import net.ilexiconn.magister.util.GsonUtil;
 import net.ilexiconn.magister.util.HttpUtil;
@@ -91,9 +92,17 @@ public class GradeHandler implements IHandler {
      * @throws IOException if there is no active internet connection.
      */
     public Grade[] getGradesFromSubject(SubSubject subject, boolean onlyAverage, boolean onlyPTA, boolean onlyActiveStudy) throws IOException {
+        return getGradesFromSubjectID(subject.id, onlyAverage, onlyPTA, onlyActiveStudy);
+    }
+
+    public Grade[] getGradesFromSubject(Subject subject, boolean onlyAverage, boolean onlyPTA, boolean onlyActiveStudy) throws IOException {
+        return getGradesFromSubjectID(subject.id, onlyAverage, onlyPTA, onlyActiveStudy);
+    }
+
+    public Grade[] getGradesFromSubjectID(int subjectID, boolean onlyAverage, boolean onlyPTA, boolean onlyActiveStudy) throws IOException {
         List<Grade> gradeList = new ArrayList<Grade>();
         for (Grade grade : getGrades(onlyAverage, onlyPTA, onlyActiveStudy)) {
-            if (grade.subject == subject) {
+            if (grade.subject.id == subjectID) {
                 gradeList.add(grade);
             }
         }
@@ -108,9 +117,17 @@ public class GradeHandler implements IHandler {
      * @throws IOException if there is no active internet connection.
      */
     public Grade[] getAllGradesFromSubject(SubSubject subject) throws IOException {
+        return getAllGradesFromSubjectID(subject.id);
+    }
+
+    public Grade[] getAllGradesFromSubject(Subject subject) throws IOException {
+        return getAllGradesFromSubjectID(subject.id);
+    }
+
+    public Grade[] getAllGradesFromSubjectID(int subjectID) throws IOException {
         List<Grade> gradeList = new ArrayList<Grade>();
         for (Grade grade : getAllGrades()) {
-            if (grade.subject == subject) {
+            if (grade.subject.id == subjectID) {
                 gradeList.add(grade);
             }
         }

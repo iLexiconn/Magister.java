@@ -131,7 +131,7 @@ public class Magister {
             }
         }
         if (magister.currentStudy != null) {
-            magister.subjects = magister.gson.fromJson(HttpUtil.httpGet(url.getApiUrl() + "personen/" + magister.profile.id + "/aanmeldingen/" + magister.currentStudy.id + "/vakken"), Subject[].class);
+            magister.subjects = magister.getSubjectsOfStudy(magister.currentStudy);
         }
         return magister;
     }
