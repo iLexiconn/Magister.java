@@ -40,7 +40,7 @@ public class Grade implements Serializable {
     @SerializedName("CijferStr")
     public String grade;
 
-    @SerializedName("IsCijferVoldoende")
+    @SerializedName(value = "IsCijferVoldoende", alternate = "IsVoldoende")
     public boolean isSufficient;
 
     @SerializedName("IngevoerdDoor")
