@@ -30,9 +30,9 @@ import com.google.gson.TypeAdapter;
 import net.ilexiconn.magister.Magister;
 import net.ilexiconn.magister.adapter.ArrayAdapter;
 import net.ilexiconn.magister.adapter.SingleStudyGuideAdapter;
-import net.ilexiconn.magister.container.elo.SingleStudyGuide;
-import net.ilexiconn.magister.container.elo.Source;
-import net.ilexiconn.magister.container.elo.StudyGuide;
+import net.ilexiconn.magister.container.SingleStudyGuide;
+import net.ilexiconn.magister.container.Source;
+import net.ilexiconn.magister.container.StudyGuide;
 import net.ilexiconn.magister.util.GsonUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 

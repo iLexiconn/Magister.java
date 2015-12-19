@@ -23,40 +23,61 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.ilexiconn.magister.container.elo;
+package net.ilexiconn.magister.container;
 
 import com.google.gson.annotations.SerializedName;
 import net.ilexiconn.magister.container.sub.Link;
 
 import java.io.Serializable;
 
-public class StudyGuideItem implements Serializable {
-    // Bronnen
-
+public class Source implements Serializable {
     @SerializedName("Id")
     public int id;
 
     @SerializedName("Links")
     public Link[] links;
 
-    @SerializedName("Van")
-    public String from;
+    @SerializedName("BronSoort")
+    public int sourceType;
 
-    @SerializedName("TotEnMet")
-    public String to;
+    @SerializedName("Naam")
+    public String name;
 
-    @SerializedName("Titel")
-    public String title;
+    @SerializedName("Referentie")
+    public int reference;
 
-    @SerializedName("Omschrijving")
-    public String description;
+    //Uri
 
-    @SerializedName("IsZichtbaar")
-    public boolean isVisible;
+    @SerializedName("Grootte")
+    public int size;
 
-    @SerializedName("Kleur")
-    public int color;
+    @SerializedName("Privilege")
+    public int privelege;
 
-    @SerializedName("Volgnummer")
+    @SerializedName("Type")
+    public int type;
+
+    @SerializedName("ContentType")
+    public String contentType;
+
+    //GewijzigdOp
+
+    //GeplaatstDoor
+
+    //GemaaktOp
+
+    @SerializedName("FileBlobId")
+    public int fileBlobId;
+
+    @SerializedName("ParentId")
+    public int parentId;
+
+    @SerializedName("UniqueId")
+    public String uniqueId;
+
+    @SerializedName("Volgnr")
     public int followId;
+
+    @SerializedName("ModuleSoort")
+    public int moduleType;
 }

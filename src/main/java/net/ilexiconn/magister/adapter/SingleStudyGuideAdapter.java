@@ -28,8 +28,8 @@ package net.ilexiconn.magister.adapter;
 import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
-import net.ilexiconn.magister.container.elo.SingleStudyGuide;
-import net.ilexiconn.magister.container.elo.StudyGuideItem;
+import net.ilexiconn.magister.container.SingleStudyGuide;
+import net.ilexiconn.magister.container.StudyGuideItem;
 import net.ilexiconn.magister.util.GsonUtil;
 
 import java.io.IOException;

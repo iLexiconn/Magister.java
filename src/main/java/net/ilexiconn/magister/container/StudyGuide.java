@@ -23,14 +23,14 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.ilexiconn.magister.container.elo;
+package net.ilexiconn.magister.container;
 
 import com.google.gson.annotations.SerializedName;
 import net.ilexiconn.magister.container.sub.Link;
 
 import java.io.Serializable;
 
-public class SingleStudyGuide implements Serializable {
+public class StudyGuide implements Serializable {
     @SerializedName("Id")
     public int id;
 
@@ -43,17 +43,12 @@ public class SingleStudyGuide implements Serializable {
     @SerializedName("TotEnMet")
     public String to;
 
-    @SerializedName("Titel")
-    public String title;
-
-    @SerializedName("IsZichtbaar")
-    public boolean isVisible;
-
-    @SerializedName("InLeerlingArchief")
-    public boolean isArchived;
-
     @SerializedName("VakCodes")
     public String[] courses;
 
-    public StudyGuideItem[] items;
+    @SerializedName("Titel")
+    public String title;
+
+    @SerializedName("InLeerlingArchief")
+    public boolean isArchived;
 }
