@@ -33,12 +33,10 @@ import net.ilexiconn.magister.util.DateUtil;
 import net.ilexiconn.magister.util.GsonUtil;
 import net.ilexiconn.magister.util.HttpUtil;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.security.InvalidParameterException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -131,7 +129,7 @@ public class SingleMessage implements Serializable {
         }
         Attachment a = new Attachment();
         a.fileName = f.getName();
-        a.contentType = /*Files.probeContentType(f.toPath());*/"";
+        a.contentType = URLConnection.guessContentTypeFromStream(new BufferedInputStream(new FileInputStream(f)));
         a.id = 0;
         a.sourceType = 0;
         a.uploadDate = DateUtil.dateToString(new Date());

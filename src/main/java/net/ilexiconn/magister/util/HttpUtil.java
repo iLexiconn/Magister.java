@@ -156,7 +156,6 @@ public class HttpUtil {
         String disposition = connection.getHeaderField("Content-Disposition");
         String fileName = disposition.substring(disposition.indexOf("filename=") + 10, disposition.length() - 1);
         File target = new File(downloadDir.getPath() + "\\" + fileName);
-        System.out.println(target.getAbsolutePath());
         copyFileUsingStream(connection.getInputStream(), target);
         connection.connect();
         storeCookies(connection);
@@ -164,6 +163,9 @@ public class HttpUtil {
     }
 
     private static void copyFileUsingStream(InputStream is, File dest) throws IOException {
+        if (is == null || dest == null) {
+            return;
+        }
         OutputStream os = null;
         try {
             os = new FileOutputStream(dest);
@@ -174,7 +176,9 @@ public class HttpUtil {
             }
         } finally {
             is.close();
-            os.close();
+            if (os != null) {
+                os.close();
+            }
         }
     }
 
