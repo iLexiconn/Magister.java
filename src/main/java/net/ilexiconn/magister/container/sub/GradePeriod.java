@@ -34,7 +34,7 @@ public class GradePeriod implements Serializable {
     public int id;
 
     @SerializedName("Naam")
-    public boolean gradePeriodName;
+    public String gradePeriodName;
 
     @SerializedName("VolgNummer")
     public int gradePeriodSerialNumber;
