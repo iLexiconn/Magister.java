@@ -113,7 +113,8 @@ public class MessageHandler implements IHandler {
     /**
      * Get an array of {@link SingleMessage}s of this specific {@link Message}.
      *
-     * @param messageID the {@link Message} ID.
+     * @param messageID   the {@link Message} ID.
+     * @param messageType the type of this message.
      * @return an array of {@link SingleMessage}s.
      * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.

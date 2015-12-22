@@ -39,7 +39,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -100,10 +99,12 @@ public class AppointmentHandler implements IHandler {
      * Adds an appointment to magister. It wil return the Url of this Appointment, if it fails null will be
      * returned
      *
+     * @param personalAppointment the personal appointment instance.
+     * @return the appointment instance with more info.
      * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
-    public Appointment createAppointment(PersonalAppointment personalAppointment) throws IOException, ParseException {
+    public Appointment createAppointment(PersonalAppointment personalAppointment) throws IOException {
         String data = gson.toJson(personalAppointment);
         BufferedReader reader = new BufferedReader(HttpUtil.httpPostRaw(magister.school.url + "/api/personen/" + magister.profile.id + "/afspraken", data));
         StringBuilder responseBuilder = new StringBuilder();
@@ -119,6 +120,7 @@ public class AppointmentHandler implements IHandler {
     /**
      * Deletes an appointment from magister.
      *
+     * @param appointment the appointment instance.
      * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */
@@ -129,6 +131,7 @@ public class AppointmentHandler implements IHandler {
     /**
      * Deletes an appointment from magister.
      *
+     * @param id the appointment id.
      * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */

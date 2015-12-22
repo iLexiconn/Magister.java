@@ -11,8 +11,6 @@ A Java implementation of the [Magister 6](http://magister6.nl/) API.
 
 Quickstart
 ==========
-NOTE: The maven artifacts are not yet available, as we haven't released 0.1.0 yet.
-
 To use this API is your project, you just have to add this snippet if you're using Grade:
 ```gradle
 repositories {
@@ -32,7 +30,6 @@ or Maven:
 ```xml
 <repositories>
     <repository>
-      <id>ilexiconn</id>
       <name>ilexiconn</name>
       <url>http://maven.ilexiconn.net/</url>
     </repository>

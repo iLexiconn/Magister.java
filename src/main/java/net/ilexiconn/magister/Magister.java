@@ -57,7 +57,7 @@ import java.util.*;
  * @since 0.1.0
  */
 public class Magister {
-    public static final String VERSION = "0.1.0-SNAPSHOT";
+    public static final String VERSION = "0.1.0";
 
     public static final int SESSION_TIMEOUT = 1200000;
 
@@ -262,6 +262,7 @@ public class Magister {
      * Get a handler instance from this magister instance.
      *
      * @param type the class of the handler.
+     * @param <T>  the handler class type.
      * @return the {@link IHandler} instance, null if it can't be found.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
      */

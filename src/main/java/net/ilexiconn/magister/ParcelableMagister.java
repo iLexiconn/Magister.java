@@ -44,7 +44,7 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * A special Magister class implementing {@link Parcelable].
+ * A special Magister class implementing Parcelable.
  * {@inheritDoc}
  */
 public class ParcelableMagister extends Magister implements Parcelable {

@@ -74,6 +74,7 @@ public class ContactHandler implements IHandler {
      * returned instead.
      *
      * @param name the name.
+     * @param type the type.
      * @return an array of {@link Contact} with the contact information.
      * @throws IOException        if there is no active internet connection.
      * @throws PrivilegeException if the profile doesn't have the privilege to perform this action.
