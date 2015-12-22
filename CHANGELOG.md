@@ -1,4 +1,4 @@
-## [Unreleased]
+## [0.1.0] - 2015-12-22
 ### Added
 - Appointments
   - Appointments from period
