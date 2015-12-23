@@ -21,7 +21,7 @@ repositories {
 }
 
 dependencies {
-    compile "net.ilexiconn:magister:0.1.0"
+    compile "net.ilexiconn:magister:0.1.1"
 }
 ```
 
@@ -39,7 +39,7 @@ or Maven:
     <dependency>
       <groupId>net.ilexiconn</groupId>
       <artifactId>magister</artifactId>
-      <version>0.1.0</version>
+      <version>0.1.1</version>
     </dependency>
 </dependencies>
 ```

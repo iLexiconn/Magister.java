@@ -1,3 +1,8 @@
+## [0.1.1] - 2015-12-23
+### Fixed
+- Not all containers being serializable
+- Subjects array not getting parsed
+
 ## [0.1.0] - 2015-12-22
 ### Added
 - Appointments

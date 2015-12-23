@@ -72,6 +72,10 @@ public class ParcelableMagister extends Magister implements Parcelable {
         version = (Version) in.readSerializable();
         session = (Session) in.readSerializable();
         profile = (Profile) in.readSerializable();
+        subjects = new Subject[in.readInt()];
+        for (int i = 0; i < subjects.length; i++) {
+            subjects[i] = (Subject) in.readSerializable();
+        }
         currentStudy = (Study) in.readSerializable();
         studies = new Study[in.readInt()];
         for (int i = 0; i < studies.length; i++) {
@@ -133,10 +137,14 @@ public class ParcelableMagister extends Magister implements Parcelable {
         dest.writeSerializable(version);
         dest.writeSerializable(session);
         dest.writeSerializable(profile);
+        dest.writeInt(subjects.length);
+        for (Subject subject : subjects) {
+            dest.writeSerializable(subject);
+        }
         dest.writeSerializable(currentStudy);
         dest.writeInt(studies.length);
-        for (Study s : studies) {
-            dest.writeSerializable(s);
+        for (Study study : studies) {
+            dest.writeSerializable(study);
         }
     }
 }

@@ -27,9 +27,10 @@ package net.ilexiconn.magister.container;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Subject {
+public class Subject implements Serializable {
     @SerializedName("afkorting")
     public String abbreviation;
 

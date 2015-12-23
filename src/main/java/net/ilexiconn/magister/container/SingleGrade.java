@@ -27,7 +27,9 @@ package net.ilexiconn.magister.container;
 
 import com.google.gson.annotations.SerializedName;
 
-public class SingleGrade {
+import java.io.Serializable;
+
+public class SingleGrade implements Serializable {
     @SerializedName("KolomKopnaam")
     public String headerName;
 

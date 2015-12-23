@@ -25,7 +25,9 @@
 
 package net.ilexiconn.magister.container.type;
 
-public enum MessageType {
+import java.io.Serializable;
+
+public enum MessageType implements Serializable {
     MESSAGE("Bericht", 1),
     ANNOUNCEMENT("Mededeling", 2);
 
