@@ -122,6 +122,9 @@ public class ParcelableMagister extends Magister implements Parcelable {
                 magister.currentStudy = study;
             }
         }
+        if (magister.currentStudy != null) {
+            magister.subjects = magister.getSubjectsOfStudy(magister.currentStudy);
+        }
         return magister;
     }
 
