@@ -126,7 +126,7 @@ public class Magister {
         DateFormat format = new SimpleDateFormat("y-m-d", Locale.ENGLISH);
         Date now = new Date();
         for (Study study : magister.studies) {
-            if (format.parse(study.endDate.substring(0, 10)).after(now)) {
+            if (format.parse(study.endDate.substring(0, 10)).before(now)) {
                 magister.currentStudy = study;
             }
         }
