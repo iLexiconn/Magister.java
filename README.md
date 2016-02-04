@@ -44,6 +44,8 @@ or Maven:
 </dependencies>
 ```
 
+You can find the wiki [here](https://magister.ilexiconn.net/Main_Page).
+
 How to compile from source
 ==========
 1. Make sure you have a JDK (minimal version 6) installed.
