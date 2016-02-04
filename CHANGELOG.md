@@ -2,7 +2,8 @@
 ### Added
 - Variables for handler types
 - Date variables to Study object
-- Password handler
+- Password handler   
+
 ### Fixed
 - Current study not correctly initializing
 
