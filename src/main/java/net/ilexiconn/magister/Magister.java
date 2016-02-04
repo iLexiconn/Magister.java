@@ -45,9 +45,7 @@ import javax.net.ssl.HttpsURLConnection;
 import java.io.IOException;
 import java.net.URL;
 import java.security.InvalidParameterException;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -57,7 +55,7 @@ import java.util.*;
  * @since 0.1.0
  */
 public class Magister {
-    public static final String VERSION = "0.1.1";
+    public static final String VERSION = "0.1.2";
 
     public static final int SESSION_TIMEOUT = 1200000;
 
@@ -123,10 +121,9 @@ public class Magister {
         magister.loginTime = System.currentTimeMillis();
         magister.profile = magister.gson.fromJson(HttpUtil.httpGet(url.getAccountUrl()), Profile.class);
         magister.studies = magister.gson.fromJson(HttpUtil.httpGet(url.getStudiesUrl(magister.profile.id)), Study[].class);
-        DateFormat format = new SimpleDateFormat("y-m-d", Locale.ENGLISH);
         Date now = new Date();
         for (Study study : magister.studies) {
-            if (format.parse(study.endDate.substring(0, 10)).before(now)) {
+            if (study.endDate.before(now)) {
                 magister.currentStudy = study;
             }
         }
@@ -229,29 +226,11 @@ public class Magister {
      * @throws InvalidParameterException if one of the parameters is null or empty, or when the two new passwords aren't
      *                                   the same.
      * @throws PrivilegeException        if the profile doesn't have the privilege to perform this action.
+     * @deprecated use the password handler instead.
      */
+    @Deprecated
     public String changePassword(String oldPassword, String newPassword, String newPassword2) throws IOException, InvalidParameterException, PrivilegeException {
-        if (!hasPrivilege("WachtwoordWijzigen")) {
-            throw new PrivilegeException();
-        }
-        if (oldPassword == null || oldPassword.isEmpty() || newPassword == null || newPassword.isEmpty() || newPassword2 == null || newPassword2.isEmpty()) {
-            throw new InvalidParameterException("Parameters can't be null or empty!");
-        } else if (!newPassword.equals(newPassword2)) {
-            throw new InvalidParameterException("New passwords don't match!");
-        }
-        Map<String, String> nameValuePairMap = new HashMap<String, String>();
-        nameValuePairMap.put("HuidigWachtwoord", oldPassword);
-        nameValuePairMap.put("NieuwWachtwoord", newPassword);
-        nameValuePairMap.put("PersoonId", profile.id + "");
-        nameValuePairMap.put("WachtwoordBevestigen", newPassword2);
-        Response response = gson.fromJson(HttpUtil.httpPost(school.url + "/api/personen/account/wachtwoordwijzigen?persoonId=" + profile.id, nameValuePairMap), Response.class);
-        if (response == null) {
-            user.password = newPassword;
-            return "Successful";
-        } else {
-            LogUtil.printError(response.message, new InvalidParameterException());
-            return response.message;
-        }
+        return getHandler(Handler.PASSWORD).changePassword(oldPassword, newPassword, newPassword2);
     }
 
     public Subject[] getSubjectsOfStudy(Study study) throws IOException {
@@ -273,6 +252,18 @@ public class Magister {
                     throw new PrivilegeException();
                 }
                 return type.cast(handler);
+            }
+        }
+        return null;
+    }
+
+    public <T extends IHandler> T getHandler(Handler<T> handler) {
+        for (IHandler h : handlerList) {
+            if (h.getClass() == handler.getHandler()) {
+                if (!hasPrivilege(h.getPrivilege())) {
+                    throw new PrivilegeException();
+                }
+                return handler.getHandler().cast(h);
             }
         }
         return null;

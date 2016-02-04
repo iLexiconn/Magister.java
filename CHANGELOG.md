@@ -1,3 +1,11 @@
+## [0.1.2] - 2016-02-04
+### Added
+- Variables for handler types
+- Date variables to Study object
+- Password handler
+### Fixed
+- Current study not correctly initializing
+
 ## [0.1.1] - 2015-12-23
 ### Fixed
 - Not all containers being serializable

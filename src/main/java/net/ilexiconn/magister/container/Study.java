@@ -30,6 +30,7 @@ import net.ilexiconn.magister.container.sub.Group;
 import net.ilexiconn.magister.container.sub.Link;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class Study implements Serializable {
     @SerializedName("Id")
@@ -42,10 +43,14 @@ public class Study implements Serializable {
     public int pupilId;
 
     @SerializedName("Start")
-    public String startDate;
+    public String startDateString;
+
+    public Date startDate;
 
     @SerializedName("Einde")
-    public String endDate;
+    public String endDateString;
+
+    public Date endDate;
 
     @SerializedName("Lesperiode")
     public String classPeriod;

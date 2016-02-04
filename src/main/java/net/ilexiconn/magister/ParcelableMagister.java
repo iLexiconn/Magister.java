@@ -36,11 +36,8 @@ import net.ilexiconn.magister.util.SchoolUrl;
 
 import java.io.IOException;
 import java.security.InvalidParameterException;
-import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -115,10 +112,9 @@ public class ParcelableMagister extends Magister implements Parcelable {
         magister.loginTime = System.currentTimeMillis();
         magister.profile = magister.gson.fromJson(HttpUtil.httpGet(url.getAccountUrl()), Profile.class);
         magister.studies = magister.gson.fromJson(HttpUtil.httpGet(url.getStudiesUrl(magister.profile.id)), Study[].class);
-        DateFormat format = new SimpleDateFormat("y-m-d", Locale.ENGLISH);
         Date now = new Date();
         for (Study study : magister.studies) {
-            if (format.parse(study.endDate.substring(0, 10)).before(now)) {
+            if (study.endDate.before(now)) {
                 magister.currentStudy = study;
             }
         }

@@ -29,9 +29,12 @@ import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import net.ilexiconn.magister.container.Study;
+import net.ilexiconn.magister.util.DateUtil;
 import net.ilexiconn.magister.util.GsonUtil;
+import net.ilexiconn.magister.util.LogUtil;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +57,12 @@ public class StudyAdapter extends TypeAdapter<Study[]> {
             JsonObject object2 = object1.get("Studie").getAsJsonObject();
             study.studyId = object2.get("Id").getAsInt();
             study.description = object2.get("Omschrijving").getAsString();
+            try {
+                study.startDate = DateUtil.stringToDate(study.startDateString);
+                study.endDate = DateUtil.stringToDate(study.endDateString);
+            } catch (ParseException e) {
+                LogUtil.printError("Unable to parse date", e);
+            }
             studyList.add(study);
         }
         return studyList.toArray(new Study[studyList.size()]);
